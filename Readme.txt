@@ -1,0 +1,1 @@
+﻿This is a personal project to create a free windows invoicing application.
