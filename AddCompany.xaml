@@ -1,0 +1,90 @@
+﻿<Page
+    x:Class="Invoice_Free.AddCompany"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Invoice_Free"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="17*"/>
+            <ColumnDefinition Width="233*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Header-->
+        <Button x:Name="BackButton" IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" VerticalAlignment="Top" Click="BackButton_Click" 
+                Margin="20,37,0,0" Grid.Column="0" Height="73" Width="73" FontSize="25" FontFamily="Segoe MDL2 Assets" Content="&#xE72B;" Background="{ThemeResource SystemAccentColor}">
+            <Button.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Dark">
+                            <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Light">
+                            <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
+                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
+            </Button.Resources>
+        </Button>
+        <TextBlock x:Name="PageTitle" Text="ADD COMPANY" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="40" TextDecorations="None" Margin="-72,0,0,0"/>
+        <!--Header End -->
+
+        <ContentControl x:Name="ContentHost" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ContentControl.ContentTransitions>
+                <TransitionCollection>
+                    <ContentThemeTransition HorizontalOffset="800"/>
+                </TransitionCollection>
+            </ContentControl.ContentTransitions>
+            <StackPanel>
+                <Grid Margin="0,0,0,20" Background="{ThemeResource SystemAccentColor}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="37*"/>
+                        <ColumnDefinition Width="683*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button x:Name="backBtn" Click="BackDisplayHandler" FontFamily="Segoe MDL2 Assets" Content="&#xE72B;" VerticalAlignment="Top" Grid.Column="0"/>
+                    <TextBlock x:Name="panelTitle" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Center" Margin="-35,0,0,0" FontWeight="Normal" FontSize="18"/>
+                    
+                </Grid>
+
+                <StackPanel x:Name="COMP_name_panel" Visibility="Visible" >
+                    <TextBox x:Name="CompanyName" HorizontalAlignment="Center" PlaceholderText="Company Name" Width="720" Height="59" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" Header="Please enter a company name to continue." KeyDown="EnterPressed"/>
+                    <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyNameChosen"  Margin="0,20,0,0"/>
+                </StackPanel>
+
+                <StackPanel x:Name="COMP_Image_panel"  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">               
+                    <Image x:Name="Company_logo" Width="320" Source="/Assets/logo.png" PointerReleased="{x:Bind local:App.SelectImage}" HorizontalAlignment="Stretch" Height="238" Margin="0,0,0,10"/>
+                    <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyLogoChosen" Margin="0,20,0,0"/>
+                </StackPanel>
+
+                <StackPanel x:Name="COMP_Details_panel" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <TextBox x:Name="Contact"  HorizontalAlignment="Left" PlaceholderText="Contact Number" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" InputScope="TelephoneLocalNumber"/>
+
+                    <TextBox x:Name="Email"  HorizontalAlignment="Left" PlaceholderText="Email Address" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" InputScope="EmailSmtpAddress"/>
+
+                    <TextBox x:Name="companyAddress"  HorizontalAlignment="Left" PlaceholderText="Phisical Address" TextWrapping="Wrap" Width="720"  Height="auto" MaxHeight="200" VerticalAlignment="top" VerticalContentAlignment="Center" Margin="0,0,0,10" AcceptsReturn="True"/>
+
+                    <TextBox x:Name="CompanyReg"  HorizontalAlignment="Left" PlaceholderText="Company Registration No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
+
+                    <TextBox x:Name="VatTax"  HorizontalAlignment="Left" PlaceholderText="Vat/Tax No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
+
+                    <TextBox x:Name="ContactPerson"  HorizontalAlignment="Left" PlaceholderText="Contact Person" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
+
+                    <Button HorizontalAlignment="Center" Content="Save" Click="CompanyDetailsChosen"/>
+                </StackPanel>
+            </StackPanel>
+        </ContentControl>
+
+    </Grid>
+</Page>
