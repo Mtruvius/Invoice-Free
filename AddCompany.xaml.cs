@@ -79,14 +79,32 @@ namespace Invoice_Free
             CompanyObj.Add("RegNo", CompanyReg.Text);
             CompanyObj.Add("Person", ContactPerson.Text);
 
-            CompanyDetails.Add(_CompanyName, CompanyObj);
+            CompanyDetails.Add("Details", CompanyObj);
 
             await _chosenImage.CopyAsync(await StorageFolder.GetFolderFromPathAsync(CompanyFolder.Path), "logo.jpg");
 
             StorageFile JsonFile = await CompanyFolder.CreateFileAsync(_CompanyName + ".json", CreationCollisionOption.ReplaceExisting);
             File.WriteAllText(JsonFile.Path, CompanyDetails.ToString());
+            
+            StorageFile ImgFile = await CompanyFolder.GetFileAsync("logo.jpg");
+            BitmapSource img = new BitmapImage(new Uri(ImgFile.Path));
 
-            App.ChangePageTo("Main");
+            Image image = new Image();
+            image.Source = img;
+
+            Company company = new Company()
+            {
+                CompanyName = _CompanyName,
+                CompanyLogo = image.Source,
+                Contact = Contact.Text,
+                Email = Email.Text,
+                Address = companyAddress.Text,
+                RegNo = CompanyReg.Text,
+                VatOrTax = VatTax.Text,
+                ContactPerson = ContactPerson.Text,
+            };
+
+            this.Frame.Navigate(typeof(MainPage), company);
         }
 
         private void DetailsDisplayHandler(int v)

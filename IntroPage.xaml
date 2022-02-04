@@ -10,7 +10,9 @@
     
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    
+    
+    
     <Grid x:Name="IntroScreen" Height="auto" Width="auto">
 
         <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top">
@@ -64,27 +66,43 @@
             </StackPanel>
 
         </Grid>
+        
         <StackPanel VerticalAlignment="Center" Height="auto" Width="auto">
             <Image Height="318" Width="314" RenderTransformOrigin="0.5,0.4" Source="/Assets/logo.png" Margin="0,40,0,20"/>
-            <TextBlock x:Name="IntroTitle" Text="TextBlock" TextWrapping="Wrap" FontSize="20" FontWeight="Bold"/>
-            <StackPanel >
-                <ListView x:Name="InstatiationPanel">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Tapped="StackPanel_Tapped" >
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding CompanyLogo}" />
-                                    <TextBlock Text="{Binding CompanyName}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-            
-        </StackPanel>
+            <TextBlock x:Name="IntroTitle" Text="Companies" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Margin="0,0,0,40"/>
 
+            <ListView x:Name="InstatiationPanel" ItemsSource="{x:Bind _companies}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemClick="SelectCompany_OnClick"  IsItemClickEnabled="True">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                
+                <ListView.ItemTemplate>
+                    
+                    <DataTemplate x:DataType="local:CompanyListViewItem">                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="200"/>                                
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="90"/>
+                            </Grid.RowDefinitions>
+                            <Image Name="image" Source="{x:Bind CompanyLogo}" RequestedTheme="Default" Margin="0,0,20,0"  Grid.Column="0" />
+                            <TextBlock Text="{x:Bind CompanyName, Mode=TwoWay}" FontSize="16" Name="NameTextBlock" RequestedTheme="Default" VerticalAlignment="Center" Grid.Column="1" HorizontalAlignment="Left"/>               
+                        </Grid>
+                    </DataTemplate>
+                    
+                </ListView.ItemTemplate>
+                
+
+            </ListView>
+
+
+        </StackPanel>
         
+
     </Grid>
 
     

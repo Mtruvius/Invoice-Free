@@ -11,15 +11,64 @@
 
 
     <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="131*"/>
+            <RowDefinition Height="369*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1419*"/>
+                <ColumnDefinition Width="135*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="TitleText" Text="Invoice Free" Grid.Column="0" TextAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="19" />
+            <StackPanel Orientation="Horizontal"  Grid.Column="1" Height="32" HorizontalAlignment="Right">
 
-        <StackPanel Orientation="Horizontal" Height="45" BorderBrush="AliceBlue" BorderThickness="0,0,0,5" VerticalAlignment="Top" Margin="0,336,0,0">
-            <Button Content="Button"/>
-            <Button Content="Button"/>
-            <Button Content="Button"/>
+                <Button x:Name="Minimize" FontFamily="Segoe MDL2 Assets" Content="&#xE949;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.Minimize_Checked}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Dark">
+                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
 
-        </StackPanel>
-        <Button Content="Button" Margin="647,216,0,0" VerticalAlignment="Top" Height="90" Width="174" Click="Button_Click"/>
-        
+                <Button x:Name="Fullscreen" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="DimGray" FocusVisualSecondaryBrush="#00000000" FocusVisualPrimaryBrush="Transparent" IsEnabled="False"/>
+
+
+                <Button x:Name="ClsBtn" FontFamily="Segoe MDL2 Assets" Content="&#xE106;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.App_ExitRequested}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Dark">
+                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+
+
+
 
     </Grid>
 </Page>

@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using Windows.UI;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -27,13 +28,20 @@ namespace Invoice_Free
     public sealed partial class MainPage : Page
     {
         private ApplicationView appView;
+        private Company companyActive;
         public MainPage()
         {
             this.InitializeComponent();
             Window.Current.SizeChanged += Window_SizeChanged;          
             
         }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            companyActive = (Company)e.Parameter;
+            Debug.WriteLine(companyActive.CompanyName);
 
+        }
         private void AddNewCompany(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
