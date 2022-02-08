@@ -27,6 +27,7 @@ using System.Diagnostics;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
+
 namespace Invoice_Free
 {
     /// <summary>
@@ -35,10 +36,11 @@ namespace Invoice_Free
     sealed partial class App : Application
     {
         public  static StorageFolder PublisherFolder { get; private set; }
+        public static string PathToCompanies { get; private set; }
 
         public delegate void OnImageSetected(BitmapImage Image, StorageFile file);
         public static event OnImageSetected ImageSelected;
-        //public static string APPDATA_PATH = PublisherFolder.Path;
+        public static Company companyActive;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -49,7 +51,8 @@ namespace Invoice_Free
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
-            PublisherFolder = ApplicationData.Current.GetPublisherCacheFolder("InvoiceFree"); ;
+            PublisherFolder = ApplicationData.Current.GetPublisherCacheFolder("InvoiceFree");
+            PathToCompanies = PublisherFolder.Path + "\\Companies\\";
         }
 
         
@@ -87,6 +90,8 @@ namespace Invoice_Free
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
+
+                    //rootFrame.Navigate(typeof(CustomerViewPage));
                     GetFirstPage();
                         
                 }
@@ -190,7 +195,7 @@ namespace Invoice_Free
 
         public static void MaintainMaimized(object sender, WindowSizeChangedEventArgs e)
         {
-            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+           // ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
 
         public static async void Minimize_Checked(object sender, RoutedEventArgs e)

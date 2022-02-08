@@ -58,32 +58,31 @@ namespace Invoice_Free
         
         private async void SetContent()
         {
-            StorageFolder companiesFolder = await App.PublisherFolder.GetFolderAsync("Companies");
-            IReadOnlyList<StorageFolder> companies = await companiesFolder.GetFoldersAsync();
-            _companies = new ObservableCollection<CompanyListViewItem>();
-            foreach (var company in companies)
-            {
-                StorageFile ImgFile = await company.GetFileAsync("logo.jpg");
-                BitmapSource img = new BitmapImage(new Uri(ImgFile.Path));
+             StorageFolder companiesFolder = await App.PublisherFolder.GetFolderAsync("Companies");
+             IReadOnlyList<StorageFolder> companies = await companiesFolder.GetFoldersAsync();
+             _companies = new ObservableCollection<CompanyListViewItem>();
+             foreach (var company in companies)
+             {
+                 StorageFile ImgFile = await company.GetFileAsync("logo.jpg");
+                 BitmapSource img = new BitmapImage(new Uri(ImgFile.Path));
 
-                Image image = new Image();
-                image.Source = img;
+                 Image image = new Image();
+                 image.Source = img;
 
-                CompanyListViewItem Obj = new CompanyListViewItem()
-                {
-                    CompanyLogo = image.Source,
-                    CompanyName = company.DisplayName
-                };
+                 CompanyListViewItem Obj = new CompanyListViewItem()
+                 {
+                     CompanyLogo = image.Source,
+                     CompanyName = company.DisplayName
+                 };
 
-                _companies.Add(Obj);
-            }
+                 _companies.Add(Obj);
+             }
 
-            IntroTitle.Text = "Select a company to continue.";
-            IntroTitle.TextAlignment = TextAlignment.Center;
-            InstatiationPanel.ItemsSource = _companies;
+             IntroTitle.Text = "Select a company to continue.";
+             IntroTitle.TextAlignment = TextAlignment.Center;
+             InstatiationPanel.ItemsSource = _companies;
 
-            InstatiationPanel.UpdateLayout();
-            
+             InstatiationPanel.UpdateLayout();          
         }
 
 

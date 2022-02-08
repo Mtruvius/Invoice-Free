@@ -1,0 +1,93 @@
+﻿<Page
+    x:Class="Invoice_Free.ShowStats"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Invoice_Free" 
+    xmlns:lvc="using:LiveCharts.Uwp"
+    xmlns:converters="using:UWP.Converters"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BoolToObjectConverter x:Key="bvc">
+            <converters:BoolToObjectConverter.TrueValue>
+                <x:Boolean>True</x:Boolean>
+            </converters:BoolToObjectConverter.TrueValue>
+            <converters:BoolToObjectConverter.FalseValue>
+                <x:Boolean>False</x:Boolean>
+            </converters:BoolToObjectConverter.FalseValue>
+        </converters:BoolToObjectConverter>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="STATISTICS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!-- BAR CHART-->
+            <Grid Grid.Column="0" Margin="40,40,40,40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="113*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto" MinWidth="207"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Revenue" FontSize="18" Grid.Column="0" Margin="0,0,43,0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <ToggleButton IsChecked="{Binding thisYear, Mode=TwoWay}" Content = "2022" FontSize="18" Grid.Column="1" Height="37" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                        <ToggleButton IsChecked="{Binding previousYear, Mode=TwoWay}" Content="2021" FontSize="18" Grid.Column="1" HorizontalAlignment="Stretch" Height="37" Margin="0,0,5,0" VerticalAlignment="Stretch"/>
+                        <ToggleButton IsChecked="{Binding priorYear, Mode=TwoWay}" Content="2020" FontSize="18"  Grid.Column="1" Height="37" HorizontalAlignment="Stretch" Margin="0,0,5,0" VerticalAlignment="Stretch" />
+                    </StackPanel>
+                </Grid>
+
+                <lvc:CartesianChart Name="BARCHART" Grid.Row="1" Hoverable="False">
+                    <!---->
+                    <lvc:CartesianChart.Series>
+                        <lvc:ColumnSeries Title="{x:Bind this_Year}" Values="{Binding ThisYearValues}" Visibility="{Binding thisYear, Converter={StaticResource bvc}, Mode=OneWay}" Width="Auto" MaxWidth="1000" ColumnPadding="2" />
+
+                        <lvc:ColumnSeries Title="{x:Bind previous_Year}" Width="Auto" Values="{Binding PreviousYearValues}" Visibility="{Binding previousYear, Converter={StaticResource bvc}, Mode=OneWay}" MaxWidth="1000" ColumnPadding="2"/>
+
+                        <lvc:ColumnSeries Title="{x:Bind prior_Year}" Width="Auto" Values="{Binding PriorYearValues}" Visibility="{Binding priorYear, Converter={StaticResource bvc}, Mode=OneWay}" MaxWidth="1000" ColumnPadding="2"/>
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Labels="{Binding Labels}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <!-- -->
+                </lvc:CartesianChart>
+
+            </Grid>
+
+            <!-- PIE CHART-->
+            <Grid Grid.Column="1">
+                <lvc:PieChart Name="Chart" Series="{Binding SeriesCollection}" 
+                      LegendLocation="Right" InnerRadius="50" Margin="40,40,40,40">
+                    <lvc:PieChart.ChartLegend>
+                        <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
+                    </lvc:PieChart.ChartLegend>
+                    <lvc:PieChart.DataTooltip>
+                        <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
+                    </lvc:PieChart.DataTooltip>
+                </lvc:PieChart>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Page>
