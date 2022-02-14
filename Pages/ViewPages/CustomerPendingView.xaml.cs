@@ -20,9 +20,9 @@ namespace Invoice_Free
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddInvoice : Page
+    public sealed partial class CustomerPendingView : Page
     {
-        public AddInvoice()
+        public CustomerPendingView()
         {
             this.InitializeComponent();
         }

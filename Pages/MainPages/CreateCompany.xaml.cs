@@ -24,14 +24,14 @@ namespace Invoice_Free
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddCompany : Page
+    public sealed partial class CreateCompany : Page
     {
         private string _CompanyName;        
         private Image _CompanyLogo;
         private StorageFile _chosenImage;
         private int _detailsTracker = 0;
 
-        public AddCompany()
+        public CreateCompany()
         {
             this.InitializeComponent();
             App.ImageSelected += ImageSelected;
@@ -78,6 +78,7 @@ namespace Invoice_Free
             CompanyObj.Add("VatOrTax", VatTax.Text);
             CompanyObj.Add("RegNo", CompanyReg.Text);
             CompanyObj.Add("Person", ContactPerson.Text);
+            CompanyObj.Add("LastInvNo", "-1");
 
             CompanyDetails.Add("Details", CompanyObj);
 
@@ -102,6 +103,7 @@ namespace Invoice_Free
                 RegNo = CompanyReg.Text,
                 VatOrTax = VatTax.Text,
                 ContactPerson = ContactPerson.Text,
+                LastInvoiceNo = "-1"
             };
 
             this.Frame.Navigate(typeof(MainPage), company);

@@ -1,9 +1,11 @@
 ﻿using SimpleJSON;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -24,12 +26,13 @@ namespace Invoice_Free
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddCustomer : Page
+    public sealed partial class CreateCustomer : Page
     {
         public Customer CustomerToAdd;
         public string ErrorText;
 
-        public AddCustomer()
+
+        public CreateCustomer()
         {
             this.InitializeComponent();
             CustomerToAdd = new Customer();
@@ -90,19 +93,36 @@ namespace Invoice_Free
 
         private void AddToCustomers(string PathToCustomersJson, JSONArray customers)
         {
+            if (string.IsNullOrEmpty(customers))
+            {
+                customers = new JSONArray();
+            }
             JSONObject newCustomer = new JSONObject();
 
             newCustomer.Add("Name", CustomerToAdd.CustomerName);
-            newCustomer.Add("Email", CustomerToAdd.Email);
-            
+            newCustomer.Add("Email", CustomerToAdd.Email);            
             newCustomer.Add("Contact", CheckStringNotNull(CustomerToAdd.Contact));
             newCustomer.Add("Address", CheckStringNotNull(CustomerToAdd.Address));
             newCustomer.Add("VatOrTax", CheckStringNotNull(CustomerToAdd.VatOrTax));
             newCustomer.Add("ContactPerson", CheckStringNotNull(CustomerToAdd.ContactPerson));
+            JSONArray customerInvoiceArray = new JSONArray();
+            newCustomer.Add("Invoices", customerInvoiceArray.ToString());           
 
             customers.Add(newCustomer);
 
-            File.WriteAllText(PathToCustomersJson, customers.ToString()); ;
+            File.WriteAllText(PathToCustomersJson, customers.ToString());
+
+            Customer theCustomer = new()
+            {
+                CustomerName = newCustomer["Name"],
+                Email = newCustomer["Email"],
+                Contact = newCustomer["Contact"],
+                Address = newCustomer["Address"],
+                VatOrTax = newCustomer["VatOrTax"],
+                ContactPerson = newCustomer["ContactPerson"]
+            };
+
+            AddCustomerFrame.NavigateToType(typeof(CustomerViewPage), theCustomer, App.AnimatePage("right"));
         }
 
         private string CheckStringNotNull(string str)
@@ -181,6 +201,8 @@ namespace Invoice_Free
             }
             
         }
-    }
 
+        
+
+    }
 }

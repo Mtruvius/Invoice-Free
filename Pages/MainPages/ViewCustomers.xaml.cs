@@ -1,5 +1,6 @@
 ﻿
 using SimpleJSON;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,8 @@ namespace Invoice_Free
     {
         private ObservableCollection<Customer> _customers;
         private ObservableCollection<SearchOptions> CustomerSearchOptions;
+
+        public int InvoiceListCount { get; private set; }
         
         public ViewCustomers()
         {
@@ -51,29 +54,18 @@ namespace Invoice_Free
 
         private void CreateCustomersList()
         {
-           _customers = new ObservableCollection<Customer>();
+            _customers = App.CUSTOMERS;
+            if (_customers.Count < 1)
+            {
+                NoCustomerText.Visibility = Visibility.Visible;
+                CustomersPanel.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                CustomersPanel.ItemsSource = _customers;
+            }
 
-             string CustomerJsonFile = File.ReadAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json");
-             JSONNode customersData = JSONNode.Parse(CustomerJsonFile);
-             foreach (JSONNode item in customersData)
-             {
-
-                 Debug.WriteLine(item["Name"]);
-                Customer Obj = new()
-                 {
-                     CustomerName = item["Name"],
-                     Email = item["Email"],
-                     Contact = item["Contact"],
-                     Address = item["Address"],
-                     VatOrTax = item["VatOrTax"],
-                     ContactPerson = item["ContactPerson"]
-                };
-                _customers.Add(Obj);
-             }
-
-            CustomersPanel.ItemsSource = _customers;
-
-             CustomersPanel.UpdateLayout();
+            CustomersPanel.UpdateLayout();
         }
 
         public void SelectCustomer_OnClick(object sender, ItemClickEventArgs e)

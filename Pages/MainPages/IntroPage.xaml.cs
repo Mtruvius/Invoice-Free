@@ -86,40 +86,95 @@ namespace Invoice_Free
         }
 
 
-        private async void SelectCompany_OnClick(object sender, ItemClickEventArgs e)
+        private void SelectCompany_OnClick(object sender, ItemClickEventArgs e)
         {
-            CompanyListViewItem clickedItem = (CompanyListViewItem)e.ClickedItem;            
-            StorageFolder CompaniesFolder = await App.PublisherFolder.GetFolderAsync("Companies");
-            StorageFolder companyFolder = await CompaniesFolder.GetFolderAsync(clickedItem.CompanyName);
-            IReadOnlyList<StorageFile> theCompany = await companyFolder.GetFilesAsync();
-            JSONNode companyInfo; 
-            foreach (var item in theCompany)
+            CompanyListViewItem clickedItem = (CompanyListViewItem)e.ClickedItem;
+            string _PathToCompanyFolder = App.PathToCompanies + "\\" + clickedItem.CompanyName;            
+            string CompanyData = File.ReadAllText(_PathToCompanyFolder + "\\" + clickedItem.CompanyName + ".json");
+
+            JSONNode companyInfo = JSONNode.Parse(CompanyData);
+
+            Company company = new Company()
             {
-                if (item.FileType == ".json")
-                {
-                    Debug.WriteLine("FILE FOUND");
-                    string text = File.ReadAllText(companyFolder.Path +"\\"+ clickedItem.CompanyName + ".json");                                      
-                    companyInfo = JSONNode.Parse(text);
-
-                    Company company = new Company()
-                    {
-                        CompanyName = clickedItem.CompanyName,
-                        CompanyLogo = clickedItem.CompanyLogo,
-                        Contact = companyInfo[0]["Contact"],
-                        Email = companyInfo[0]["Email"],
-                        Address = companyInfo[0]["Address"],
-                        RegNo = companyInfo[0]["RegNo"],
-                        VatOrTax = companyInfo[0]["VatOrTax"],
-                        ContactPerson = companyInfo[0]["ContactPerson"],
-                    };
-
-                    this.Frame.Navigate(typeof(MainPage), company);
-                }
-            }
+                CompanyName = clickedItem.CompanyName,
+                CompanyLogo = clickedItem.CompanyLogo,
+                Contact = companyInfo[0]["Contact"],
+                Email = companyInfo[0]["Email"],
+                Address = companyInfo[0]["Address"],
+                RegNo = companyInfo[0]["RegNo"],
+                VatOrTax = companyInfo[0]["VatOrTax"],
+                ContactPerson = companyInfo[0]["ContactPerson"],
+                LastInvoiceNo = companyInfo[0]["LastInvNo"]
+            };
+            App.companyActive = company;
+            CreateCustomersList();
+            CreateProductsList();
+            this.Frame.Navigate(typeof(MainPage));           
 
             Debug.WriteLine(clickedItem.CompanyName);
-            
-            
+
+        }
+
+        private void CreateProductsList()
+        {
+            App.PathToProducts = App.PathToCompanies + App.companyActive.CompanyName + "\\products.json";
+            string ProductsJsonFile;
+            ProductsJsonFile = File.ReadAllText(App.PathToProducts);
+            JSONNode products = JSONNode.Parse(ProductsJsonFile);
+            foreach (JSONNode product in products)
+            {
+                Product pro = new()
+                {
+                    Catagory = product["Catagory"],
+                    Name = product["Name"],
+                    Description = product["Description"],
+                    Cost = product["Cost"],
+                    Price = product["Price"],
+                    IsTaxable = product["IsTaxable"]
+                    
+                };
+                App.PRODUCTS.Add(pro);
+            }
+
+            Debug.WriteLine("Products COUNT: " + App.PRODUCTS.Count);
+        
+        }
+
+        private void CreateCustomersList()
+        {
+            App.PathToCustomers = App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json";
+            string CustomerJsonFile;
+            CustomerJsonFile = File.ReadAllText(App.PathToCustomers);
+            JSONNode customersData = JSONNode.Parse(CustomerJsonFile);
+            foreach (JSONNode customer in customersData)
+            {
+                JSONNode customerInvoices = JSONNode.Parse(customer["Invoices"]);
+                List<InvoiceClass> invoicesList = new List<InvoiceClass>();
+                int InvoiceListCount = invoicesList.Count;
+                foreach (JSONNode invoice in customerInvoices)
+                {
+                    InvoiceClass inv = new()
+                    {
+                        Number = invoice["Number"],
+                    };
+                    invoicesList.Add(inv);
+                }
+
+                Customer Obj = new()
+                {
+                    CustomerName = customer["Name"],
+                    Email = customer["Email"],
+                    Contact = customer["Contact"],
+                    Address = customer["Address"],
+                    VatOrTax = customer["VatOrTax"],
+                    ContactPerson = customer["ContactPerson"],
+                    CustomerInvoices = invoicesList,
+                    InvoiceCount = InvoiceListCount
+                };
+                App.CUSTOMERS.Add(Obj);
+            }
+
+            Debug.WriteLine("CUSTOMER COUNT: " + App.CUSTOMERS.Count);
         }
     }
 

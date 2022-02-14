@@ -2,15 +2,28 @@
     x:Class="Invoice_Free.CustomerInvoicesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Invoice_Free.Pages.ViewPages"
+    xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock Text="No invoices to display." HorizontalAlignment="Center" FontSize="22" Margin="0,20,0,0"/>
-        <!--<ListView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <TextBlock x:Name="comp_pend" Text="COMPLETE" FontSize="16" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center"/>
+                <Button Grid.Row="0" Height="40" Width="40"  CornerRadius="90,90,90,90" FontFamily="Segoe MDL2 Assets" Content="&#59152;" FontWeight="ExtraBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="DarkOliveGreen" HorizontalAlignment="right" Margin="0,0,40,0" ToolTipService.ToolTip="Add Invoice" Click="AddInvoice_OnClick"/>
+            </Grid>
+            <TextBlock x:Name="NoInvoiceText" Text="No invoices to display." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Margin="0,9,0,0" Grid.Row="2" Grid.RowSpan="2"/>
+
+            <ListView x:Name="InvoiceList" Grid.Row="2" Grid.RowSpan="2">
+                <ListViewItem Content="Invoice Content" HorizontalAlignment="Stretch" Background="CadetBlue"/>
+            </ListView>
+            <!--<ListView>
             <ListView x:Name="CustomersPanel" ItemsSource="{x:Bind _customers}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.Row="2" Grid.ColumnSpan="2" ItemClick="SelectCustomer_OnClick"  IsItemClickEnabled="True">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -58,5 +71,6 @@
             </ListView>
 
         </ListView>-->
+        </Grid>
     </Grid>
 </Page>

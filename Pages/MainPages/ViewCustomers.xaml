@@ -43,7 +43,7 @@
                     </DataTemplate>                    
                 </ComboBox.ItemTemplate>
             </ComboBox>
-
+            <TextBlock x:Name="NoCustomerText"  Text="No customers to display." Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Visibility="Collapsed"/>
             <ListView x:Name="CustomersPanel" ItemsSource="{x:Bind _customers}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.Row="2" Grid.ColumnSpan="2" ItemClick="SelectCustomer_OnClick"  IsItemClickEnabled="True">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -77,8 +77,8 @@
                                             <TextBlock Text="{x:Bind Contact}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Contact Person: " Margin="0,0,5,0" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}"/>
-                                            <TextBlock Text="{x:Bind ContactPerson}"/>
+                                            <TextBlock Text="Invoices: " Margin="0,0,5,0" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            <TextBlock Text="{x:Bind InvoiceCount}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ToolTipService.ToolTip>

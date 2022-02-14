@@ -13,6 +13,8 @@ namespace Invoice_Free
         public string Email;
         public string Address;
         public string VatOrTax;
-        public string ContactPerson;      
+        public string ContactPerson;
+        public int InvoiceCount;
+        public List<InvoiceClass> CustomerInvoices;
     }
 }

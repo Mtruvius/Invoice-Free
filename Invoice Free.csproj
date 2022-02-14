@@ -116,17 +116,27 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Pages\MainPages\AddCompany.xaml.cs">
-      <DependentUpon>AddCompany.xaml</DependentUpon>
+    <Compile Include="Pages\MainPages\CreateProduct.xaml.cs">
+      <DependentUpon>CreateProduct.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MainPages\AddCustomer.xaml.cs">
-      <DependentUpon>AddCustomer.xaml</DependentUpon>
+    <Compile Include="Pages\MainPages\CreateCompany.xaml.cs">
+      <DependentUpon>CreateCompany.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MainPages\AddInvoice.xaml.cs">
-      <DependentUpon>AddInvoice.xaml</DependentUpon>
+    <Compile Include="Pages\MainPages\CreateCustomer.xaml.cs">
+      <DependentUpon>CreateCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MainPages\CreateInvoice.xaml.cs">
+      <DependentUpon>CreateInvoice.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MainPages\ViewProducts.xaml.cs">
+      <DependentUpon>ViewProducts.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scripts\Classes\Product.cs" />
+    <Compile Include="Pages\ViewPages\CustomerPendingView.xaml.cs">
+      <DependentUpon>CustomerPendingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ViewPages\CustomerInvoicesView.xaml.cs">
       <DependentUpon>CustomerInvoicesView.xaml</DependentUpon>
@@ -134,6 +144,7 @@
     <Compile Include="Pages\ViewPages\CustomerViewPage.xaml.cs">
       <DependentUpon>CustomerViewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scripts\Classes\InvoiceClass.cs" />
     <Compile Include="Scripts\Helpers\BoolToObjectConverter.cs" />
     <Compile Include="Scripts\Classes\Company.cs" />
     <Compile Include="Scripts\Classes\Customer.cs" />
@@ -144,8 +155,8 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pages\MainPages\ShowStats.xaml.cs">
-      <DependentUpon>ShowStats.xaml</DependentUpon>
+    <Compile Include="Pages\MainPages\ViewStats.xaml.cs">
+      <DependentUpon>ViewStats.xaml</DependentUpon>
     </Compile>
     <Compile Include="Scripts\Plugins\SimpleJSON.cs" />
     <Compile Include="Scripts\Plugins\SmartTextColorBasedOnAccentTypeConverter.cs" />
@@ -164,13 +175,18 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\AddCustomer.png" />
     <Content Include="Assets\Icons\AddInvoice.png" />
+    <Content Include="Assets\Icons\addProduct.png" />
+    <Content Include="Assets\Icons\add_hover.png" />
     <Content Include="Assets\Icons\Delete.png" />
+    <Content Include="Assets\Icons\delete_hover.png" />
     <Content Include="Assets\Icons\Edit.png" />
     <Content Include="Assets\Icons\Invoice_pending.png" />
     <Content Include="Assets\Icons\ViewCustomers.png" />
     <Content Include="Assets\Icons\ViewInvoices.png" />
+    <Content Include="Assets\Icons\ViewProducts.png" />
     <Content Include="Assets\Icons\ViewStats.png" />
     <Content Include="Assets\logo.png" />
     <Content Include="Properties\Default.rd.xml" />
@@ -187,15 +203,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Pages\MainPages\AddCompany.xaml">
+    <Page Include="Pages\MainPages\CreateProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPages\AddCustomer.xaml">
+    <Page Include="Pages\MainPages\CreateCompany.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPages\AddInvoice.xaml">
+    <Page Include="Pages\MainPages\CreateCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\MainPages\CreateInvoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\MainPages\ViewProducts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ViewPages\CustomerPendingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -207,7 +235,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\MainPages\ShowStats.xaml">
+    <Page Include="Pages\MainPages\ViewStats.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -229,9 +257,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FontAwesome5">
-      <Version>2.1.6</Version>
-    </PackageReference>
     <PackageReference Include="LiveCharts.Uwp">
       <Version>0.8.0</Version>
     </PackageReference>

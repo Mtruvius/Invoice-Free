@@ -17,5 +17,6 @@ namespace Invoice_Free
         public string VatOrTax;
         public string RegNo;
         public string ContactPerson;
+        public string LastInvoiceNo;
     }
 }

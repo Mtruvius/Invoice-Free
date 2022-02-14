@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI;
 using System.Diagnostics;
 using Windows.UI.Xaml.Media.Animation;
+using SimpleJSON;
 
 
 
@@ -30,24 +31,27 @@ namespace Invoice_Free
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static Grid Popup_Panel { get; set; }
+        public static StackPanel Popup_Content { get; set; }
+        private CreateProduct _newProduct;
         private ApplicationView appView;
-        public Frame MainContentFrame
-        {
-            get { return ContentFrame; }
-        }
+        public Frame MainContentFrame { get { return ContentFrame; } }
+        public static MainPage MAIN;
         public MainPage()
         {
             this.InitializeComponent();
             //Window.Current.SizeChanged += Window_SizeChanged;
             //ContentFrame.Navigate(typeof(AddCompany));
+            MAIN = this;
+            LoadFirstPage();
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+       /* protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             App.companyActive = (Company)e.Parameter;
 
             LoadFirstPage();
-        }
+        }*/
 
         private void LoadFirstPage()
         {
@@ -56,7 +60,7 @@ namespace Invoice_Free
                 if (item is NavigationViewItem && item.Content.ToString() == "Stats")
                 {
                     MainPageNavigation.SelectedItem = item;
-                    ContentFrame.Navigate(typeof(ShowStats));
+                    ContentFrame.Navigate(typeof(ViewStats));
                 }
             }
         }
@@ -67,7 +71,7 @@ namespace Invoice_Free
             appView.TryEnterFullScreenMode();
         }
 
-        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        public void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             
             FrameNavigationOptions navOptions = new FrameNavigationOptions();
@@ -82,7 +86,7 @@ namespace Invoice_Free
             switch (item.Name)
             {
                 case "StatsContent":                    
-                    ContentFrame.NavigateToType(typeof(ShowStats), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);                    
                     break;
 
                 case "ViewCustomersContent":
@@ -94,21 +98,23 @@ namespace Invoice_Free
                     break;
 
                 case "AddCustomersContent":
-                    ContentFrame.NavigateToType(typeof(AddCustomer), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);                    
                     break;
 
                 case "AddInvoicesContent":
-                    ContentFrame.NavigateToType(typeof(AddInvoice), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(CreateInvoice), null, navOptions);                    
                     break;
-                default:
-                    ContentFrame.NavigateToType(typeof(ShowStats), null, navOptions);
+                
+                case "ViewProductContent":
+                    ContentFrame.NavigateToType(typeof(ViewProducts), null, navOptions);
                     break;
-
-
             }
             
         }
 
+        
+
+        
         public void PageView_ItemInvoled(string pageViewName)
         {
             ContentFrame = new Frame();
@@ -137,10 +143,24 @@ namespace Invoice_Free
                     break;
 
                 case "InvoiceEdit":
-                    ContentFrame.NavigateToType(typeof(AddCustomer), null, navOptions);
+                    ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
                     break;
-
             }
         }
+
+        private void ShowAddProducts(object sender, TappedRoutedEventArgs e)
+        {
+            Color redColor = Color.FromArgb(170, 0, 0, 0);
+            PopUpPanel.Background = new SolidColorBrush(redColor);
+            _newProduct = new CreateProduct();           
+            PopUpContent.Children.Add(_newProduct);
+            PopUpContent.Padding = new Thickness(10);
+            
+            PopUpPanel.Visibility = Visibility.Visible;
+            Popup_Panel = PopUpPanel;
+            Popup_Content = PopUpContent; 
+        }
+
+        
     }
 }

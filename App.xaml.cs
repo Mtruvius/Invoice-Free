@@ -26,7 +26,9 @@ using Windows.Storage;
 using System.Diagnostics;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-
+using Windows.UI.Xaml.Media.Animation;
+using SimpleJSON;
+using System.Collections.ObjectModel;
 
 namespace Invoice_Free
 {
@@ -37,10 +39,15 @@ namespace Invoice_Free
     {
         public  static StorageFolder PublisherFolder { get; private set; }
         public static string PathToCompanies { get; private set; }
+        public static string PathToCustomers { get; set; }
+        public static string PathToProducts { get; set; }
 
         public delegate void OnImageSetected(BitmapImage Image, StorageFile file);
         public static event OnImageSetected ImageSelected;
         public static Company companyActive;
+
+        public static ObservableCollection<Customer> CUSTOMERS { get; set; }
+        public static ObservableCollection<Product> PRODUCTS { get; set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -53,9 +60,14 @@ namespace Invoice_Free
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
             PublisherFolder = ApplicationData.Current.GetPublisherCacheFolder("InvoiceFree");
             PathToCompanies = PublisherFolder.Path + "\\Companies\\";
+            CUSTOMERS = new ObservableCollection<Customer>();
+            PRODUCTS = new ObservableCollection<Product>();
+            
         }
 
         
+
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -91,7 +103,7 @@ namespace Invoice_Free
                     // configuring the new page by passing required information as a navigation
                     // parameter
 
-                    //rootFrame.Navigate(typeof(CustomerViewPage));
+                    //rootFrame.Navigate(typeof(CreateProduct));
                     GetFirstPage();
                         
                 }
@@ -275,7 +287,7 @@ namespace Invoice_Free
                     rootFrame.Navigate(typeof(IntroPage));
                     break;
                 case "AddCompany":                    
-                    rootFrame.Navigate(typeof(AddCompany));
+                    rootFrame.Navigate(typeof(CreateCompany));
                     break;
                 case "Main":
                     rootFrame.Navigate(typeof(MainPage));
@@ -285,12 +297,36 @@ namespace Invoice_Free
                     break;
                 default:
                     break;
-            }
-            
-            
+            }        
         }
 
-
+        public static FrameNavigationOptions AnimatePage(string direction)
+        {
+            FrameNavigationOptions navOptions = new FrameNavigationOptions();
+            if (direction == "left")
+            {
+                navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
+                {
+                    Effect = SlideNavigationTransitionEffect.FromLeft
+                };
+            }
+            else if (direction == "right")
+            {
+                navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
+                {
+                    Effect = SlideNavigationTransitionEffect.FromRight
+                };
+            }
+            else
+            {
+                navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
+                {
+                    Effect = SlideNavigationTransitionEffect.FromBottom
+                };
+            }
+            navOptions.IsNavigationStackEnabled = false;
+            return navOptions;
+        }
         #endregion
     }
 }

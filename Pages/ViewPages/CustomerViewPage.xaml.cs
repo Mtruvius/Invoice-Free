@@ -1,5 +1,14 @@
-﻿using System;
+﻿using SimpleJSON;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -11,13 +20,18 @@ namespace Invoice_Free
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CustomerViewPage : Page
+    public sealed partial class CustomerViewPage : Page, INotifyPropertyChanged
     {
+        private Customer _selectedCustomer;
+
+        
+
         public string CustomerName { get; private set; }
         public string CustomerEmail { get; private set; }
         public string CustomerContact { get; private set; }
         public string CustomerAddress { get; private set; }
         public string CustomerContactPerson { get; private set; }
+        public List<InvoiceClass> CustomerInvoices { get; private set; }
 
         public CustomerViewPage()
         {
@@ -41,7 +55,7 @@ namespace Invoice_Free
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Customer _selectedCustomer = (Customer)e.Parameter;
+            _selectedCustomer = (Customer)e.Parameter;
 
             LoadCustomer(_selectedCustomer);
         }
@@ -53,7 +67,7 @@ namespace Invoice_Free
                 if (item is NavigationViewItem && item.Content.ToString() == "Complete")
                 {
                     CustomerNavigation.SelectedItem = item;
-                    InvoicesContentFrame.Navigate(typeof(CustomerInvoicesView));
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), _selectedCustomer, null);
                 }
             }
             CustomerName = selectedCustomer.CustomerName;
@@ -61,6 +75,8 @@ namespace Invoice_Free
             CustomerContact = selectedCustomer.Contact;
             CustomerAddress = selectedCustomer.Address;
             CustomerContactPerson = selectedCustomer.ContactPerson;
+            CustomerInvoices = selectedCustomer.CustomerInvoices;
+            OnPropertyChanged(string.Empty);
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -73,16 +89,16 @@ namespace Invoice_Free
             };
             navOptions.IsNavigationStackEnabled = false;
 
-            NavigationViewItemBase item = args.InvokedItemContainer;
+            NavigationViewItemBase item = args.InvokedItemContainer;           
 
             switch (item.Name)
             {
                 case "Complete":
-                    InvoicesContentFrame.NavigateToType(typeof(ShowStats), null, navOptions);
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), _selectedCustomer, navOptions);
                     break;
 
                 case "Pending":
-                    InvoicesContentFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerPendingView), _selectedCustomer, navOptions);
                     break;
                 case "Edit":
                     EditCustomer();
@@ -91,18 +107,90 @@ namespace Invoice_Free
                     DeleteCustomer();
                     break;
                 default:
-                    InvoicesContentFrame.NavigateToType(typeof(ShowStats), null, navOptions);
+                    InvoicesContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
                     break;
             }
         }
 
-        private void EditCustomer()
+        private async void EditCustomer()
         {
-            Debug.WriteLine("The customer is in edit mode");
+            Debug.WriteLine("The customer " + _selectedCustomer.CustomerName + " is in edit mode");
+
+            await EditingPanel.ShowAsync();
         }
-        private void DeleteCustomer()
+
+        private void CustomerEditComplete(ContentDialog dialog, ContentDialogButtonClickEventArgs args)
         {
-            Debug.WriteLine("The customer is being deleted");
+            if (!string.IsNullOrEmpty(EmailInput.Text))
+            {
+                _selectedCustomer.Email = EmailInput.Text;
+                EmailInput.Text = string.Empty;
+            }
+            if (!string.IsNullOrEmpty(ContactPersonInput.Text))
+            {
+                _selectedCustomer.ContactPerson = ContactPersonInput.Text;
+                ContactPersonInput.Text = string.Empty;
+            }
+            if (!string.IsNullOrEmpty(Number.Text))
+            {
+                _selectedCustomer.Contact  = Number.Text;
+                Number.Text = string.Empty;
+            }
+            if (!string.IsNullOrEmpty(Address.Text))
+            {
+                _selectedCustomer.Address = Address.Text;
+                Address.Text = string.Empty;
+            }
+            LoadCustomer(_selectedCustomer);            
+        }
+
+        private async void DeleteCustomer()
+        {
+            string CustomerJsonFile = File.ReadAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json");
+            JSONNode customersData = JSONNode.Parse(CustomerJsonFile);
+
+            foreach (JSONNode item in customersData)
+            {                
+                if (item["Name"] == _selectedCustomer.CustomerName)
+                {
+                    var dialog = new MessageDialog("Are you sure you want to delete customer?", "Delete " + _selectedCustomer.CustomerName + "?");
+                    var confirmCommand = new UICommand("Yes");
+                    var cancelCommand = new UICommand("No");
+                    dialog.Commands.Add(confirmCommand);
+
+                    dialog.Commands.Add(cancelCommand);
+
+                    if (await dialog.ShowAsync() == cancelCommand)
+                    {
+
+                    }
+                    else
+                    {
+                        customersData.Remove(item);
+                        //App.AnimatePage("left");
+                        FrameNavigationOptions navOptions = new FrameNavigationOptions();
+                        navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
+                        {
+                            Effect = SlideNavigationTransitionEffect.FromLeft
+                        };
+                        navOptions.IsNavigationStackEnabled = false;
+
+                        File.WriteAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json", customersData);
+                        CustomerViewFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
+                        CustomerViewFrame.UpdateLayout();
+                    }
+                    break;
+                }
+               
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            Debug.WriteLine("OnPropertyChanged");
+            // Raise the PropertyChanged event, passing the name of the property whose value has changed.
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
