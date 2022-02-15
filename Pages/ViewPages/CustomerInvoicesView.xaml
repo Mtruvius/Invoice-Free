@@ -16,7 +16,17 @@
             </Grid.RowDefinitions>
             <Grid>
                 <TextBlock x:Name="comp_pend" Text="COMPLETE" FontSize="16" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center"/>
-                <Button Grid.Row="0" Height="40" Width="40"  CornerRadius="90,90,90,90" FontFamily="Segoe MDL2 Assets" Content="&#59152;" FontWeight="ExtraBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Background="DarkOliveGreen" HorizontalAlignment="right" Margin="0,0,40,0" ToolTipService.ToolTip="Add Invoice" Click="AddInvoice_OnClick"/>
+                <Image x:Name="AddIcon"                                     
+                                   Stretch="Uniform" 
+                                   Margin="10,0,0,0" 
+                                   Grid.Column ="2"                                    
+                                   Width="30"
+                                   Height="30"
+                                   PointerPressed="AddInvoice_OnClick"
+                                   PointerEntered ="AddInvoice_OnHover"
+                                   PointerExited="AddInvoice_OnHover"
+                                   ToolTipService.ToolTip="Add Invoice"/>
+                
             </Grid>
             <TextBlock x:Name="NoInvoiceText" Text="No invoices to display." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Margin="0,9,0,0" Grid.Row="2" Grid.RowSpan="2"/>
 

@@ -184,6 +184,7 @@
     <Content Include="Assets\Icons\delete_hover.png" />
     <Content Include="Assets\Icons\Edit.png" />
     <Content Include="Assets\Icons\Invoice_pending.png" />
+    <Content Include="Assets\Icons\PDFExport.png" />
     <Content Include="Assets\Icons\ViewCustomers.png" />
     <Content Include="Assets\Icons\ViewInvoices.png" />
     <Content Include="Assets\Icons\ViewProducts.png" />

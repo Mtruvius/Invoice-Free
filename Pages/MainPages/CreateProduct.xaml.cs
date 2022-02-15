@@ -32,20 +32,10 @@ namespace Invoice_Free
         public CreateProduct()
         {
             this.InitializeComponent();
-            GetAssets();
-        }
-
-        private async void GetAssets()
-        {
-            var assetFolder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
-            var addFile = await assetFolder.GetFileAsync("Icons\\add.png");
-            var addHoverFile = await assetFolder.GetFileAsync("Icons\\add_hover.png");
-
-            addBtnNormal = new BitmapImage(new Uri(addFile.Path));
-            addBtnHover = new BitmapImage(new Uri(addHoverFile.Path));
-
+            addBtnNormal = App.addBtnNormal;
+            addBtnHover = App.addBtnHover;
             AddIcon.Source = addBtnNormal;
-        }
+        }       
 
         private void AddBtn_PointerHover(object sender, PointerRoutedEventArgs e)
         {

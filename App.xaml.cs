@@ -49,6 +49,8 @@ namespace Invoice_Free
         public static ObservableCollection<Customer> CUSTOMERS { get; set; }
         public static ObservableCollection<Product> PRODUCTS { get; set; }
 
+        public static BitmapSource addBtnNormal;
+        public static BitmapSource addBtnHover;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -62,11 +64,19 @@ namespace Invoice_Free
             PathToCompanies = PublisherFolder.Path + "\\Companies\\";
             CUSTOMERS = new ObservableCollection<Customer>();
             PRODUCTS = new ObservableCollection<Product>();
-            
+            GetAssets();
         }
 
-        
 
+        private async void GetAssets()
+        {
+            var assetFolder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
+            var addFile = await assetFolder.GetFileAsync("Icons\\add.png");
+            var addHoverFile = await assetFolder.GetFileAsync("Icons\\add_hover.png");
+
+            addBtnNormal = new BitmapImage(new Uri(addFile.Path));
+            addBtnHover = new BitmapImage(new Uri(addHoverFile.Path));            
+        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
