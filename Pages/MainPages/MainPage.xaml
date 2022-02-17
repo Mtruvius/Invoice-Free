@@ -5,17 +5,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:Custom="using:Microsoft.UI.Xaml.Controls" 
+     
     mc:Ignorable="d"
     Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 
     <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
         <Grid.RowDefinitions>
-            <RowDefinition Height="131*"/>
-            <RowDefinition Height="369*"/>
+            <RowDefinition Height="38*"/>
+            <RowDefinition Height="145*"/>
+            <RowDefinition Height="817*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top">
+
+        <!--     <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top" Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1419*"/>
                 <ColumnDefinition Width="135*"/>
@@ -28,12 +30,12 @@
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
                                 <ResourceDictionary x:Key="Dark">
-                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
-                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                                    
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                 </ResourceDictionary>
                                 <ResourceDictionary x:Key="Light">
-                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    
                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                 </ResourceDictionary>
@@ -50,12 +52,12 @@
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
                                 <ResourceDictionary x:Key="Dark">
-                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    
                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                 </ResourceDictionary>
                                 <ResourceDictionary x:Key="Light">
-                                    <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
+                                    
                                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
                                     <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                                 </ResourceDictionary>
@@ -66,9 +68,58 @@
             </StackPanel>
 
         </Grid>
+-->
+        <Image x:Name="Company_Logo" Grid.Row="1" Width="228" HorizontalAlignment="Left" Margin="50,15,0,9" Source="{x:Bind  local:App.companyActive.CompanyLogo}"/>
+        <TextBlock x:Name="Company_Name" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="1" Text="{x:Bind local:App.companyActive.CompanyName}" TextWrapping="NoWrap"  VerticalAlignment="Center" Height="119" Width="782" FontSize="75" />
+        <Rectangle Height="1" Fill="{ThemeResource SystemAccentColor}" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <NavigationView x:Name="MainPageNavigation" PaneTitle="Menu" Grid.Row="2" ItemInvoked="NavView_ItemInvoked" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Stats" x:Name="StatsContent" IsSelected="True">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/ViewStats.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Customers" x:Name="ViewCustomersContent" >
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/ViewCustomers.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Invoices" x:Name="ViewInvoicesContent" >
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/ViewInvoices.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Products" x:Name="ViewProductContent" >
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/ViewProducts.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItemSeparator></NavigationViewItemSeparator>
+                <NavigationViewItem Content="Create Customer" x:Name="AddCustomersContent" >
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/AddCustomer.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Create Invoice" x:Name="AddInvoicesContent" >
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/AddInvoice.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Create Product" x:Name="AddProductContent" Tapped="ShowAddProducts">                    
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/addProduct.png"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <NavigationView.Content>
+                <Frame x:Name="ContentFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" ></Frame>
+            </NavigationView.Content>
+        </NavigationView>
+        <Grid x:Name="PopUpPanel" Visibility="Collapsed" Grid.RowSpan="3" Grid.ColumnSpan="2">
+            <StackPanel x:Name="PopUpContent" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{ThemeResource AppBarBackgroundThemeBrush}" MinWidth="680">
 
-
-
-
-    </Grid>
+            </StackPanel>
+        </Grid>
+        
+    </Grid>    
 </Page>

@@ -24,14 +24,14 @@ namespace Invoice_Free
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AddCompany : Page
+    public sealed partial class CreateCompany : Page
     {
         private string _CompanyName;        
         private Image _CompanyLogo;
         private StorageFile _chosenImage;
         private int _detailsTracker = 0;
 
-        public AddCompany()
+        public CreateCompany()
         {
             this.InitializeComponent();
             App.ImageSelected += ImageSelected;
@@ -77,7 +77,18 @@ namespace Invoice_Free
             CompanyObj.Add("Address", companyAddress.Text);
             CompanyObj.Add("VatOrTax", VatTax.Text);
             CompanyObj.Add("RegNo", CompanyReg.Text);
-            CompanyObj.Add("Person", ContactPerson.Text);
+            CompanyObj.Add("ContactPerson", ContactPerson.Text);
+            CompanyObj.Add("LastInvNo", 0);
+            CompanyObj.Add("PriorRevenue", GetNewRevenueArray());
+            CompanyObj.Add("PreviousRevenue", GetNewRevenueArray());
+            CompanyObj.Add("Revenue", GetNewRevenueArray());
+            CompanyObj.Add("CurrentYear", DateTime.Now.Year);
+            CompanyObj.Add("CompleteInvoices", 0);
+            CompanyObj.Add("PendingInvoices", 0);
+            CompanyObj.Add("TotalQuotes", 0);
+            CompanyObj.Add("TotalCustomers", 0);
+            
+            
 
             CompanyDetails.Add("Details", CompanyObj);
 
@@ -102,9 +113,29 @@ namespace Invoice_Free
                 RegNo = CompanyReg.Text,
                 VatOrTax = VatTax.Text,
                 ContactPerson = ContactPerson.Text,
+                LastInvoiceNo = 0,
+                PriorRevenue = new float[]{0,0,0,0,0,0,0,0,0,0,0,0 },
+                PreviousRevenue = new float[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Revenue = new float[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                CurrentYear = DateTime.Now.Year,
+                CompleteInvoices = 0,
+                PendingInvoices = 0,
+                TotalQuotes = 0,
+                TotalCustomers = 0
             };
 
+            App.companyActive = company;
             this.Frame.Navigate(typeof(MainPage), company);
+        }
+
+        private JSONNode GetNewRevenueArray()
+        {
+            JSONArray intArray = new JSONArray();
+            for (int i = 0; i < 12; i++)
+            {
+                intArray.Add(0);
+            }
+            return intArray;
         }
 
         private void DetailsDisplayHandler(int v)

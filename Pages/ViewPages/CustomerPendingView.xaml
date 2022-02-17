@@ -1,0 +1,103 @@
+﻿<Page
+    x:Class="Invoice_Free.CustomerPendingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Invoice_Free"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock x:Name="comp_pend" Text="PENDING" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image x:Name="AddIcon"                                     
+                        Stretch="Uniform" 
+                        Margin="0,0,55,0" 
+                        HorizontalAlignment="Right"                                    
+                        Width="30"
+                        Height="30"
+                        PointerPressed="AddInvoice_OnClick"
+                        PointerEntered ="AddInvoice_OnHover"
+                        PointerExited="AddInvoice_OnHover"
+                        ToolTipService.ToolTip="Add Invoice"/>
+
+            </Grid>
+
+            <Grid Grid.Row="1" Background="{ThemeResource SystemAccentColor}" Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="Auto" MinWidth="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" MinWidth="60"/>
+                    <ColumnDefinition Width="Auto" MinWidth="72"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Date" Grid.Column="0" VerticalAlignment="Center" Padding="10,0"/>
+                <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="0"/>
+                <TextBlock Text="Invoice number" Grid.Column="1" VerticalAlignment="Center" Padding="10,0"/>
+                <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="1"/>
+                <TextBlock Text="Products" Grid.Column="2" VerticalAlignment="Center" Padding="10,0"/>
+                <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="2"/>
+                <TextBlock Text="Total" Grid.Column="3" VerticalAlignment="Center" Padding="10,0"/>
+            </Grid>
+
+            <TextBlock x:Name="NoInvoiceText" Text="No pending invoices." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Margin="0,9,0,0" Grid.Row="2" Grid.RowSpan="2" />
+
+            <ListView x:Name="InvoiceList" Grid.Row="2" Grid.RowSpan="2" ItemsSource="{x:Bind PendingInvoices}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.ColumnSpan="2" ItemClick="PendingInvoiceList_ItemClick"  IsItemClickEnabled="True" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="10,0"/>
+                        <Setter Property="BorderBrush" Value="{ThemeResource AppBarBackgroundThemeBrush}"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:InvoiceClass">
+                        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition  Width="Auto" MinWidth="87.5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" MinWidth="75"/>
+                                <ColumnDefinition Width="Auto" MinWidth="60"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Date}" Grid.Column="0" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center"/>
+                            <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="0" Margin="0,-20"/>
+                            <TextBlock Text="{x:Bind Number}" Grid.Column="1" VerticalAlignment="Center" Padding="10,0" />
+                            <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="1" Margin="0,-20"/>
+                            <TextBlock Text="{x:Bind InvoicedProducts.Count}" Grid.Column="2" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center"/>
+                            <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="2" Margin="0,-20"/>
+                            <TextBlock Text="{x:Bind InvoiceTotal}" Grid.Column="3" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center"/>
+
+                        </Grid>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>        
+        <ContentDialog x:Name="PendingInvoiceClickPanel" PrimaryButtonText="Done">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>                
+                <TextBlock Text="Payment Received?" Grid.Row="0" HorizontalAlignment="Center" FontSize="22"/>
+                <Grid Width="55" HorizontalAlignment="Center" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>                    
+                    <CheckBox x:Name="IsPendingPaid" Grid.Column="0" Grid.ColumnSpan="2"/>
+                    <TextBlock Text="Yes" Grid.ColumnSpan="2" Margin="30,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Grid>
+            
+
+        </ContentDialog>
+    </Grid>
+</Page>

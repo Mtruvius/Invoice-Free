@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="Invoice_Free.CreateCustomer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Invoice_Free"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style TargetType="TextBlock" x:Key="RequiredTemplate">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="red"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Text" Value="* Field is required"/>
+        </Style>
+    </Page.Resources>
+    <FlyoutBase.AttachedFlyout>
+        <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
+            <MenuFlyout.Items>
+                <MenuFlyoutItem x:Name="ErrorFlyout"/>
+            </MenuFlyout.Items>
+        </MenuFlyout>
+    </FlyoutBase.AttachedFlyout>
+    
+    <Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="ADD CUSTOMER" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
+
+
+            <StackPanel x:Name="detailsPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200,100,200,0" Grid.Row="1">
+
+                <TextBox x:Name="customerName" PlaceholderText="Customer Name" Height="35" AutomationProperties.IsRequiredForForm="True" TabNavigation="Local" LostFocus="AddToCustomerClass"/>
+                <TextBlock Style="{StaticResource RequiredTemplate}" />
+
+                <TextBox x:Name="Email"  HorizontalAlignment="Stretch" PlaceholderText="Email Address" TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" AutomationProperties.IsRequiredForForm="True" InputScope="EmailSmtpAddress" LostFocus="AddToCustomerClass"/>
+                <TextBlock Style="{StaticResource RequiredTemplate}"/>
+
+                <TextBox x:Name="Contact"  HorizontalAlignment="Stretch" PlaceholderText="Contact Number" TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" AutomationProperties.IsRequiredForForm="True" InputScope="TelephoneLocalNumber" LostFocus="AddToCustomerClass" Margin="0,0,0,15"/>
+
+                <TextBox x:Name="customerAddress"  HorizontalAlignment="Stretch" PlaceholderText="Phisical Address" TextWrapping="Wrap" Height="35" VerticalContentAlignment="Center" Margin="0,0,0,15" MaxHeight="200" VerticalAlignment="top" AcceptsReturn="True" LostFocus="AddToCustomerClass"/>
+
+                <TextBox x:Name="VatTax"  HorizontalAlignment="Stretch" PlaceholderText="Vat/Tax No." TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,15" InputScope="Number" LostFocus="AddToCustomerClass"/>
+
+                <TextBox x:Name="ContactPerson"  HorizontalAlignment="Stretch" PlaceholderText="Contact Person" TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" LostFocus="AddToCustomerClass" />
+
+                <Button x:Name="AddCustomerBtn" Content="Add Customer" HorizontalAlignment="Center" Margin="0,50,0,0" Click="AddCustomerButton_OnClick">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout x:Name="ButtonFlyout" Placement="Top"  ShowMode="Transient">
+                            <MenuFlyout.Items>
+                                <MenuFlyoutItem x:Name="btnErrorFlyout"/>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        <Frame x:Name="AddCustomerFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2"></Frame>
+    </Grid>
+</Page>

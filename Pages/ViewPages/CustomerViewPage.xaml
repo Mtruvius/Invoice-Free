@@ -1,0 +1,142 @@
+﻿<Page
+    x:Class="Invoice_Free.CustomerViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="749*"/>
+            <ColumnDefinition Width="751*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="163*"/>
+            <RowDefinition Height="837*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="25*" />
+                <RowDefinition Height="167*" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="CUSTOMER" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Height="40" Width="168"/>
+            <TextBlock Text="{x:Bind CustomerName}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="55" Grid.Row="1" Height="66.1" Margin="19.7,0,0,0"/>
+            
+            <StackPanel x:Name="DetailsPanel" HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,20,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ContactPerson:" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" Grid.Row="1" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBlock Text="{x:Bind CustomerContactPerson, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" Grid.Row="1" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Contact:" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" Grid.Row="1" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBlock Text="{x:Bind CustomerContact, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Grid.Row="1"  />                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Email:" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" Grid.Row="1" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBlock Text="{x:Bind CustomerEmail, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" Grid.Row="1"  />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Address:" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" Grid.Row="1" Margin="0,0,5,0" Foreground="Gray"/>
+                    <TextBlock Text="{x:Bind CustomerAddress, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" Grid.Row="1"  />
+                </StackPanel>
+            </StackPanel>
+            
+            <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom"/>
+
+            <Grid Grid.Row="2">
+                <NavigationView x:Name="CustomerNavigation" PaneTitle="Menu" Grid.Row="2" PaneDisplayMode="Top" IsBackButtonVisible="Visible" IsBackEnabled="True" IsSettingsVisible="False" ItemInvoked="NavView_ItemInvoked">
+                    <NavigationView.MenuItems>
+                        <NavigationViewItem Content="Complete" x:Name="Complete" IsSelected="True">
+                            <NavigationViewItem.Icon>
+                                <BitmapIcon UriSource="/Assets/Icons/ViewInvoices.png"/>
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+                        <NavigationViewItem Content="Pending" x:Name="Pending" >
+                            <NavigationViewItem.Icon>
+                                <BitmapIcon UriSource="/Assets/Icons/Invoice_pending.png"/>
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>                        
+                    </NavigationView.MenuItems>
+                    <NavigationView.Content>
+                        <Frame x:Name="InvoicesContentFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" ></Frame>
+                    </NavigationView.Content>
+                    <NavigationView.PaneFooter>
+
+                        <NavigationView x:Name="AdditionalMenu" PaneDisplayMode="Top" IsPaneOpen="True" IsPaneToggleButtonVisible="False" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" HorizontalAlignment="Left" Width="250" Margin="119,0,-40,0" ItemInvoked="NavView_ItemInvoked">
+                            <NavigationView.MenuItems>
+                                <NavigationViewItem Content="Edit" x:Name="Edit" IsSelected="True" ToolTipService.ToolTip="Edit Customer">
+                                    <NavigationViewItem.Icon>
+                                        <BitmapIcon UriSource="/Assets/Icons/Edit.png"/>
+                                    </NavigationViewItem.Icon>
+                                </NavigationViewItem>
+                                <NavigationViewItem Content="Delete" x:Name="Delete" ToolTipService.ToolTip="Delete Customer" >
+                                    <NavigationViewItem.Icon>
+                                        <BitmapIcon UriSource="/Assets/Icons/Delete.png"/>
+                                    </NavigationViewItem.Icon>
+                                </NavigationViewItem>
+                            </NavigationView.MenuItems>
+                        </NavigationView> 
+                        
+                    </NavigationView.PaneFooter>
+                </NavigationView>
+            </Grid>            
+        </Grid>
+        <TextBlock Text="Invoices" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12.7,0,0"/>
+        
+        <Frame x:Name="CustomerViewFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2"></Frame>
+        <ContentDialog x:Name="EditingPanel"
+                       PrimaryButtonText="Accept"
+                       PrimaryButtonClick="CustomerEditComplete"
+                       CloseButtonText="Cancel"
+                       Grid.Row="1"
+                       Grid.ColumnSpan="2"
+                       MinWidth="600" Visibility="Collapsed">
+            <ContentDialog.TitleTemplate>
+                <DataTemplate>
+                    <TextBlock Text="EDITING CUSTOMER" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Bold" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+                </DataTemplate>
+            </ContentDialog.TitleTemplate>
+
+            <StackPanel>
+                <TextBlock FontSize="40" Text="{x:Bind CustomerName}" HorizontalAlignment="Center"/>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="ContactPerson" Text="Contact person" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" Grid.Column="0"/>
+                    <TextBox x:Name="ContactPersonInput" PlaceholderText="{x:Bind CustomerContactPerson}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="0,0,10,0" MinWidth="360"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="Email" Text="Email" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" Grid.Column="0"/>
+                    <TextBox x:Name="EmailInput" PlaceholderText="{x:Bind CustomerEmail}" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,10,0" MinWidth="360"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="Number" Text="Contact Number" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" Grid.Column="0"/>
+                    <TextBox x:Name="NumberInput" PlaceholderText="{x:Bind CustomerContact}" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,10,0" MinWidth="360"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="120"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="Address" Text="Address" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="16" Grid.Column="0"/>
+                    <TextBox x:Name="AddressInput" PlaceholderText="{x:Bind CustomerAddress}" Grid.Column="1" HorizontalAlignment="Left" Margin="0,0,10,0" MinWidth="360" AcceptsReturn="True" TextWrapping="Wrap"/>
+                </Grid>
+            </StackPanel>
+        </ContentDialog>
+    
+    </Grid>
+</Page>
