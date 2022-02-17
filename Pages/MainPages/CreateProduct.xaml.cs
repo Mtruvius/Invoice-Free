@@ -90,18 +90,23 @@ namespace Invoice_Free
             newProduct.Add("Cost", costPrice.Text);
             newProduct.Add("Price", sellingPrice.Text);
             newProduct.Add("IsTaxable", isTaxable.IsChecked);
-
-
             productsDataArray.Add(newProduct);
-
-            Debug.WriteLine("THE TEXT: "+ selectedItem.Content.ToString());
-
             File.WriteAllText(productsPATH, productsDataArray.ToString());
 
-            MainPage.MAIN.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
+            Product theProduct = new()
+            {
+                Name = newProduct["Name"],
+                Description = newProduct["Description"],
+                Catagory = newProduct["Catagory"],
+                Cost = newProduct["Cost"],
+                Price = newProduct["Price"],
+                IsTaxable = newProduct["IsTaxable"]
+            };
+            App.PRODUCTS.Add(theProduct);
 
-             MainPage.Popup_Content.Children.Clear();
-             MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
+            MainPage.MAIN.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
+            MainPage.Popup_Content.Children.Clear();
+            MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
 
         }
 

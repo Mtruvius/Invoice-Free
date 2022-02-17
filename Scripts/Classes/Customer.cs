@@ -8,13 +8,13 @@ namespace Invoice_Free
 {
     public class Customer
     {       
-        public string CustomerName;
+        public string Name;
         public string Contact;
         public string Email;
         public string Address;
         public string VatOrTax;
         public string ContactPerson;
         public int InvoiceCount;
-        public List<InvoiceClass> CustomerInvoices;
+        public List<InvoiceClass> Invoices;
     }
 }

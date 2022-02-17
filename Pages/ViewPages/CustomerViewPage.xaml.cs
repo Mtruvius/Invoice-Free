@@ -1,6 +1,7 @@
 ﻿using SimpleJSON;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -22,21 +23,24 @@ namespace Invoice_Free
     /// </summary>
     public sealed partial class CustomerViewPage : Page, INotifyPropertyChanged
     {
-        private Customer _selectedCustomer;
-
         
-
+        public static Customer SelectedCustomer;
         public string CustomerName { get; private set; }
         public string CustomerEmail { get; private set; }
         public string CustomerContact { get; private set; }
         public string CustomerAddress { get; private set; }
         public string CustomerContactPerson { get; private set; }
-        public List<InvoiceClass> CustomerInvoices { get; private set; }
+
+        public static ObservableCollection<InvoiceClass> CompletedInvoices;
+        public static ObservableCollection<InvoiceClass> PendingInvoices;
 
         public CustomerViewPage()
         {
             this.InitializeComponent();
             CustomerNavigation.BackRequested += BackToCustomers;
+            CompletedInvoices = new ObservableCollection<InvoiceClass>();
+            PendingInvoices = new ObservableCollection<InvoiceClass>();
+            
         }
 
         private void BackToCustomers(NavigationView sender, NavigationViewBackRequestedEventArgs args)
@@ -55,9 +59,9 @@ namespace Invoice_Free
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _selectedCustomer = (Customer)e.Parameter;
-
-            LoadCustomer(_selectedCustomer);
+            SelectedCustomer = (Customer)e.Parameter;           
+            SortInvoicesToLists(SelectedCustomer.Invoices);
+            LoadCustomer(SelectedCustomer);
         }
 
         private void LoadCustomer(Customer selectedCustomer)
@@ -67,16 +71,34 @@ namespace Invoice_Free
                 if (item is NavigationViewItem && item.Content.ToString() == "Complete")
                 {
                     CustomerNavigation.SelectedItem = item;
-                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), _selectedCustomer, null);
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), CompletedInvoices, null);
                 }
             }
-            CustomerName = selectedCustomer.CustomerName;
+            CustomerName = selectedCustomer.Name;
             CustomerEmail = selectedCustomer.Email;
             CustomerContact = selectedCustomer.Contact;
             CustomerAddress = selectedCustomer.Address;
             CustomerContactPerson = selectedCustomer.ContactPerson;
-            CustomerInvoices = selectedCustomer.CustomerInvoices;
+
+            Debug.WriteLine("PendingInvoices: " + PendingInvoices.Count);
+            Debug.WriteLine("CompleteInvoices: " + CompletedInvoices.Count);
             OnPropertyChanged(string.Empty);
+        }
+
+        public static void SortInvoicesToLists(List<InvoiceClass> Invoices)
+        {
+            Debug.WriteLine("Invoices: " + Invoices.Count);
+            foreach (InvoiceClass invoice in Invoices)
+            {
+                if (invoice.Completed == true)
+                {
+                    CompletedInvoices.Add(invoice);
+                }
+                else
+                {
+                    PendingInvoices.Add(invoice);
+                }
+            }           
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -94,11 +116,11 @@ namespace Invoice_Free
             switch (item.Name)
             {
                 case "Complete":
-                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), _selectedCustomer, navOptions);
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerInvoicesView), CompletedInvoices, navOptions);
                     break;
 
                 case "Pending":
-                    InvoicesContentFrame.NavigateToType(typeof(CustomerPendingView), _selectedCustomer, navOptions);
+                    InvoicesContentFrame.NavigateToType(typeof(CustomerPendingView), PendingInvoices, navOptions);
                     break;
                 case "Edit":
                     EditCustomer();
@@ -114,7 +136,7 @@ namespace Invoice_Free
 
         private async void EditCustomer()
         {
-            Debug.WriteLine("The customer " + _selectedCustomer.CustomerName + " is in edit mode");
+            Debug.WriteLine("The customer " + SelectedCustomer.Name + " is in edit mode");
 
             await EditingPanel.ShowAsync();
         }
@@ -123,25 +145,25 @@ namespace Invoice_Free
         {
             if (!string.IsNullOrEmpty(EmailInput.Text))
             {
-                _selectedCustomer.Email = EmailInput.Text;
+                SelectedCustomer.Email = EmailInput.Text;
                 EmailInput.Text = string.Empty;
             }
             if (!string.IsNullOrEmpty(ContactPersonInput.Text))
             {
-                _selectedCustomer.ContactPerson = ContactPersonInput.Text;
+                SelectedCustomer.ContactPerson = ContactPersonInput.Text;
                 ContactPersonInput.Text = string.Empty;
             }
             if (!string.IsNullOrEmpty(Number.Text))
             {
-                _selectedCustomer.Contact  = Number.Text;
+                SelectedCustomer.Contact  = Number.Text;
                 Number.Text = string.Empty;
             }
             if (!string.IsNullOrEmpty(Address.Text))
             {
-                _selectedCustomer.Address = Address.Text;
+                SelectedCustomer.Address = Address.Text;
                 Address.Text = string.Empty;
             }
-            LoadCustomer(_selectedCustomer);            
+            LoadCustomer(SelectedCustomer);            
         }
 
         private async void DeleteCustomer()
@@ -151,9 +173,9 @@ namespace Invoice_Free
 
             foreach (JSONNode item in customersData)
             {                
-                if (item["Name"] == _selectedCustomer.CustomerName)
+                if (item["Name"] == SelectedCustomer.Name)
                 {
-                    var dialog = new MessageDialog("Are you sure you want to delete customer?", "Delete " + _selectedCustomer.CustomerName + "?");
+                    var dialog = new MessageDialog("Are you sure you want to delete customer?", "Delete " + SelectedCustomer.Name + "?");
                     var confirmCommand = new UICommand("Yes");
                     var cancelCommand = new UICommand("No");
                     dialog.Commands.Add(confirmCommand);

@@ -17,27 +17,25 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!-- Header-->
+        <!-- Header
         <Button x:Name="BackButton" IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" VerticalAlignment="Top" Click="BackButton_Click" 
                 Margin="20,37,0,0" Grid.Column="0" Height="73" Width="73" FontSize="25" FontFamily="Segoe MDL2 Assets" Content="&#xE72B;" Background="{ThemeResource SystemAccentColor}">
             <Button.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
-                            <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
                             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <!-- <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Red"/>-->
                             <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
                             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
             </Button.Resources>
-        </Button>
-        <TextBlock x:Name="PageTitle" Text="ADD COMPANY" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="40" TextDecorations="None" Margin="-72,0,0,0"/>
+        </Button> -->
+        <TextBlock x:Name="PageTitle" Text="ADD COMPANY" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="40" TextDecorations="None" Margin="-72,30,0,0"/>
         <!--Header End -->
 
         <ContentControl x:Name="ContentHost" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -63,8 +61,8 @@
                     <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyNameChosen"  Margin="0,20,0,0"/>
                 </StackPanel>
 
-                <StackPanel x:Name="COMP_Image_panel"  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">               
-                    <Image x:Name="Company_logo" Width="320" Source="/Assets/logo.png" PointerReleased="{x:Bind local:App.SelectImage}" HorizontalAlignment="Stretch" Height="238" Margin="0,0,0,10"/>
+                <StackPanel x:Name="COMP_Image_panel"  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">                    
+                    <Image x:Name="Company_logo" Width="320" Source="/Assets/Icons/add.png" PointerReleased="{x:Bind local:App.SelectImage}" HorizontalAlignment="Stretch" Height="238" Margin="0,0,0,10"/>
                     <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyLogoChosen" Margin="0,20,0,0"/>
                 </StackPanel>
 

@@ -18,6 +18,7 @@ namespace Invoice_Free
     /// </summary>
     public sealed partial class ViewCustomers : Page
     {
+        public static Frame CustomerViewMainFrame;
         private ObservableCollection<Customer> _customers;
         private ObservableCollection<SearchOptions> CustomerSearchOptions;
 
@@ -29,6 +30,7 @@ namespace Invoice_Free
 
             CreateCustomersList();
             CreateSearchOptions();
+           
         }
 
         private void CreateSearchOptions()

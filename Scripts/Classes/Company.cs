@@ -17,6 +17,15 @@ namespace Invoice_Free
         public string VatOrTax;
         public string RegNo;
         public string ContactPerson;
-        public string LastInvoiceNo;
+        public int LastInvoiceNo;
+        public float[] PriorRevenue;
+        public float[] PreviousRevenue;
+        public float[] Revenue;
+        public int CurrentYear;
+        public int CompleteInvoices;
+        public int PendingInvoices;
+        public int TotalQuotes;
+        public int TotalCustomers;
+        
     }
 }

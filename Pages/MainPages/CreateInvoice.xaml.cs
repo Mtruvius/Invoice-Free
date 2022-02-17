@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -29,13 +30,19 @@ namespace Invoice_Free
     public sealed partial class CreateInvoice : Page
     {
         bool isHovering_AddBtn;
-        BitmapSource addBtnNormal;
-        BitmapSource addBtnHover;
-        Product _selectedProduct;
         float InvoiceTotal;
         double ScrollerHeight;
 
-        private ObservableCollection<SearchOptions> InvoiceSearchOptions;
+        BitmapSource addBtnNormal;
+        BitmapSource addBtnHover;
+
+        Customer _selectedCustomer;
+        Product _selectedProduct;
+        
+        
+        
+
+        private ObservableCollection<Customer> CustomersOptions;
         private ObservableCollection<InvoiceProduct> SelectedProducts;
         private ObservableCollection<Product> _Products;
 
@@ -62,38 +69,36 @@ namespace Invoice_Free
 
         private void CreateSearchOptions()
         {
-            InvoiceSearchOptions = new ObservableCollection<SearchOptions>();
+            CustomersOptions = new ObservableCollection<Customer>();
             GetInvoiceNumber();
             CreateCustomerOptionList();
-            
+
             //customerSearchOption.SelectedItem = CustomerSearchOptions[0];
-            invoiceSearchOption.ItemsSource = InvoiceSearchOptions;
-            invoiceSearchOption.UpdateLayout();
+            CustomersSelectBox.ItemsSource = CustomersOptions;
+            CustomersSelectBox.UpdateLayout();
         }
 
         private void GetInvoiceNumber()
         {
-            string invoiceNo = (int.Parse(App.companyActive.LastInvoiceNo) + 1).ToString();
-            TextBox_invoiceNo.Text = invoiceNo;
+            string invoiceNo = (App.companyActive.LastInvoiceNo + 1).ToString();
+            InvoiceNo.Text = invoiceNo;
             addInvoicePanel.UpdateLayout();
         }
 
         private void CreateCustomerOptionList()
         {
-            string customersFile = File.ReadAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json");
-            JSONNode customerData = JSONNode.Parse(customersFile);
-
-            foreach (JSONNode customer in customerData)
+            foreach (Customer customer in App.CUSTOMERS)
             {
-                Debug.WriteLine(customer[0]);
-                SearchOptions option = new()
-                {
-                    option = customer[0]
-                };
-                InvoiceSearchOptions.Add(option);
+                CustomersOptions.Add(customer);
             }
         }
-
+        
+        private void CustomersOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Debug.WriteLine("Customer has been selected");            
+            _selectedCustomer = (Customer)e.AddedItems[0];
+        }
+        
         private async void ShowProducts_OnClick(object sender, RoutedEventArgs e)
         {
             _Products = App.PRODUCTS;
@@ -121,8 +126,6 @@ namespace Invoice_Free
             }
         }
 
-        
-
         private void AddProductToInvoice(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             int _qty = int.Parse(QuantitySelected.Text);
@@ -133,12 +136,12 @@ namespace Invoice_Free
                 Name = _selectedProduct.Name,
                 Description = _selectedProduct.Description,
                 Quantity = _qty,
-                TotalPrice = total
+                TotalPrice = total                
             };
             SelectedProducts.Add(prod);
 
             InvoiceTotal += total;
-            TotalAmount.Text = InvoiceTotal.ToString();
+            TotalAmount.Text = InvoiceTotal.ToString("C");
             addInvoicePanel.UpdateLayout();
         }
 
@@ -146,16 +149,75 @@ namespace Invoice_Free
         {
             _selectedProduct = (Product)e.ClickedItem;
             Debug.WriteLine("THIS WAS CALLED!!!");   
-            Debug.WriteLine("_selectedProduct: " + _selectedProduct.Name);   
+             
            
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            DateTimeOffset? dateTime = InvoiceDate.Date;
+            string _invoiceDate = string.Format("{0}/{1}/{2}", dateTime.Value.Day, dateTime.Value.Month, dateTime.Value.Year);
+            List<InvoiceProduct> theProducts = new List<InvoiceProduct>();
+            foreach (InvoiceProduct item in SelectedProducts)
+            {
+                theProducts.Add(item);
+            }
+            InvoiceClass _invoice = new()
+            {
+                CustomerName = _selectedCustomer.Name,
+                Date = _invoiceDate,
+                Number = InvoiceNo.Text,
+                InvoicedProducts = theProducts,
+                InvoiceTotal = float.Parse(TotalAmount.Text, NumberStyles.Currency),
+                Completed = (bool)IsPaid.IsChecked
+            };
+            AddToCompany(_invoice);
+            SaveManager.SaveInvoice(_selectedCustomer, _invoice);
+            MainPage.MAIN.MainContentFrame.Navigate(typeof(ViewInvoices));
+        }
+
+        private void AddToCompany(InvoiceClass Invoice)
+        {
+            float invoiceTotal = Invoice.InvoiceTotal;
+            Debug.WriteLine((DateTime.Now.Month - 1));
+            for (int i = 0; i < App.companyActive.Revenue.Length; i++)
+            {
+                if (i == (DateTime.Now.Month - 1) && App.companyActive.CurrentYear == DateTime.Now.Year)
+                {
+                    App.companyActive.Revenue[i] += invoiceTotal;
+                }
+                else if (i == (DateTime.Now.Month - 1) && App.companyActive.CurrentYear != DateTime.Now.Year)
+                {
+                    App.companyActive.PriorRevenue = App.companyActive.PreviousRevenue;
+                    App.companyActive.PreviousRevenue = App.companyActive.Revenue;
+                    App.companyActive.Revenue = new float[12];
+                    App.companyActive.Revenue[i] = invoiceTotal;
+                    App.companyActive.CurrentYear = DateTime.Now.Year;
+                }
+                else
+                {
+
+                }
+            }
+            if (Invoice.Completed)
+            {
+                App.companyActive.CompleteInvoices++;
+            }
+            else
+            {
+                App.companyActive.PendingInvoices++;
+            }
+            App.companyActive.LastInvoiceNo++;
+            SaveManager.SaveCompanyEdits();
+        }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        
     }
 
-    public class InvoiceProduct
-    {
-        public string Name;
-        public string Description;
-        public int Quantity;
-        public int TotalPrice;
-    }
+    
 }

@@ -87,7 +87,7 @@
         </Grid>
         <TextBlock Text="Invoices" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12.7,0,0"/>
         
-        <Frame x:Name="CustomerViewFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="999.6"></Frame>
+        <Frame x:Name="CustomerViewFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2"></Frame>
         <ContentDialog x:Name="EditingPanel"
                        PrimaryButtonText="Accept"
                        PrimaryButtonClick="CustomerEditComplete"

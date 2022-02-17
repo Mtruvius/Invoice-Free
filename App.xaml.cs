@@ -48,6 +48,7 @@ namespace Invoice_Free
 
         public static ObservableCollection<Customer> CUSTOMERS { get; set; }
         public static ObservableCollection<Product> PRODUCTS { get; set; }
+        public static ObservableCollection<InvoiceClass> ALL_INVOICES { get; set; }
 
         public static BitmapSource addBtnNormal;
         public static BitmapSource addBtnHover;
@@ -60,10 +61,13 @@ namespace Invoice_Free
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+           
             PublisherFolder = ApplicationData.Current.GetPublisherCacheFolder("InvoiceFree");
             PathToCompanies = PublisherFolder.Path + "\\Companies\\";
+            
             CUSTOMERS = new ObservableCollection<Customer>();
             PRODUCTS = new ObservableCollection<Product>();
+            ALL_INVOICES = new ObservableCollection<InvoiceClass>();
             GetAssets();
         }
 
@@ -337,6 +341,8 @@ namespace Invoice_Free
             navOptions.IsNavigationStackEnabled = false;
             return navOptions;
         }
+
+        
         #endregion
     }
 }

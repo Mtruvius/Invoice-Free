@@ -131,6 +131,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scripts\Classes\SaveManager.cs" />
+    <Compile Include="Scripts\Classes\InvoiceProduct.cs" />
     <Compile Include="Pages\MainPages\ViewProducts.xaml.cs">
       <DependentUpon>ViewProducts.xaml</DependentUpon>
     </Compile>
@@ -180,6 +182,8 @@
     <Content Include="Assets\Icons\AddInvoice.png" />
     <Content Include="Assets\Icons\addProduct.png" />
     <Content Include="Assets\Icons\add_hover.png" />
+    <Content Include="Assets\Icons\AllCustomers.png" />
+    <Content Include="Assets\Icons\AllCustomersW.png" />
     <Content Include="Assets\Icons\Delete.png" />
     <Content Include="Assets\Icons\delete_hover.png" />
     <Content Include="Assets\Icons\Edit.png" />

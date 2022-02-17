@@ -45,7 +45,7 @@ namespace Invoice_Free
             switch (textBox.Name)
             {
                 case "customerName":
-                    CustomerToAdd.CustomerName = ValidateTextBox(textBox);
+                    CustomerToAdd.Name = ValidateTextBox(textBox);
                     break;
                 case "Email":
                     CustomerToAdd.Email = ValidateEmail(textBox);
@@ -69,7 +69,7 @@ namespace Invoice_Free
         {
             string PathToCustomersJson = App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json";
 
-            if (string.IsNullOrEmpty(CustomerToAdd.CustomerName) || string.IsNullOrEmpty(CustomerToAdd.Email))
+            if (string.IsNullOrEmpty(CustomerToAdd.Name) || string.IsNullOrEmpty(CustomerToAdd.Email))
             {
                 btnErrorFlyout.Text = "Please fill in the missing fields to continue!";
                 ButtonFlyout.ShowAt(AddCustomerBtn);
@@ -99,12 +99,13 @@ namespace Invoice_Free
             }
             JSONObject newCustomer = new JSONObject();
 
-            newCustomer.Add("Name", CustomerToAdd.CustomerName);
+            newCustomer.Add("Name", CustomerToAdd.Name);
             newCustomer.Add("Email", CustomerToAdd.Email);            
             newCustomer.Add("Contact", CheckStringNotNull(CustomerToAdd.Contact));
             newCustomer.Add("Address", CheckStringNotNull(CustomerToAdd.Address));
             newCustomer.Add("VatOrTax", CheckStringNotNull(CustomerToAdd.VatOrTax));
             newCustomer.Add("ContactPerson", CheckStringNotNull(CustomerToAdd.ContactPerson));
+            newCustomer.Add("InvoiceCount", "0");
             JSONArray customerInvoiceArray = new JSONArray();
             newCustomer.Add("Invoices", customerInvoiceArray.ToString());           
 
@@ -114,14 +115,18 @@ namespace Invoice_Free
 
             Customer theCustomer = new()
             {
-                CustomerName = newCustomer["Name"],
+                Name = newCustomer["Name"],
                 Email = newCustomer["Email"],
                 Contact = newCustomer["Contact"],
                 Address = newCustomer["Address"],
                 VatOrTax = newCustomer["VatOrTax"],
-                ContactPerson = newCustomer["ContactPerson"]
+                ContactPerson = newCustomer["ContactPerson"],
+                InvoiceCount = newCustomer["InvoiceCount"],
+                Invoices = new List<InvoiceClass>()
             };
-
+            App.CUSTOMERS.Add(theCustomer);
+            App.companyActive.TotalCustomers++;
+            SaveManager.SaveCompanyEdits();
             AddCustomerFrame.NavigateToType(typeof(CustomerViewPage), theCustomer, App.AnimatePage("right"));
         }
 

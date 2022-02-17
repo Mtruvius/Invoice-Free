@@ -31,7 +31,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Invoice Number:" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="0" Margin="0,0,10,0"/>
-                    <TextBox x:Name="TextBox_invoiceNo" VerticalAlignment="Center" Height="35" Width="100" HorizontalAlignment="Left" Margin="0,0,10,0" Grid.Column="1"/>
+                    <TextBox x:Name="InvoiceNo" VerticalAlignment="Center" Height="35" Width="100" HorizontalAlignment="Left" Margin="0,0,10,0" Grid.Column="1"/>
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -39,7 +39,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox x:Name="invoiceSearchOption" ItemsSource="{x:Bind InvoiceSearchOptions}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40" PlaceholderText="Select a customer.">
+                    <ComboBox x:Name="CustomersSelectBox" ItemsSource="{x:Bind CustomersOptions}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40" PlaceholderText="Select a customer." SelectionChanged="CustomersOptions_SelectionChanged">
                         <ComboBox.Style>
                             <Style TargetType="ComboBox">
                                 <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentColor}"/>
@@ -48,13 +48,13 @@
                             </Style>
                         </ComboBox.Style>
                         <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:SearchOptions">
-                                <TextBlock Text="{x:Bind option, Mode=TwoWay}" FontSize="22" Name="SearchTextBlock"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <DataTemplate x:DataType="local:Customer">
+                                <TextBlock Text="{x:Bind Name, Mode=TwoWay}" FontSize="22" Name="SearchTextBlock"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <CalendarDatePicker Width="218" HorizontalAlignment="Right" Grid.Column="10" Margin="0,0,10,0"/>
+                    <CalendarDatePicker x:Name="InvoiceDate" Width="218" HorizontalAlignment="Right" Grid.Column="10" Margin="0,0,10,0" DateFormat="{}{day.integer} {month.full} {year.full}"/>
 
                 </Grid>
             </StackPanel>
@@ -112,14 +112,14 @@
         </Grid>
         
         <Grid VerticalAlignment="Bottom" Margin="0,0,0,75" MaxWidth="720" Grid.ColumnSpan="3">
-            <StackPanel Orientation="Horizontal">
-            <AppBarButton Icon="Save" Label="Save"/>
-                <AppBarButton Label="Export PDF">
-                <AppBarButton.Icon>
+            <CheckBox x:Name="IsPaid" Content="Paid?" Margin="10,0,0,0"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
+                <AppBarButton Icon="Save" Label="Save" Click="SaveButton_Click"/>
+                <AppBarButton Label="Export PDF" Click="ExportButton_Click">
+                    <AppBarButton.Icon>
                         <BitmapIcon UriSource="/Assets/Icons/PDFExport.png"/>
-                </AppBarButton.Icon>
-                
-            </AppBarButton>
+                    </AppBarButton.Icon>
+                </AppBarButton>
             </StackPanel>
         </Grid>
         
@@ -132,13 +132,12 @@
                 <Run Text="{x:Bind SelectedProducts.Count, Mode=OneWay}"/>
                 <Run Text=" products."/>
             </TextBlock>
-            <TextBlock HorizontalAlignment="Right" Grid.Column="1" FontSize="40" VerticalAlignment="Center" Margin="0,0,40,0">
-                <Run Text="R"/>
+            <TextBlock HorizontalAlignment="Right" Grid.Column="1" FontSize="40" VerticalAlignment="Center" Margin="0,0,40,0">                
                 <Run x:Name="TotalAmount"/>
             </TextBlock>
         </Grid>
         
-        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add" PrimaryButtonClick="AddProductToInvoice" Visibility="Collapsed" >
+        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add" PrimaryButtonClick="AddProductToInvoice" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>

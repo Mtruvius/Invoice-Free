@@ -104,22 +104,51 @@ namespace Invoice_Free
                 RegNo = companyInfo[0]["RegNo"],
                 VatOrTax = companyInfo[0]["VatOrTax"],
                 ContactPerson = companyInfo[0]["ContactPerson"],
-                LastInvoiceNo = companyInfo[0]["LastInvNo"]
+                LastInvoiceNo = companyInfo[0]["LastInvNo"],
+                PriorRevenue = GetRevenueIntArray(companyInfo[0]["PriorRevenue"]),
+                PreviousRevenue = GetRevenueIntArray(companyInfo[0]["PreviousRevenue"]),
+                Revenue = GetRevenueIntArray(companyInfo[0]["Revenue"]),
+                CurrentYear = companyInfo[0]["CurrentYear"],
+                CompleteInvoices = companyInfo[0]["CompleteInvoices"],
+                PendingInvoices = companyInfo[0]["PendingInvoices"],
+                TotalQuotes = companyInfo[0]["TotalQuotes"],
+                TotalCustomers = companyInfo[0]["TotalCustomers"],
             };
             App.companyActive = company;
             CreateCustomersList();
-            CreateProductsList();
+            CreateProductsList();            
             this.Frame.Navigate(typeof(MainPage));           
 
             Debug.WriteLine(clickedItem.CompanyName);
 
         }
 
+        private float[] GetRevenueIntArray(JSONNode revenueArray)
+        {
+            Debug.WriteLine(revenueArray[0]);
+            float[] revenue = new float[12];
+            for (int i = 0; i < revenueArray.Count; i++)
+            {
+                revenue[i] = revenueArray[i];
+            }
+            return revenue;
+        }
+
         private void CreateProductsList()
         {
-            App.PathToProducts = App.PathToCompanies + App.companyActive.CompanyName + "\\products.json";
+            string PATH = App.PathToCompanies + App.companyActive.CompanyName + "\\products.json";
             string ProductsJsonFile;
-            ProductsJsonFile = File.ReadAllText(App.PathToProducts);
+            if (!File.Exists(PATH))
+            {
+                File.Create(PATH);
+                ProductsJsonFile = "";
+            }
+            else
+            {
+               ProductsJsonFile = File.ReadAllText(PATH);               
+            }
+            App.PathToProducts = PATH;
+            
             JSONNode products = JSONNode.Parse(ProductsJsonFile);
             foreach (JSONNode product in products)
             {
@@ -142,39 +171,67 @@ namespace Invoice_Free
 
         private void CreateCustomersList()
         {
-            App.PathToCustomers = App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json";
+            string PATH = App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json";
             string CustomerJsonFile;
-            CustomerJsonFile = File.ReadAllText(App.PathToCustomers);
+            if (!File.Exists(PATH))
+            {
+                File.Create(PATH);
+                CustomerJsonFile = "";
+            }
+            else
+            {
+                CustomerJsonFile = File.ReadAllText(PATH);               
+            }
+            App.PathToCustomers = PATH;
             JSONNode customersData = JSONNode.Parse(CustomerJsonFile);
             foreach (JSONNode customer in customersData)
             {
-                JSONNode customerInvoices = JSONNode.Parse(customer["Invoices"]);
-                List<InvoiceClass> invoicesList = new List<InvoiceClass>();
-                int InvoiceListCount = invoicesList.Count;
+
+                JSONNode customerInvoices = customer["Invoices"];
+                Debug.WriteLine("customerInvoices: " + customerInvoices.Count);
+                List<InvoiceClass> invoicesList = new List<InvoiceClass>();                
+                List<InvoiceProduct> invoicedProductList = new List<InvoiceProduct>();
+
                 foreach (JSONNode invoice in customerInvoices)
                 {
+                    foreach (JSONNode product in invoice["InvoicedProducts"])
+                    {
+                        InvoiceProduct productToAdd = new()
+                        {
+                            Name = product["Name"],
+                            Description = product["Description"],
+                            Quantity = product["Quantity"],
+                            TotalPrice = product["TotalPrice"]
+                        };
+                        invoicedProductList.Add(productToAdd);
+                    }
                     InvoiceClass inv = new()
                     {
+                        CustomerName = invoice["CustomerName"],
                         Number = invoice["Number"],
+                        Date = invoice["Date"],
+                        Completed = invoice["Completed"],
+                        InvoiceTotal = invoice["InvoiceTotal"],
+                        InvoicedProducts = invoicedProductList,
                     };
+                    App.ALL_INVOICES.Add(inv);
                     invoicesList.Add(inv);
                 }
-
+                Debug.WriteLine("INTRO_CreateCustomersList: " +invoicesList.Count);
                 Customer Obj = new()
                 {
-                    CustomerName = customer["Name"],
+                    Name = customer["Name"],
                     Email = customer["Email"],
                     Contact = customer["Contact"],
                     Address = customer["Address"],
                     VatOrTax = customer["VatOrTax"],
                     ContactPerson = customer["ContactPerson"],
-                    CustomerInvoices = invoicesList,
-                    InvoiceCount = InvoiceListCount
+                    Invoices = invoicesList,
+                    InvoiceCount = customer["InvoiceCount"]
                 };
                 App.CUSTOMERS.Add(Obj);
             }
-
-            Debug.WriteLine("CUSTOMER COUNT: " + App.CUSTOMERS.Count);
+            Debug.WriteLine("CUSTOMERS count: " + App.CUSTOMERS.Count);
         }
     }
 

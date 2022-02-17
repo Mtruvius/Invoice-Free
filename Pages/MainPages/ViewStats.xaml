@@ -8,18 +8,37 @@
     xmlns:lvc="using:LiveCharts.Uwp"
     xmlns:converters="using:UWP.Converters"
     mc:Ignorable="d">
+    
     <UserControl.Resources>
-        <converters:BoolToObjectConverter x:Key="bvc">
-            <converters:BoolToObjectConverter.TrueValue>
-                <x:Boolean>True</x:Boolean>
-            </converters:BoolToObjectConverter.TrueValue>
-            <converters:BoolToObjectConverter.FalseValue>
-                <x:Boolean>False</x:Boolean>
-            </converters:BoolToObjectConverter.FalseValue>
-        </converters:BoolToObjectConverter>
-    </UserControl.Resources>
+        <ResourceDictionary>
+            
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Style x:Key="AllCustomersIcon" TargetType="Image">
+                        <Setter Property="Source" Value="/Assets/Icons/AllCustomers.png"/>
+                    </Style>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <Style x:Key="AllCustomersIcon" TargetType="Image">
+                        <Setter Property="Source" Value="/Assets/Icons/AllCustomersW.png"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
 
+            <converters:BoolToObjectConverter x:Key="bvc">
+                <converters:BoolToObjectConverter.TrueValue>
+                    <x:Boolean>True</x:Boolean>
+                </converters:BoolToObjectConverter.TrueValue>
+                <converters:BoolToObjectConverter.FalseValue>
+                    <x:Boolean>False</x:Boolean>
+                </converters:BoolToObjectConverter.FalseValue>
+            </converters:BoolToObjectConverter>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -54,7 +73,7 @@
                 </Grid>
 
                 <lvc:CartesianChart Name="BARCHART" Grid.Row="1" Hoverable="False">
-                    <!---->
+                    
                     <lvc:CartesianChart.Series>
                         <lvc:ColumnSeries Title="{x:Bind this_Year}" Values="{Binding ThisYearValues}" Visibility="{Binding thisYear, Converter={StaticResource bvc}, Mode=OneWay}" Width="Auto" MaxWidth="1000" ColumnPadding="2" />
 
@@ -69,22 +88,47 @@
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
-                    <!-- -->
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis LabelFormatter="{Binding Formatter}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1000"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                    
                 </lvc:CartesianChart>
 
             </Grid>
 
             <!-- PIE CHART-->
+            <TextBlock Text="Invoices &amp; Quotes" Grid.Column="1" HorizontalTextAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
             <Grid Grid.Column="1">
-                <lvc:PieChart Name="Chart" Series="{Binding SeriesCollection}" 
-                      LegendLocation="Right" InnerRadius="50" Margin="40,40,40,40">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto" MinHeight="124"/>
+                </Grid.RowDefinitions>
+                <lvc:PieChart Name="Chart" Series="{x:Bind PieSeriesCollection}" LegendLocation="Top" InnerRadius="50" Margin="40,40,40,40" Grid.Row="0">
+                    <lvc:PieChart.Resources>
+                        <Style TargetType="lvc:DefaultLegend">
+                            <Setter Property="BulletSize" Value="20"/>
+                        </Style>
+                    </lvc:PieChart.Resources>
                     <lvc:PieChart.ChartLegend>
-                        <lvc:DefaultLegend BulletSize="20"></lvc:DefaultLegend>
+                        <lvc:DefaultLegend></lvc:DefaultLegend>
                     </lvc:PieChart.ChartLegend>
                     <lvc:PieChart.DataTooltip>
                         <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
                     </lvc:PieChart.DataTooltip>
                 </lvc:PieChart>
+
+                <StackPanel Grid.Row="1" MaxHeight="200" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="73" Width="165">
+                    <Image Style="{StaticResource AllCustomersIcon}" HorizontalAlignment="Left" MaxHeight="60" Margin="0,0,10,0"/>
+
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind CustomerTotal}" FontSize="40" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Customers" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
             </Grid>
 
         </Grid>
