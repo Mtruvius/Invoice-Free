@@ -9,7 +9,7 @@
 
   <Identity
     Name="497047a8-d3e1-466a-90a5-6f22eac2d74b"
-    Publisher="CN=GhostRider"
+    Publisher="CN=Tasty Humans inc."
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="497047a8-d3e1-466a-90a5-6f22eac2d74b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>

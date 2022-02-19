@@ -11,6 +11,6 @@ namespace Invoice_Free
         public string Name;
         public string Description;
         public int Quantity;
-        public int TotalPrice;
+        public float TotalPrice;
     }
 }

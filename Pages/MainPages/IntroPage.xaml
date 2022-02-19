@@ -69,7 +69,7 @@
         
         <StackPanel VerticalAlignment="Center" Height="auto" Width="auto">
             <Image Height="318" Width="314" RenderTransformOrigin="0.5,0.4" Source="/Assets/logo.png" Margin="0,40,0,20"/>
-            <TextBlock x:Name="IntroTitle" Text="Companies" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Margin="0,0,0,40"/>
+            <TextBlock x:Name="IntroTitle" Text="Companies" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
             <ListView x:Name="InstatiationPanel" ItemsSource="{x:Bind _companies}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemClick="SelectCompany_OnClick"  IsItemClickEnabled="True">
                 <ListView.ItemContainerStyle>
@@ -81,7 +81,7 @@
                 <ListView.ItemTemplate>
                     
                     <DataTemplate x:DataType="local:CompanyListViewItem">                        
-                        <Grid>
+                        <Grid Margin="0,5" BorderThickness="0,0,0,1" BorderBrush="{ThemeResource ComboBoxFocusedBorderThemeBrush}" Padding="0,0,0,5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="200"/>                                
@@ -99,6 +99,8 @@
 
             </ListView>
 
+            <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Margin="0,20,0,0"/>
+            <Button x:Name="AddNewCompany_Btn" Content="Create New" HorizontalAlignment="Center" Margin="0,5,0,0" Click="AddNewCompany_Btn_Click"/>
 
         </StackPanel>
         

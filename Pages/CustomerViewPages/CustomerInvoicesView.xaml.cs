@@ -49,9 +49,9 @@ namespace Invoice_Free
             InvoiceList.UpdateLayout();
         }
 
-        private void AddInvoice_OnClick(object sender, RoutedEventArgs e)
+        private void CreateInvoice_OnClick(object sender, RoutedEventArgs e)
         {
-
+            MainPage.MAIN.NavigateToPage("Create Invoice", CustomerViewPage.SelectedCustomer);
         }
 
         private void AddInvoice_OnHover(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

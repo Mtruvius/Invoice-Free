@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using SimpleJSON;
+using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -51,23 +52,59 @@ namespace Invoice_Free
 
         private void CompanyNameChosen(object sender, RoutedEventArgs e)
         {
-            _CompanyName = CompanyName.Text;
-            DetailsDisplayHandler(_detailsTracker);
+            if (App.ValidateTextBox(CompanyName, TextBlockFlyout, ErrorFlyout) != null)
+            {
+                _CompanyName = CompanyName.Text;
+                DetailsDisplayHandler(_detailsTracker);
+            }            
+        }
+        private void SelectingImage()
+        {
+            App.SelectImage();
+            ImageBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            //x:Bind local:App.SelectImage
         }
 
         private void CompanyLogoChosen(object sender, RoutedEventArgs e)
         {
-            _CompanyLogo = new Image();
-            _CompanyLogo.Source = Company_logo.Source;
-            _CompanyLogo.Name = _CompanyName;
-            DetailsDisplayHandler(_detailsTracker);
+            BitmapImage img = (BitmapImage)Company_logo.Source;           
+            Debug.WriteLine(img.UriSource);
+             if (_chosenImage == null)
+            {
+                ImageBorder.BorderBrush = new SolidColorBrush(Colors.Red);
+                ErrorFlyout.Text = "A company logo must be selected!";
+                TextBlockFlyout.ShowAt(Company_logo);
+            }
+            else
+            {
+                ImageBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
+                _CompanyLogo = new Image();
+                _CompanyLogo.Source = Company_logo.Source;
+                _CompanyLogo.Name = _CompanyName;
+                DetailsDisplayHandler(_detailsTracker);
+            }
+            
         }
         private async void CompanyDetailsChosen(object sender, RoutedEventArgs e)
         {
-            StorageFolder folder = await App.PublisherFolder.CreateFolderAsync("Companies");
+            StorageFolder folder;
+
+            try
+            {
+                folder = await App.PublisherFolder.CreateFolderAsync("Companies");
+            }
+            catch (Exception)
+            {
+
+               folder = await App.PublisherFolder.GetFolderAsync("Companies");
+            }
+                
+            
             StorageFolder CompanyFolder = await folder.CreateFolderAsync(_CompanyName);
             Debug.WriteLine(folder.Path);
-
+           JSONArray productCatagoriesList = new();
+            productCatagoriesList.Add("Default");
+            
             JSONArray CompanyDetails = new JSONArray();
 
             JSONObject CompanyObj = new JSONObject();
@@ -87,6 +124,7 @@ namespace Invoice_Free
             CompanyObj.Add("PendingInvoices", 0);
             CompanyObj.Add("TotalQuotes", 0);
             CompanyObj.Add("TotalCustomers", 0);
+            CompanyObj.Add("ProductCatagoriesList", productCatagoriesList);
             
             
 
@@ -205,6 +243,12 @@ namespace Invoice_Free
                 CompanyNameChosen(sender, e);
             }
 
-        }        
+        }
+
+        private void Email_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            App.ValidateEmail(textBox, TextBlockFlyout, ErrorFlyout);
+        }
     }
 }

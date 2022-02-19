@@ -11,7 +11,7 @@ namespace Invoice_Free
 {
     public static class SaveManager
     {
-        public static void SaveInvoice(Customer selectedCustomer, InvoiceClass invoice)
+        public static void SaveInvoiceToCustomer(Customer selectedCustomer, InvoiceClass invoice)
         {
             Debug.WriteLine(invoice.InvoiceTotal);
             JSONArray completeCustomerList = new JSONArray();
@@ -37,6 +37,7 @@ namespace Invoice_Free
                 foreach (InvoiceClass inv in customer.Invoices)
                 {
                     JSONObject theInv = new JSONObject();
+                    theInv.Add("CustomerName", inv.CustomerName);
                     theInv.Add("Date", inv.Date);
                     theInv.Add("Number", inv.Number);
                     theInv.Add("InvoiceTotal", inv.InvoiceTotal);
@@ -58,6 +59,7 @@ namespace Invoice_Free
                 customerObj.Add("Invoices", customerInvoiceList);
                 completeCustomerList.Add(customerObj);
             }
+            App.ALL_INVOICES.Add(invoice);
 
             Debug.WriteLine("customers: " + completeCustomerList.ToString());
             Debug.WriteLine("App.PathToCustomers: " + App.PathToCustomers);
@@ -116,9 +118,9 @@ namespace Invoice_Free
 
         public static void SaveCompanyEdits()
         {
-            Debug.WriteLine("SaveCompanyEdits WAS CALLED");
+            Debug.WriteLine("SaveCompanyEdits LastInvoiceNo" + App.companyActive.LastInvoiceNo);
             Company company = App.companyActive;
-            Debug.WriteLine(company.CompanyName);
+            Debug.WriteLine("company LastInvoiceNo" + company.LastInvoiceNo);
             Company EditedCompany = new()
             {
                 CompanyName = company.CompanyName,
@@ -141,9 +143,10 @@ namespace Invoice_Free
             };
             
             App.companyActive = EditedCompany;
-            Debug.WriteLine("EditedCompany: "+EditedCompany.CompanyName);
+            Debug.WriteLine("EditedCompany LastInvoiceNo" + EditedCompany.LastInvoiceNo);
 
             JSONArray newCompanyDetail = new JSONArray();
+            JSONArray ProductCatagoriesList = new JSONArray();
             JSONObject newCompanyOBJ = new JSONObject();
             newCompanyOBJ.Add("CompanyName", EditedCompany.CompanyName);
             newCompanyOBJ.Add("Email", EditedCompany.Email);
@@ -161,8 +164,16 @@ namespace Invoice_Free
             newCompanyOBJ.Add("PendingInvoices", EditedCompany.PendingInvoices);
             newCompanyOBJ.Add("TotalQuotes", EditedCompany.TotalQuotes);
             newCompanyOBJ.Add("TotalCustomers", EditedCompany.TotalCustomers);
+
+            foreach (string catagory in App.PRODUCTCATAGORIESLIST)
+            {
+                ProductCatagoriesList.Add(catagory);
+            }
+            newCompanyOBJ.Add("ProductCatagoriesList", ProductCatagoriesList);
+
             newCompanyDetail.Add(newCompanyOBJ);
 
+            Debug.WriteLine("newCompanyDetail" + newCompanyDetail.ToString());
             File.WriteAllText(App.PathToCompanies + EditedCompany.CompanyName + "\\" + EditedCompany.CompanyName + ".json", newCompanyDetail.ToString());
         }
 

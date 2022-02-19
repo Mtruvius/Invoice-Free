@@ -1,6 +1,7 @@
 ﻿using SimpleJSON;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,40 +28,34 @@ namespace Invoice_Free
     /// </summary>
     public sealed partial class CreateProduct : UserControl
     {
-        bool isHovering_AddBtn;
-        BitmapSource addBtnNormal;
-        BitmapSource addBtnHover;
+        private bool isHovering_AddBtn;
+        private BitmapSource addBtnNormal;
+        private BitmapSource addBtnHover;
+        private ObservableCollection<string> ProductCatagories;
+        private bool ErrorOccured;
+
         public CreateProduct()
         {
             this.InitializeComponent();
             addBtnNormal = App.addBtnNormal;
             addBtnHover = App.addBtnHover;
             AddIcon.Source = addBtnNormal;
-        }       
+            ProductCatagories = new ObservableCollection<string>();
+            CreateCatagory_Dialog.Closing += CheckForErrorBeforClosing;
 
-        private void AddBtn_PointerHover(object sender, PointerRoutedEventArgs e)
-        {
-            if (isHovering_AddBtn)
-            {
-                isHovering_AddBtn = false;
-                AddIcon.Source = addBtnNormal;
-            }
-            else
-            {
-                isHovering_AddBtn = true;
-                AddIcon.Source = addBtnHover;
-            }
-            
-            Debug.WriteLine(e.Pointer);
+            GetProductCatagories();
         }
 
-        private void AddBtn_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void GetProductCatagories()
         {
-            Debug.WriteLine("Add button was pressed");
+            foreach (string catagory in App.PRODUCTCATAGORIESLIST)
+            {
+                ProductCatagories.Add(catagory);
+            }
             
         }
 
-        private void CreateBtn_Click(object sender, RoutedEventArgs e)
+        private void CreateProductBtn_Click(object sender, RoutedEventArgs e)
         {
             
             string productsPATH = App.PathToCompanies + App.companyActive.CompanyName + "\\products.json";
@@ -83,13 +79,44 @@ namespace Invoice_Free
             }
             
             JSONObject newProduct = new JSONObject();
-            ComboBoxItem selectedItem = (ComboBoxItem)catagorySelection.SelectedItem;
-            newProduct.Add("Catagory", selectedItem.Content.ToString());
-            newProduct.Add("Name", productName.Text);
+            string selectedCatagory = (string)catagorySelection.SelectedItem;
+
+            if (App.ValidateSelectedItem(catagorySelection, TextBlockFlyout, ErrorFlyout, "A catagory must be selected") == null)
+            {
+                return;
+            }
+            newProduct.Add("Catagory", selectedCatagory);
+            
+            if (App.ValidateTextBox(productName, TextBlockFlyout, ErrorFlyout) == null)
+            {
+                return;
+            }
+            newProduct.Add("Name", productName.Text);  
+            
             newProduct.Add("Description", description.Text);
-            newProduct.Add("Cost", costPrice.Text);
-            newProduct.Add("Price", sellingPrice.Text);
-            newProduct.Add("IsTaxable", isTaxable.IsChecked);
+
+
+            float costPricing = App.ValidateNumericBox(costPriceTxt, TextBlockFlyout, ErrorFlyout);
+            if (costPricing == -1)
+            {
+                return;
+            }
+            else
+            {
+                newProduct.Add("Cost", costPricing);
+            }
+
+            float sellPricing = App.ValidateNumericBox(sellingPrice, TextBlockFlyout, ErrorFlyout);
+            if (sellPricing == -1)
+            {
+                return;
+            }
+            else
+            {
+                newProduct.Add("Price", sellPricing);
+            }
+           
+
             productsDataArray.Add(newProduct);
             File.WriteAllText(productsPATH, productsDataArray.ToString());
 
@@ -100,20 +127,81 @@ namespace Invoice_Free
                 Catagory = newProduct["Catagory"],
                 Cost = newProduct["Cost"],
                 Price = newProduct["Price"],
-                IsTaxable = newProduct["IsTaxable"]
             };
             App.PRODUCTS.Add(theProduct);
 
-            MainPage.MAIN.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
-            MainPage.Popup_Content.Children.Clear();
-            MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
-
+            if (MainPage.MAIN.currentActivePage == "Create Invoice")
+            {
+                MainPage.Popup_Content.Children.Clear();
+                MainPage.Popup_Panel.Visibility = Visibility.Collapsed;                
+                CreateInvoice.Instance.selectedProduct = theProduct;
+                CreateInvoice.Instance.ShowProducts_OnClick(theProduct, null);
+            }
+            else
+            {
+                MainPage.MAIN.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
+                MainPage.Popup_Content.Children.Clear();
+                MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)
+        private void CancelProductBtn_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
             MainPage.Popup_Content.Children.Clear();
+            Debug.WriteLine(MainPage.MAIN.currentActivePage);
+            MainPage.MAIN.NavigateToPage(MainPage.MAIN.currentActivePage, null);
+        }
+
+        private void CreateCatagoryBtn_PointerHover(object sender, PointerRoutedEventArgs e)
+        {
+            if (isHovering_AddBtn)
+            {
+                isHovering_AddBtn = false;
+                AddIcon.Source = addBtnNormal;
+            }
+            else
+            {
+                isHovering_AddBtn = true;
+                AddIcon.Source = addBtnHover;
+            }
+
+            Debug.WriteLine(e.Pointer);
+        }
+
+        private async void CreateCatagoryBtn_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            await CreateCatagory_Dialog.ShowAsync();
+        }
+
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            if (string.IsNullOrEmpty(CatagoryText.Text))
+            {
+                CatagoryText.BorderBrush = new SolidColorBrush(Colors.Red);
+                ErrorFlyout.Text = "This value cannot be empty!";
+                TextBlockFlyout.ShowAt(CatagoryText);
+                ErrorOccured = true;
+                
+            }
+            else
+            {
+                Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                CatagoryText.BorderBrush = borderColor;
+                ErrorOccured = false;
+                App.PRODUCTCATAGORIESLIST.Add(CatagoryText.Text);
+                ProductCatagories.Add(CatagoryText.Text);
+                catagorySelection.SelectedItem = CatagoryText.Text;
+                SaveManager.SaveCompanyEdits();
+            }
+
+        }
+        private void CheckForErrorBeforClosing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        {
+            if (ErrorOccured)
+            {
+                args.Cancel = true;
+            }
         }
     }
 }

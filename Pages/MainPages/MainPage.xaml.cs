@@ -37,6 +37,11 @@ namespace Invoice_Free
         private ApplicationView appView;
         public Frame MainContentFrame { get { return ContentFrame; } }
         public static MainPage MAIN;
+        
+        public NavigationView MainPageNav { get { return MainPageNavigation; } }
+        public string currentActivePage;
+
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -44,6 +49,7 @@ namespace Invoice_Free
             //ContentFrame.Navigate(typeof(AddCompany));
             MAIN = this;
             LoadFirstPage();
+            
         }
        /* protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -61,6 +67,7 @@ namespace Invoice_Free
                 {
                     MainPageNavigation.SelectedItem = item;
                     ContentFrame.Navigate(typeof(ViewStats));
+                    currentActivePage = "Stats";
                 }
             }
         }
@@ -86,38 +93,39 @@ namespace Invoice_Free
             switch (item.Name)
             {
                 case "StatsContent":                    
-                    ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
+                    currentActivePage = "Stats";
                     break;
 
                 case "ViewCustomersContent":
-                    ContentFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
+                    currentActivePage = "Customers";
                     break;
 
                 case "ViewInvoicesContent":
-                    ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
+                    currentActivePage = "Invoices";
                     break;
 
                 case "AddCustomersContent":
-                    ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
+                    currentActivePage = "Create Customer";
                     break;
 
                 case "AddInvoicesContent":
-                    ContentFrame.NavigateToType(typeof(CreateInvoice), null, navOptions);                    
+                    ContentFrame.NavigateToType(typeof(CreateInvoice), null, navOptions);
+                    currentActivePage = "Create Invoice";
                     break;
                 
                 case "ViewProductContent":
                     ContentFrame.NavigateToType(typeof(ViewProducts), null, navOptions);
+                    currentActivePage = "Products";
                     break;
             }
             
         }
-
-        
-
-        
-        public void PageView_ItemInvoled(string pageViewName)
+        public void NavigateToPage(string pageViewName, Customer customer)
         {
-            ContentFrame = new Frame();
             Debug.WriteLine("The PageView_ItemInvoled was clicked");
             FrameNavigationOptions navOptions = new FrameNavigationOptions();
 
@@ -129,21 +137,87 @@ namespace Invoice_Free
 
             switch (pageViewName)
             {
-                case "CustomerView":
-                    Debug.WriteLine("The CustomerView was clicked");
-                    ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
+                case "Stats":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Stats")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
+                            currentActivePage = "Stats";
+                        }
+                    }
+
+                    break;
+                case "Customers":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Customers")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
+                            currentActivePage = "Customers";
+                        }
+                    }
+                    
                     break;
 
-                case "CustomerEdit":
-                    ContentFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
+                case "Create Customer":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Create Customer")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
+                            currentActivePage = "Create Customer";
+                        }
+                    }                    
                     break;
 
-                case "InvoiceView":
-                    ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
+                case "Invoices":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Invoices")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
+                            currentActivePage = "Invoices";
+                        }
+                    }
+                    
                     break;
 
-                case "InvoiceEdit":
-                    ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
+                case "Create Invoice":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Create Invoice")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(CreateInvoice), customer, navOptions);
+                            currentActivePage = "Create Invoice";
+                        }
+                    }
+                    break;
+                case "Products":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Products")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ContentFrame.NavigateToType(typeof(ViewProducts), customer, navOptions);
+                            currentActivePage = "Products";
+                        }
+                    }
+                    break;
+                case "Create Product":
+                    foreach (NavigationViewItemBase item in MainPageNavigation.MenuItems)
+                    {
+                        if (item is NavigationViewItem && item.Content.ToString() == "Create Product")
+                        {
+                            MainPageNavigation.SelectedItem = item;
+                            ShowAddProducts(null, null);
+                        }
+                    }
                     break;
             }
         }

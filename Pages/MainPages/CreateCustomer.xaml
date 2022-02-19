@@ -35,7 +35,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="ADD CUSTOMER" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
+            <TextBlock Text="CREATE CUSTOMER" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
 
 
             <StackPanel x:Name="detailsPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200,100,200,0" Grid.Row="1">

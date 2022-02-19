@@ -5,10 +5,30 @@
     xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:hovey="using:HoveyTech.SearchableComboBox.UWP" xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <Style TargetType="TextBlock" x:Key="RequiredTemplate">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="red"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Text" Value="* Field is required"/>
+        </Style>
+        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+    </Page.Resources>
+    <FlyoutBase.AttachedFlyout>
+        <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
+            <MenuFlyout.Items>
+                <MenuFlyoutItem x:Name="ErrorFlyout"/>
+            </MenuFlyout.Items>
+        </MenuFlyout>
+    </FlyoutBase.AttachedFlyout>
+    
     <Grid x:Name="addInvoicePanel">
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="720" Background="{ThemeResource InkToolbarButtonHoverBackgroundThemeBrush}">
             <Grid.ColumnDefinitions>
@@ -21,7 +41,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="ADD INVOICES" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
+            <TextBlock Text="CREATE INVOICES" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
 
             <StackPanel Grid.Row="1" >
                 <Grid>
@@ -38,24 +58,40 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-
-                    <ComboBox x:Name="CustomersSelectBox" ItemsSource="{x:Bind CustomersOptions}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="40" PlaceholderText="Select a customer." SelectionChanged="CustomersOptions_SelectionChanged">
-                        <ComboBox.Style>
-                            <Style TargetType="ComboBox">
-                                <Setter Property="BorderBrush" Value="{ThemeResource SystemAccentColor}"/>
-                                <Setter Property="BorderThickness" Value="1"/>
-                                <Setter Property="Margin" Value="10,0,0,0"/>
-                            </Style>
-                        </ComboBox.Style>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="local:Customer">
-                                <TextBlock Text="{x:Bind Name, Mode=TwoWay}" FontSize="22" Name="SearchTextBlock"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <CalendarDatePicker x:Name="InvoiceDate" Width="218" HorizontalAlignment="Right" Grid.Column="10" Margin="0,0,10,0" DateFormat="{}{day.integer} {month.full} {year.full}"/>
-
+                    <Grid Grid.Row="1" Grid.Column="0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <hovey:SearchableComboBox x:Name="CustomersSelectBox" 
+                                                  ItemsSource="{x:Bind CustomersList}" 
+                                                  FilterText="{x:Bind FilterCustomers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Grid.Row="0"
+                                                  HorizontalAlignment="Stretch" 
+                                                  VerticalAlignment="Center"
+                                                  Height="35" 
+                                                  Margin="10,0,0,0"
+                                                  PlaceholderText="Select a customer."
+                                                  ItemsSourceEmptyMessage="No Customer by that name found!"
+                                                  UseLoadingProgressRing="True"
+                                                  IsRefreshingItemsSource="{x:Bind IsSearching}">
+                            <hovey:SearchableComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="local:Customer">
+                                    <TextBlock Text="{x:Bind Name, Mode=TwoWay}" FontSize="22" Name="SearchTextBlock"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </hovey:SearchableComboBox.ItemTemplate>
+                        </hovey:SearchableComboBox>
+                        <TextBlock Style="{StaticResource RequiredTemplate}"  Grid.Row="1" Margin="10,0,0,0"/>
+                    </Grid>
+                    <Grid Grid.Column="1" Margin="0,0,10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <CalendarDatePicker x:Name="InvoiceDate" Width="218" HorizontalAlignment="Right" DateFormat="{}{day.integer} {month.full} {year.full}" VerticalAlignment="Center" Grid.Row="0"/>
+                        <TextBlock Style="{StaticResource RequiredTemplate}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                    </Grid>
                 </Grid>
             </StackPanel>
             
@@ -63,13 +99,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>                    
+                    <ColumnDefinition Width="150"/>                    
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Product" Grid.Column="0" VerticalAlignment="Center" Padding="10,0"/>
                 <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="0"/>
-                <TextBlock Text="Qty" Grid.Column="1" VerticalAlignment="Center" Padding="10,0"/>
+                <TextBlock Text="Qty" Grid.Column="1" VerticalAlignment="Center" Padding="10,0" />
                 <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="1"/>
-                <TextBlock Text="Price" Grid.Column="2" VerticalAlignment="Center" Padding="10,0"/>
+                <TextBlock Text="Price" Grid.Column="2" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center"/>
             </Grid>
             
             <StackPanel Grid.Row="3" VerticalAlignment="Stretch">
@@ -92,12 +128,12 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition Width="Auto" MinWidth="50"/>
-                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="150"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
                                                 <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
                                                 <TextBlock Text="{x:Bind Quantity}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Center" VerticalAlignment="Center" FontSize="16" Grid.RowSpan ="2" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="{x:Bind TotalPrice}"  Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Grid.RowSpan ="2"/>
+                                                <TextBlock Text="{x:Bind TotalPrice, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Grid.RowSpan ="2"/>
                                                 <Rectangle Fill="LightGray" Height="1" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,18,0,0"/>
                                             </Grid>
                                         </StackPanel>
@@ -107,7 +143,7 @@
                         </ScrollViewer>
                     </StackPanel>
                 </Grid>
-                <Button Content="Add Product" Height="41" Width="124" Click="ShowProducts_OnClick" HorizontalAlignment="Center"/>
+                <Button x:Name="addProduct_Btn" Content="Add Product" Height="41" Width="124" Click="ShowProducts_OnClick" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
         
@@ -115,7 +151,9 @@
             <CheckBox x:Name="IsPaid" Content="Paid?" Margin="10,0,0,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">
                 <AppBarButton Icon="Save" Label="Save" Click="SaveButton_Click"/>
+
                 <AppBarButton Label="Export PDF" Click="ExportButton_Click">
+                    
                     <AppBarButton.Icon>
                         <BitmapIcon UriSource="/Assets/Icons/PDFExport.png"/>
                     </AppBarButton.Icon>
@@ -137,7 +175,7 @@
             </TextBlock>
         </Grid>
         
-        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add" PrimaryButtonClick="AddProductToInvoice" >
+        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add" PrimaryButtonClick="AddProductToInvoice" Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -145,27 +183,23 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="PRODUCTS" HorizontalTextAlignment="Center" HorizontalAlignment="Center" FontSize="22" Grid.Row="0"/>
-                <Image x:Name="AddIcon"                                     
-                        Stretch="Uniform" 
-                        Margin="10,0,0,0" 
-                        Grid.Column ="2"                                    
-                        Width="30"
-                        Height="30"
-                        PointerPressed="AddNewProduct_OnClick"
-                        PointerEntered ="AddNewProduct_OnHover"
-                        PointerExited="AddNewProduct_OnHover"
-                        ToolTipService.ToolTip="Add new product"
-                        HorizontalAlignment="Right" 
-                       VerticalAlignment="Top"
-                       Grid.Row="0"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,5">
                     <TextBlock Text="Quantity" HorizontalTextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Margin="0,0,5,0"/>
                     <TextBox x:Name="QuantitySelected" PlaceholderText="0"/>
                 </StackPanel>
 
-                <ListView x:Name="ProductsDisplayList" Grid.Row="2" IsItemClickEnabled="True" ItemClick="ProductsDisplayList_ItemSelected">
-                    <ListView.ItemTemplate>
+
+                <hovey:SearchableComboBox x:Name="ProductsDisplayList" 
+                                          Grid.Row="2" MinWidth="470"
+                                          FilterText="{x:Bind FilterProducts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          PlaceholderText="Select A Product..." 
+                                          ItemsSourceEmptyMessage="No Product found by that name!" 
+                                          ItemsSource="{x:Bind ProductsList}" 
+                                          UseLoadingProgressRing="True"
+                                          IsRefreshingItemsSource="{x:Bind IsSearching}"
+                                          MinHeight="60"> 
+                    <hovey:SearchableComboBox.ItemTemplate>
                         <DataTemplate x:DataType="local:Product">
                             <Grid HorizontalAlignment="Center" MinWidth="400" Padding="10,5,10,0">
                                 <Grid.RowDefinitions>
@@ -178,39 +212,12 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
                                 <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
-                                <TextBlock Text="{x:Bind Price}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Grid.RowSpan ="2"/>
-                                <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="2" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2" Margin="-20,20,-20,0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-
-
-
-
-                <!-- <ComboBox x:Name="productList" Grid.Row="1" MinWidth="470">                    
-                    <ComboBox.ItemTemplate>                        
-                        <DataTemplate x:DataType="local:Product">
-                            <Grid HorizontalAlignment="Center" MinWidth="400"> 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
-                                <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
-                                <TextBlock Text="{x:Bind Price}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Grid.RowSpan ="2"/>
+                                <TextBlock Text="{x:Bind Price, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
                                 <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="2" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,18,0,0"/>
                             </Grid>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>-->
-
-
+                    </hovey:SearchableComboBox.ItemTemplate>
+                </hovey:SearchableComboBox>
 
             </Grid>
         </ContentDialog>

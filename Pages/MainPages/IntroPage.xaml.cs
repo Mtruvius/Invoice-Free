@@ -104,7 +104,7 @@ namespace Invoice_Free
                 RegNo = companyInfo[0]["RegNo"],
                 VatOrTax = companyInfo[0]["VatOrTax"],
                 ContactPerson = companyInfo[0]["ContactPerson"],
-                LastInvoiceNo = companyInfo[0]["LastInvNo"],
+                LastInvoiceNo = companyInfo[0]["LastInvoiceNo"],
                 PriorRevenue = GetRevenueIntArray(companyInfo[0]["PriorRevenue"]),
                 PreviousRevenue = GetRevenueIntArray(companyInfo[0]["PreviousRevenue"]),
                 Revenue = GetRevenueIntArray(companyInfo[0]["Revenue"]),
@@ -114,13 +114,24 @@ namespace Invoice_Free
                 TotalQuotes = companyInfo[0]["TotalQuotes"],
                 TotalCustomers = companyInfo[0]["TotalCustomers"],
             };
+            JSONNode CatagoriesList = companyInfo[0]["ProductCatagoriesList"];
             App.companyActive = company;
             CreateCustomersList();
             CreateProductsList();            
+            CreateProductCatagoryList(CatagoriesList);            
             this.Frame.Navigate(typeof(MainPage));           
 
-            Debug.WriteLine(clickedItem.CompanyName);
+            Debug.WriteLine("PRODUCTCATAGORIESLIST: " + App.PRODUCTCATAGORIESLIST[0].ToString());
 
+        }
+
+        private void CreateProductCatagoryList(JSONNode CatagoriesList)
+        {
+            foreach (JSONNode catagory in CatagoriesList)
+            {
+                App.PRODUCTCATAGORIESLIST.Add(catagory.Value.ToString());
+            }
+           
         }
 
         private float[] GetRevenueIntArray(JSONNode revenueArray)
@@ -133,6 +144,8 @@ namespace Invoice_Free
             }
             return revenue;
         }
+
+        
 
         private void CreateProductsList()
         {
@@ -158,9 +171,7 @@ namespace Invoice_Free
                     Name = product["Name"],
                     Description = product["Description"],
                     Cost = product["Cost"],
-                    Price = product["Price"],
-                    IsTaxable = product["IsTaxable"]
-                    
+                    Price = product["Price"]
                 };
                 App.PRODUCTS.Add(pro);
             }
@@ -232,6 +243,13 @@ namespace Invoice_Free
                 App.CUSTOMERS.Add(Obj);
             }
             Debug.WriteLine("CUSTOMERS count: " + App.CUSTOMERS.Count);
+        }
+
+        private void AddNewCompany_Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame frame = Window.Current.Content as Frame;
+
+            frame.NavigateToType(typeof(CreateCompany),null,App.AnimatePage("bottom"));
         }
     }
 

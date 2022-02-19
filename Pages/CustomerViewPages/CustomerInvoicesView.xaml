@@ -23,10 +23,10 @@
                         HorizontalAlignment="Right"                                    
                         Width="30"
                         Height="30"
-                        PointerPressed="AddInvoice_OnClick"
+                        PointerPressed="CreateInvoice_OnClick"
                         PointerEntered ="AddInvoice_OnHover"
                         PointerExited="AddInvoice_OnHover"
-                        ToolTipService.ToolTip="Add Invoice"/>
+                        ToolTipService.ToolTip="Create Invoice"/>
 
             </Grid>
 

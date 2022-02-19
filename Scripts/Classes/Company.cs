@@ -26,6 +26,5 @@ namespace Invoice_Free
         public int PendingInvoices;
         public int TotalQuotes;
         public int TotalCustomers;
-        
     }
 }

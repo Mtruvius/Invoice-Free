@@ -45,10 +45,10 @@ namespace Invoice_Free
             switch (textBox.Name)
             {
                 case "customerName":
-                    CustomerToAdd.Name = ValidateTextBox(textBox);
+                    CustomerToAdd.Name = App.ValidateTextBox(textBox, TextBlockFlyout, ErrorFlyout);
                     break;
                 case "Email":
-                    CustomerToAdd.Email = ValidateEmail(textBox);
+                    CustomerToAdd.Email = App.ValidateEmail(textBox, TextBlockFlyout, ErrorFlyout);
                     break;
                 case "Contact":
                     CustomerToAdd.Contact = textBox.Text;
@@ -141,73 +141,5 @@ namespace Invoice_Free
                 return str;
             }
         }
-
-        public string ValidateTextBox(TextBox input)
-        {
-            if (string.IsNullOrEmpty(input.Text))
-            {
-                input.BorderBrush = new SolidColorBrush(Colors.Red);
-                ErrorFlyout.Text = "This field cannot be empty!";
-                TextBlockFlyout.ShowAt(input);
-                return null;
-            }
-            else
-            {
-                Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
-                input.BorderBrush = borderColor;
-                return input.Text;
-            }
-
-        }
-        private string ValidateEmail(TextBox input)
-        {
-            bool containsTLD = false;
-
-            if (string.IsNullOrEmpty(input.Text))
-            {
-                input.BorderBrush = new SolidColorBrush(Colors.Red);
-                ErrorFlyout.Text = "This field cannot be empty!";
-                TextBlockFlyout.ShowAt(input);
-                return null;
-            }
-            else
-            {
-                try
-                {
-                    string[] theString = input.Text.Split('.');
-                    string TLD = theString[1];
-
-                    foreach (string item in TLDs.Domains)
-                    {
-                        if (item.ToLower() == TLD.ToLower())
-                        {
-                            containsTLD = true;
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-
-                }
-                
-                if (!input.Text.Contains('@') || !containsTLD)
-                {
-                    input.BorderBrush = new SolidColorBrush(Colors.Red);
-                    ErrorFlyout.Text = "A valid email address is required!";
-                    TextBlockFlyout.ShowAt(input);
-                    return null;
-                }
-                else
-                {
-                    Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
-                    input.BorderBrush = borderColor;
-                    return input.Text;
-                }
-            }
-            
-        }
-
-        
-
     }
 }

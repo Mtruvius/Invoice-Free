@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media.Animation;
 using SimpleJSON;
 using System.Collections.ObjectModel;
+using HoveyTech.SearchableComboBox.UWP;
 
 namespace Invoice_Free
 {
@@ -49,6 +50,7 @@ namespace Invoice_Free
         public static ObservableCollection<Customer> CUSTOMERS { get; set; }
         public static ObservableCollection<Product> PRODUCTS { get; set; }
         public static ObservableCollection<InvoiceClass> ALL_INVOICES { get; set; }
+        public static ObservableCollection<string> PRODUCTCATAGORIESLIST { get; set; }
 
         public static BitmapSource addBtnNormal;
         public static BitmapSource addBtnHover;
@@ -68,6 +70,7 @@ namespace Invoice_Free
             CUSTOMERS = new ObservableCollection<Customer>();
             PRODUCTS = new ObservableCollection<Product>();
             ALL_INVOICES = new ObservableCollection<InvoiceClass>();
+            PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             GetAssets();
         }
 
@@ -342,7 +345,138 @@ namespace Invoice_Free
             return navOptions;
         }
 
-        
+        public static string ValidateTextBox(TextBox input, MenuFlyout flyout, MenuFlyoutItem flyoutItem)
+        {
+            if (string.IsNullOrEmpty(input.Text))
+            {
+                input.BorderBrush = new SolidColorBrush(Colors.Red);
+                flyoutItem.Text = "This field cannot be empty!";
+                flyout.ShowAt(input);
+                return null;
+            }
+            else
+            {
+                Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                input.BorderBrush = borderColor;
+                return input.Text;
+            }
+
+        }
+
+        public static float ValidateNumericBox(TextBox input, MenuFlyout flyout, MenuFlyoutItem flyoutItem)
+        {
+            if (string.IsNullOrEmpty(input.Text))
+            {
+                input.BorderBrush = new SolidColorBrush(Colors.Red);
+                flyoutItem.Text = "This field cannot be empty!";
+                flyout.ShowAt(input);
+                return -1;
+            }
+            else
+            {
+                try
+                {
+                    float number = float.Parse(input.Text);
+                    Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                    input.BorderBrush = borderColor;
+                    return number;
+                }
+                catch (Exception)
+                {
+                    input.BorderBrush = new SolidColorBrush(Colors.Red);
+                    flyoutItem.Text = "A Numeric value is required for this field!";
+                    flyout.ShowAt(input);
+                    return -1;
+                }
+            }
+            
+            
+        }
+
+        public static object ValidateSelectedItem(SearchableComboBox box, MenuFlyout flyout, MenuFlyoutItem flyoutItem, string errorMessage)
+        {
+            if (box.SelectedItem == null)
+            {
+                box.BorderBrush = new SolidColorBrush(Colors.Red);
+                flyoutItem.Text = errorMessage;
+                flyout.ShowAt(box);
+                return null;
+            }
+            else
+            {
+                Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                box.BorderBrush = borderColor;
+                return box.SelectedItem;
+            }
+
+        }
+        public static object ValidateSelectedItem(ComboBox box, MenuFlyout flyout, MenuFlyoutItem flyoutItem, string errorMessage)
+        {
+            if (box.SelectedItem == null)
+            {
+                box.BorderBrush = new SolidColorBrush(Colors.Red);
+                flyoutItem.Text = errorMessage;
+                flyout.ShowAt(box);
+                return null;
+            }
+            else
+            {
+                Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                box.BorderBrush = borderColor;
+                return box.SelectedItem;
+            }
+
+        }
+
+        public static string ValidateEmail(TextBox input, MenuFlyout flyout, MenuFlyoutItem flyoutItem)
+        {
+            bool containsTLD = false;
+
+            if (string.IsNullOrEmpty(input.Text))
+            {
+                input.BorderBrush = new SolidColorBrush(Colors.Red);
+                flyoutItem.Text = "This field cannot be empty!";
+                flyout.ShowAt(input);
+                return null;
+            }
+            else
+            {
+                try
+                {
+                    string[] theString = input.Text.Split('.');
+                    string TLD = theString[1];
+
+                    foreach (string item in TLDs.Domains)
+                    {
+                        if (item.ToLower() == TLD.ToLower())
+                        {
+                            containsTLD = true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
+                if (!input.Text.Contains('@') || !containsTLD)
+                {
+                    input.BorderBrush = new SolidColorBrush(Colors.Red);
+                    flyoutItem.Text = "A valid email address is required!";
+                    flyout.ShowAt(input);
+                    return null;
+                }
+                else
+                {
+                    Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
+                    input.BorderBrush = borderColor;
+                    return input.Text;
+                }
+            }
+
+        }
+
+
         #endregion
     }
 }

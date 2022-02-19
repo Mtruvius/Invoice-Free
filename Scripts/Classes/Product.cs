@@ -11,9 +11,7 @@ namespace Invoice_Free
         public string Catagory;
         public string Name;
         public string Description;
-        public string Cost;
-        public string Price;
-        public string IsTaxable;
-
+        public float Cost;
+        public float Price;
     }
 }

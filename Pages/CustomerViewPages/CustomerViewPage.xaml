@@ -94,7 +94,7 @@
                        CloseButtonText="Cancel"
                        Grid.Row="1"
                        Grid.ColumnSpan="2"
-                       MinWidth="600" Visibility="Collapsed">
+                       MinWidth="600" Visibility="Visible">
             <ContentDialog.TitleTemplate>
                 <DataTemplate>
                     <TextBlock Text="EDITING CUSTOMER" Foreground="{ThemeResource SystemAccentColor}" FontWeight="Bold" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>

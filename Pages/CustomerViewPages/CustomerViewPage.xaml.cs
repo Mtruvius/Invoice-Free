@@ -43,6 +43,8 @@ namespace Invoice_Free
             
         }
 
+        
+
         private void BackToCustomers(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             FrameNavigationOptions navOptions = new FrameNavigationOptions();

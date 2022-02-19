@@ -7,7 +7,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.Resources>
+        <Style TargetType="TextBlock" x:Key="RequiredTemplate">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="red"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,-10,0,10"/>
+            <Setter Property="Text" Value="* Field is required"/>
+        </Style>
+    </Page.Resources>
+    <FlyoutBase.AttachedFlyout>
+        <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
+            <MenuFlyout.Items>
+                <MenuFlyoutItem x:Name="ErrorFlyout"/>
+            </MenuFlyout.Items>
+        </MenuFlyout>
+    </FlyoutBase.AttachedFlyout>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="17*"/>
@@ -17,26 +32,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!-- Header
-        <Button x:Name="BackButton" IsEnabled="{x:Bind Frame.CanGoBack, Mode=OneWay}" VerticalAlignment="Top" Click="BackButton_Click" 
-                Margin="20,37,0,0" Grid.Column="0" Height="73" Width="73" FontSize="25" FontFamily="Segoe MDL2 Assets" Content="&#xE72B;" Background="{ThemeResource SystemAccentColor}">
-            <Button.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Dark">
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
-                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
-                            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                        </ResourceDictionary>
-                    </ResourceDictionary.ThemeDictionaries>
-                </ResourceDictionary>
-            </Button.Resources>
-        </Button> -->
-        <TextBlock x:Name="PageTitle" Text="ADD COMPANY" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="40" TextDecorations="None" Margin="-72,30,0,0"/>
-        <!--Header End -->
+
+        <TextBlock x:Name="PageTitle" Text="CREATE COMPANY" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="40" TextDecorations="None" Margin="-72,30,0,0"/>
+        
 
         <ContentControl x:Name="ContentHost" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">
             <ContentControl.ContentTransitions>
@@ -58,19 +56,25 @@
 
                 <StackPanel x:Name="COMP_name_panel" Visibility="Visible" >
                     <TextBox x:Name="CompanyName" HorizontalAlignment="Center" PlaceholderText="Company Name" Width="720" Height="59" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" Header="Please enter a company name to continue." KeyDown="EnterPressed"/>
+                    <TextBlock Style="{StaticResource RequiredTemplate}" />
                     <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyNameChosen"  Margin="0,20,0,0"/>
                 </StackPanel>
 
-                <StackPanel x:Name="COMP_Image_panel"  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">                    
-                    <Image x:Name="Company_logo" Width="320" Source="/Assets/Icons/add.png" PointerReleased="{x:Bind local:App.SelectImage}" HorizontalAlignment="Stretch" Height="238" Margin="0,0,0,10"/>
+                <StackPanel x:Name="COMP_Image_panel"  Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <Border x:Name="ImageBorder" BorderThickness="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="Company_logo" Source="/Assets/Icons/imageAdd.png" PointerReleased="{x:Bind SelectingImage}" HorizontalAlignment="Center" VerticalAlignment="Center"  MaxHeight="320" AutomationProperties.IsRequiredForForm="True"/>
+                    </Border>
+                    <TextBlock Style="{StaticResource RequiredTemplate}"  Margin="0,0,0,0"/>
                     <Button HorizontalAlignment="Center" Content="Continue" Click="CompanyLogoChosen" Margin="0,20,0,0"/>
                 </StackPanel>
 
                 <StackPanel x:Name="COMP_Details_panel" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed">
-                    <TextBox x:Name="Contact"  HorizontalAlignment="Left" PlaceholderText="Contact Number" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" InputScope="TelephoneLocalNumber"/>
 
-                    <TextBox x:Name="Email"  HorizontalAlignment="Left" PlaceholderText="Email Address" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" InputScope="EmailSmtpAddress"/>
+                    <TextBox x:Name="Email"  HorizontalAlignment="Left" PlaceholderText="Email Address" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" AutomationProperties.IsRequiredForForm="True" InputScope="EmailSmtpAddress"  LostFocus="Email_LostFocus"/>
+                    <TextBlock Style="{StaticResource RequiredTemplate}" />
 
+                    <TextBox x:Name="Contact"  HorizontalAlignment="Left" PlaceholderText="Contact Number" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="TelephoneLocalNumber"/>
+                    
                     <TextBox x:Name="companyAddress"  HorizontalAlignment="Left" PlaceholderText="Phisical Address" TextWrapping="Wrap" Width="720"  Height="auto" MaxHeight="200" VerticalAlignment="top" VerticalContentAlignment="Center" Margin="0,0,0,10" AcceptsReturn="True"/>
 
                     <TextBox x:Name="CompanyReg"  HorizontalAlignment="Left" PlaceholderText="Company Registration No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
@@ -79,7 +83,15 @@
 
                     <TextBox x:Name="ContactPerson"  HorizontalAlignment="Left" PlaceholderText="Contact Person" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
 
-                    <Button HorizontalAlignment="Center" Content="Save" Click="CompanyDetailsChosen"/>
+                    <Button HorizontalAlignment="Center" Content="Save" Click="CompanyDetailsChosen">                       
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout x:Name="ButtonFlyout" Placement="Top"  ShowMode="Transient">
+                                <MenuFlyout.Items>
+                                    <MenuFlyoutItem x:Name="btnErrorFlyout"/>
+                                </MenuFlyout.Items>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>                    
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </ContentControl>

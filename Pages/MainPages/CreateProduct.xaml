@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     >
-
+    <FlyoutBase.AttachedFlyout>
+        <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
+            <MenuFlyout.Items>
+                <MenuFlyoutItem x:Name="ErrorFlyout"/>
+            </MenuFlyout.Items>
+        </MenuFlyout>
+    </FlyoutBase.AttachedFlyout>
     <Grid>
         <Grid Padding="20">
             <Grid.ColumnDefinitions>
@@ -37,8 +43,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Catagory:" Grid.Column ="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <ComboBox x:Name="catagorySelection" Grid.Column ="1" HorizontalAlignment="Stretch">
-                                <ComboBoxItem Content="HELLO WORLD"/>
+                            <ComboBox x:Name="catagorySelection" 
+                                      Grid.Column ="1" 
+                                      HorizontalAlignment="Stretch"
+                                      ItemsSource="{x:Bind ProductCatagories}">
                             </ComboBox>
                             <Image x:Name="AddIcon"                                     
                                    Stretch="Uniform" 
@@ -46,9 +54,9 @@
                                    Grid.Column ="2"                                    
                                    Width="30"
                                    Height="30"
-                                   PointerPressed="AddBtn_PointerPressed"
-                                   PointerEntered="AddBtn_PointerHover"
-                                   PointerExited="AddBtn_PointerHover"/>
+                                   PointerPressed="CreateCatagoryBtn_PointerPressed"
+                                   PointerEntered="CreateCatagoryBtn_PointerHover"
+                                   PointerExited="CreateCatagoryBtn_PointerHover"/>
                         </Grid>
                         <Grid Grid.Column ="1"  Margin="10,0,0,0">
                             <Grid.ColumnDefinitions>
@@ -73,7 +81,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Cost:" Grid.Column ="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <TextBox x:Name="costPrice" Grid.Column ="1" HorizontalAlignment="Stretch"/>
+                            <TextBox x:Name="costPriceTxt" Grid.Column ="1" HorizontalAlignment="Stretch"/>
                         </Grid>
                         <Grid Grid.Column ="1"  Margin="10,0,0,0">
                             <Grid.ColumnDefinitions>
@@ -83,15 +91,24 @@
                             <TextBlock Text="Selling Price:" Grid.Column ="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                             <TextBox x:Name="sellingPrice" Grid.Column ="1" HorizontalAlignment="Stretch"/>
                         </Grid>
-                    </Grid>
-                    <CheckBox x:Name="isTaxable" Content="Taxable Product?"/>
+                    </Grid>                    
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="10">
-                        <Button x:Name="createBtn" Content="Create" Margin="0,0,5,0" Click="CreateBtn_Click"/>
-                        <Button x:Name="cancel" Content="Cancel" Click="Cancel_Click"/>
+                        <Button x:Name="createBtn" Content="Create" Margin="0,0,5,0" Click="CreateProductBtn_Click"/>
+                        <Button x:Name="cancel" Content="Cancel" Click="CancelProductBtn_Click"/>
                     </StackPanel>
                     
                 </StackPanel>
             </Grid>            
         </Grid>
+        
+        <ContentDialog x:Name="CreateCatagory_Dialog"
+            PrimaryButtonText="Create"
+            CloseButtonText="Cancel"
+            PrimaryButtonClick="ContentDialog_PrimaryButtonClick" Visibility="Collapsed">
+            <StackPanel Margin="0,0,0,-20">
+                <TextBlock Text="CREATE CATAGORY" HorizontalAlignment="Center" FontSize="20"/>
+                <TextBox x:Name="CatagoryText" PlaceholderText="Catagory" Margin="10"/>
+            </StackPanel>            
+        </ContentDialog>
     </Grid>
 </UserControl>
