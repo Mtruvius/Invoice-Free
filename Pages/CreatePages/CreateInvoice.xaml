@@ -5,9 +5,8 @@
     xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity" 
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
-    xmlns:hovey="using:HoveyTech.SearchableComboBox.UWP" xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:hovey="using:HoveyTech.SearchableComboBox"
+   xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters" 
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -30,7 +29,8 @@
     </FlyoutBase.AttachedFlyout>
     
     <Grid x:Name="addInvoicePanel">
-        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="720" Background="{ThemeResource InkToolbarButtonHoverBackgroundThemeBrush}">
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxWidth="720" Background="{ThemeResource SystemChromeMediumHighColor}">
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -146,7 +146,7 @@
                 <Button x:Name="addProduct_Btn" Content="Add Product" Height="41" Width="124" Click="ShowProducts_OnClick" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
-        
+       
         <Grid VerticalAlignment="Bottom" Margin="0,0,0,75" MaxWidth="720" Grid.ColumnSpan="3">
             <CheckBox x:Name="IsPaid" Content="Paid?" Margin="10,0,0,0"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,0">

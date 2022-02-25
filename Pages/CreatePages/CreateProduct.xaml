@@ -1,4 +1,4 @@
-﻿<UserControl 
+﻿<Page 
     x:Class="Invoice_Free.CreateProduct"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -23,7 +23,7 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            
+
             <Grid>
                 <TextBlock Text="CREATE PRODUCT" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40" Grid.ColumnSpan="2"/>
             </Grid>
@@ -91,24 +91,24 @@
                             <TextBlock Text="Selling Price:" Grid.Column ="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                             <TextBox x:Name="sellingPrice" Grid.Column ="1" HorizontalAlignment="Stretch"/>
                         </Grid>
-                    </Grid>                    
+                    </Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="10">
                         <Button x:Name="createBtn" Content="Create" Margin="0,0,5,0" Click="CreateProductBtn_Click"/>
                         <Button x:Name="cancel" Content="Cancel" Click="CancelProductBtn_Click"/>
                     </StackPanel>
-                    
+
                 </StackPanel>
-            </Grid>            
+            </Grid>
         </Grid>
-        
+
         <ContentDialog x:Name="CreateCatagory_Dialog"
             PrimaryButtonText="Create"
             CloseButtonText="Cancel"
-            PrimaryButtonClick="ContentDialog_PrimaryButtonClick" Visibility="Collapsed">
+            PrimaryButtonClick="ContentDialog_PrimaryButtonClick" Visibility="Visible">
             <StackPanel Margin="0,0,0,-20">
                 <TextBlock Text="CREATE CATAGORY" HorizontalAlignment="Center" FontSize="20"/>
                 <TextBox x:Name="CatagoryText" PlaceholderText="Catagory" Margin="10"/>
-            </StackPanel>            
+            </StackPanel>
         </ContentDialog>
     </Grid>
-</UserControl>
+</Page>

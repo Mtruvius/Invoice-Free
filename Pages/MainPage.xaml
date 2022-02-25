@@ -4,7 +4,6 @@
     xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
      
     mc:Ignorable="d"
     Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -17,13 +16,15 @@
             <RowDefinition Height="817*"/>
         </Grid.RowDefinitions>
 
-        <!--     <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top" Grid.Row="0">
+        <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1419*"/>
-                <ColumnDefinition Width="135*"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="135"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="TitleText" Text="Invoice Free" Grid.Column="0" TextAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="19" />
-            <StackPanel Orientation="Horizontal"  Grid.Column="1" Height="32" HorizontalAlignment="Right">
+            <Image x:Name="TitleLogo" Grid.Column="0"  VerticalAlignment="Stretch" Height="30" Source="/Assets/StoreLogo.png" Stretch="Uniform" Margin="0,3,0,3"/>
+            <TextBlock x:Name="TitleText" Text="Invoice Free" Grid.Column="1" TextAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="19"  HorizontalAlignment="Stretch"/>
+            <StackPanel Orientation="Horizontal"  Grid.Column="2" Height="32" HorizontalAlignment="Right">
 
                 <Button x:Name="Minimize" FontFamily="Segoe MDL2 Assets" Content="&#xE949;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.Minimize_Checked}">
                     <Button.Resources>
@@ -68,7 +69,7 @@
             </StackPanel>
 
         </Grid>
--->
+
         <Image x:Name="Company_Logo" Grid.Row="1" Width="228" HorizontalAlignment="Left" Margin="50,15,0,9" Source="{x:Bind  local:App.companyActive.CompanyLogo}"/>
         <TextBlock x:Name="Company_Name" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="1" Text="{x:Bind local:App.companyActive.CompanyName}" TextWrapping="NoWrap"  VerticalAlignment="Center" Height="119" Width="782" FontSize="75" />
         <Rectangle Height="1" Fill="{ThemeResource SystemAccentColor}" VerticalAlignment="Bottom" Grid.Row="1"/>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 
 namespace Invoice_Free
 {
@@ -18,9 +18,9 @@ namespace Invoice_Free
         public string RegNo;
         public string ContactPerson;
         public int LastInvoiceNo;
-        public float[] PriorRevenue;
-        public float[] PreviousRevenue;
-        public float[] Revenue;
+        public double[] PriorRevenue;
+        public double[] PreviousRevenue;
+        public double[] Revenue;
         public int CurrentYear;
         public int CompleteInvoices;
         public int PendingInvoices;

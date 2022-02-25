@@ -1,30 +1,15 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Helpers;
-using SimpleJSON;
+﻿using SimpleJSON;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Core.Preview;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Windows.Storage;
+using System.IO;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -43,8 +28,8 @@ namespace Invoice_Free
         {
             InitializeComponent();
             SetContent();
-            Debug.WriteLine(App.PublisherFolder.Path);
-            Window.Current.SizeChanged += App.MaintainMaimized;
+
+            //Window.Current.SizeChanged += App.MaintainMaimized;
             uiSettings = new UISettings();
             uiSettings.ColorValuesChanged += CheckTitleTxtColor;
         }
@@ -58,7 +43,8 @@ namespace Invoice_Free
         
         private async void SetContent()
         {
-             StorageFolder companiesFolder = await App.PublisherFolder.GetFolderAsync("Companies");
+            Debug.WriteLine(App.PathToCompanies);
+             StorageFolder companiesFolder = await StorageFolder.GetFolderFromPathAsync(App.PathToCompanies);
              IReadOnlyList<StorageFolder> companies = await companiesFolder.GetFoldersAsync();
              _companies = new ObservableCollection<CompanyListViewItem>();
              foreach (var company in companies)
@@ -118,10 +104,10 @@ namespace Invoice_Free
             App.companyActive = company;
             CreateCustomersList();
             CreateProductsList();            
-            CreateProductCatagoryList(CatagoriesList);            
+            CreateProductCatagoryList(CatagoriesList);
+
             this.Frame.Navigate(typeof(MainPage));           
 
-            Debug.WriteLine("PRODUCTCATAGORIESLIST: " + App.PRODUCTCATAGORIESLIST[0].ToString());
 
         }
 
@@ -134,10 +120,10 @@ namespace Invoice_Free
            
         }
 
-        private float[] GetRevenueIntArray(JSONNode revenueArray)
+        private double[] GetRevenueIntArray(JSONNode revenueArray)
         {
             Debug.WriteLine(revenueArray[0]);
-            float[] revenue = new float[12];
+            double[] revenue = new double[12];
             for (int i = 0; i < revenueArray.Count; i++)
             {
                 revenue[i] = revenueArray[i];
@@ -247,7 +233,7 @@ namespace Invoice_Free
 
         private void AddNewCompany_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Frame frame = Window.Current.Content as Frame;
+            Frame frame = MainWindow.m_Frame;
 
             frame.NavigateToType(typeof(CreateCompany),null,App.AnimatePage("bottom"));
         }
