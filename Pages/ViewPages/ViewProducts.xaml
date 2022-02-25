@@ -5,7 +5,7 @@
     xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
@@ -23,7 +23,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="PRODUCTS" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="30" Height="40" Width="168" Margin="666,0,0,0"/>
+            <TextBlock Text="PRODUCTS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Height="40" Grid.ColumnSpan="2"/>
 
             <TextBox PlaceholderText="Search" Grid.Row="1" Height="40" VerticalAlignment="Center" FontSize="16" VerticalContentAlignment="Center" Grid.Column="0" TextChanging="TextBox_TextChanging">
                 <TextBox.Style>

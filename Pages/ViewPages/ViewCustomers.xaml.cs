@@ -9,12 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -99,10 +99,10 @@ namespace Invoice_Free
             };            
             navOptions.IsNavigationStackEnabled = false;
 
-            CustomerContentFrame.NavigateToType(typeof(CustomerViewPage), (Customer)e.ClickedItem, navOptions);
+           // CustomerContentFrame.NavigateToType(typeof(CustomerViewPage), (Customer)e.ClickedItem, navOptions);
         }
        
-        private void CreateCustomer_OnHover(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void CreateCustomer_OnHover(object sender, PointerRoutedEventArgs e)
         {
             if (isHovering_AddBtn)
             {

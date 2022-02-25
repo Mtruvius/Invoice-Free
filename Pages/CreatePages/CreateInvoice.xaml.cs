@@ -1,28 +1,18 @@
-﻿using SimpleJSON;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -62,7 +52,7 @@ namespace Invoice_Free
             SelectedProducts = new ObservableCollection<InvoiceProduct>();
             ProductsList = new ObservableCollection<Product>();
             CustomersList = new ObservableCollection<Customer>();           
-            ScrollerHeight = Window.Current.Content.ActualSize.Y / 2;
+            ScrollerHeight = App.m_window.Content.ActualSize.Y / 2;
             ScrollerView.MaxHeight = ScrollerHeight;
             Debug.WriteLine(ScrollerHeight);
             ScrollerView.UpdateLayout();
@@ -364,7 +354,7 @@ namespace Invoice_Free
                 {
                     App.companyActive.PriorRevenue = App.companyActive.PreviousRevenue;
                     App.companyActive.PreviousRevenue = App.companyActive.Revenue;
-                    App.companyActive.Revenue = new float[12];
+                    App.companyActive.Revenue = new double[12];
                     App.companyActive.Revenue[i] = invoiceTotal;
                     App.companyActive.CurrentYear = DateTime.Now.Year;
                 }
