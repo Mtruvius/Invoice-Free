@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Invoice Free (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Invoice Free (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.Foundation;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 
-using Windows.UI;
+using Microsoft.UI;
 using System.Diagnostics;
-using Windows.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Animation;
 using SimpleJSON;
+using Windows.UI;
+using Microsoft.UI.Xaml;
+using Windows.UI.ViewManagement;
 
 
 
@@ -33,7 +32,7 @@ namespace Invoice_Free
     {
         public static Grid Popup_Panel { get; set; }
         public static StackPanel Popup_Content { get; set; }
-        private CreateProduct _newProduct;
+        //private CreateProduct _newProduct;
         private ApplicationView appView;
         public Frame MainContentFrame { get { return ContentFrame; } }
         public static MainPage MAIN;
@@ -51,13 +50,11 @@ namespace Invoice_Free
             LoadFirstPage();
             
         }
-       /* protected override void OnNavigatedTo(NavigationEventArgs e)
+       protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            App.companyActive = (Company)e.Parameter;
-
             LoadFirstPage();
-        }*/
+        }
 
         private void LoadFirstPage()
         {
@@ -90,36 +87,40 @@ namespace Invoice_Free
 
             NavigationViewItemBase item = args.InvokedItemContainer;
 
-            switch (item.Name)
+            switch (item.Content)
             {
-                case "StatsContent":                    
+                case "Stats":                    
                     ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
                     currentActivePage = "Stats";
                     break;
 
-                case "ViewCustomersContent":
+                case "Customers":
                     ContentFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
                     currentActivePage = "Customers";
                     break;
 
-                case "ViewInvoicesContent":
+                case "Invoices":
                     ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
                     currentActivePage = "Invoices";
                     break;
 
-                case "AddCustomersContent":
+                case "Products":
+                     ContentFrame.NavigateToType(typeof(ViewProducts), null, navOptions);
+                    currentActivePage = "Products";
+                    break;
+
+                case "Create Customer":
                     ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
                     currentActivePage = "Create Customer";
                     break;
 
-                case "AddInvoicesContent":
+                case "Create Invoice":
                     ContentFrame.NavigateToType(typeof(CreateInvoice), null, navOptions);
                     currentActivePage = "Create Invoice";
                     break;
-                
-                case "ViewProductContent":
-                    ContentFrame.NavigateToType(typeof(ViewProducts), null, navOptions);
-                    currentActivePage = "Products";
+                case "Settings":
+                    NavigateToPage("Settings", null);
+                    currentActivePage = "Settings";
                     break;
             }
             
@@ -143,7 +144,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Stats")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
+                           // ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
                             currentActivePage = "Stats";
                         }
                     }
@@ -155,7 +156,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Customers")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
+                           // ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
                             currentActivePage = "Customers";
                         }
                     }
@@ -168,7 +169,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Create Customer")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
+                           // ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
                             currentActivePage = "Create Customer";
                         }
                     }                    
@@ -180,7 +181,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Invoices")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
+                           // ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
                             currentActivePage = "Invoices";
                         }
                     }
@@ -193,7 +194,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Create Invoice")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(CreateInvoice), customer, navOptions);
+                           // ContentFrame.NavigateToType(typeof(CreateInvoice), customer, navOptions);
                             currentActivePage = "Create Invoice";
                         }
                     }
@@ -204,7 +205,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Products")
                         {
                             MainPageNavigation.SelectedItem = item;
-                            ContentFrame.NavigateToType(typeof(ViewProducts), customer, navOptions);
+                           // ContentFrame.NavigateToType(typeof(ViewProducts), customer, navOptions);
                             currentActivePage = "Products";
                         }
                     }
@@ -219,15 +220,20 @@ namespace Invoice_Free
                         }
                     }
                     break;
+                case "Settings":
+                   
+                        ShowSettingsPage(null, null);
+                        Debug.WriteLine("Settings was invoked");                      
+                    
+                    break;
             }
         }
 
         private void ShowAddProducts(object sender, TappedRoutedEventArgs e)
         {
             Color redColor = Color.FromArgb(170, 0, 0, 0);
-            PopUpPanel.Background = new SolidColorBrush(redColor);
-            _newProduct = new CreateProduct();           
-            PopUpContent.Children.Add(_newProduct);
+            PopUpPanel.Background = new SolidColorBrush(redColor);           
+            PopUpContent.Children.Add(new CreateProduct());
             PopUpContent.Padding = new Thickness(10);
             
             PopUpPanel.Visibility = Visibility.Visible;
@@ -235,6 +241,17 @@ namespace Invoice_Free
             Popup_Content = PopUpContent; 
         }
 
-        
+        private void ShowSettingsPage(object sender, TappedRoutedEventArgs e)
+        {
+            Color redColor = Color.FromArgb(170, 0, 0, 0);
+            PopUpPanel.Background = new SolidColorBrush(redColor);
+            PopUpContent.Children.Add(new Settings());
+            PopUpContent.Padding = new Thickness(10);
+
+            PopUpPanel.Visibility = Visibility.Visible;
+            Popup_Panel = PopUpPanel;
+            Popup_Content = PopUpContent;
+        }
+
     }
 }

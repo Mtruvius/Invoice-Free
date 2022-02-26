@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
-using SimpleJSON;
-using Windows.UI;
+﻿
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using SimpleJSON;
+using System;
+using System.Diagnostics;
+using System.IO;
+using Windows.Storage;
 
 namespace Invoice_Free
 {
@@ -27,7 +21,7 @@ namespace Invoice_Free
     /// </summary>
     public sealed partial class CreateCompany : Page
     {
-        private string _CompanyName;        
+        private string _CompanyName;
         private Image _CompanyLogo;
         private StorageFile _chosenImage;
         private int _detailsTracker = 0;
@@ -87,21 +81,17 @@ namespace Invoice_Free
         }
         private async void CompanyDetailsChosen(object sender, RoutedEventArgs e)
         {
-            StorageFolder folder;
-
-            try
+            DirectoryInfo folder;
+            if (!Directory.Exists(App.PathToCompanies))
             {
-                folder = await App.PublisherFolder.CreateFolderAsync("Companies");
+                folder = Directory.CreateDirectory(App.PathToCompanies);
             }
-            catch (Exception)
+            else
             {
-
-               folder = await App.PublisherFolder.GetFolderAsync("Companies");
+                folder = new DirectoryInfo(App.PathToCompanies);
             }
-                
             
-            StorageFolder CompanyFolder = await folder.CreateFolderAsync(_CompanyName);
-            Debug.WriteLine(folder.Path);
+            DirectoryInfo CompanyFolder = folder.CreateSubdirectory(_CompanyName);
            JSONArray productCatagoriesList = new();
             productCatagoriesList.Add("Default");
             
@@ -130,13 +120,13 @@ namespace Invoice_Free
 
             CompanyDetails.Add("Details", CompanyObj);
 
-            await _chosenImage.CopyAsync(await StorageFolder.GetFolderFromPathAsync(CompanyFolder.Path), "logo.jpg");
-
-            StorageFile JsonFile = await CompanyFolder.CreateFileAsync(_CompanyName + ".json", CreationCollisionOption.ReplaceExisting);
-            File.WriteAllText(JsonFile.Path, CompanyDetails.ToString());
+            await _chosenImage.CopyAsync(await StorageFolder.GetFolderFromPathAsync(CompanyFolder.ToString()), "logo.jpg");
+            App.CompanyLogoPath = CompanyFolder.ToString() +"logo.jpg";
+            string JsonFilePath = CompanyFolder.ToString() +"\\"+ _CompanyName + ".json";
+            File.WriteAllText(JsonFilePath, CompanyDetails.ToString());
             
-            StorageFile ImgFile = await CompanyFolder.GetFileAsync("logo.jpg");
-            BitmapSource img = new BitmapImage(new Uri(ImgFile.Path));
+            
+            BitmapSource img = new BitmapImage(new Uri(App.CompanyLogoPath));
 
             Image image = new Image();
             image.Source = img;
@@ -152,9 +142,9 @@ namespace Invoice_Free
                 VatOrTax = VatTax.Text,
                 ContactPerson = ContactPerson.Text,
                 LastInvoiceNo = 0,
-                PriorRevenue = new float[]{0,0,0,0,0,0,0,0,0,0,0,0 },
-                PreviousRevenue = new float[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Revenue = new float[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                PriorRevenue = new double[]{0,0,0,0,0,0,0,0,0,0,0,0 },
+                PreviousRevenue = new double[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Revenue = new double[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 CurrentYear = DateTime.Now.Year,
                 CompleteInvoices = 0,
                 PendingInvoices = 0,

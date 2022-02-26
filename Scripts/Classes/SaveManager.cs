@@ -177,7 +177,7 @@ namespace Invoice_Free
             File.WriteAllText(App.PathToCompanies + EditedCompany.CompanyName + "\\" + EditedCompany.CompanyName + ".json", newCompanyDetail.ToString());
         }
 
-        private static JSONNode GetRevenueArray(float[] revenue)
+        private static JSONNode GetRevenueArray(double[] revenue)
         {
             JSONArray intArray = new JSONArray();
             for (int i = 0; i < revenue.Length; i++)

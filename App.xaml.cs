@@ -1,45 +1,38 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Helpers;
+﻿using HoveyTech.SearchableComboBox;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using System.Diagnostics;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media.Animation;
-using SimpleJSON;
-using System.Collections.ObjectModel;
-using HoveyTech.SearchableComboBox.UWP;
 
 namespace Invoice_Free
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    public partial class App : Application
     {
-        public  static StorageFolder PublisherFolder { get; private set; }
-        public static string PathToCompanies { get; private set; }
+        public static Window m_window;
+
+        public static string DataFolder { get; set; }
+        public static string AssetsFolder { get; set; }
+        public static string PathToCompanies { get; set; }
+        public static string CompanyLogoPath { get; set; }
         public static string PathToCustomers { get; set; }
         public static string PathToProducts { get; set; }
 
@@ -61,117 +54,47 @@ namespace Invoice_Free
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
-           
-            PublisherFolder = ApplicationData.Current.GetPublisherCacheFolder("InvoiceFree");
-            PathToCompanies = PublisherFolder.Path + "\\Companies\\";
-            
-            CUSTOMERS = new ObservableCollection<Customer>();
-            PRODUCTS = new ObservableCollection<Product>();
-            ALL_INVOICES = new ObservableCollection<InvoiceClass>();
-            PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
-            GetAssets();
-        }
-
-
-        private async void GetAssets()
-        {
-            var assetFolder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
-            var addFile = await assetFolder.GetFileAsync("Icons\\add.png");
-            var addHoverFile = await assetFolder.GetFileAsync("Icons\\add_hover.png");
-
-            addBtnNormal = new BitmapImage(new Uri(addFile.Path));
-            addBtnHover = new BitmapImage(new Uri(addHoverFile.Path));            
         }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App_CloseRequested;
+            AssetsFolder = Directory.GetCurrentDirectory() + "\\Assets\\";
+            DataFolder = Directory.GetCurrentDirectory() + "\\Data\\";
+            if (!Directory.Exists(DataFolder))
+            {
+                Directory.CreateDirectory(DataFolder);
+            }
+            Debug.WriteLine("PATH: " + Directory.GetCurrentDirectory());
+            //this.Suspending += OnSuspending;
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+
+           
+            PathToCompanies = DataFolder + "Companies\\";
+
+            CUSTOMERS = new ObservableCollection<Customer>();
+            PRODUCTS = new ObservableCollection<Product>();
+            ALL_INVOICES = new ObservableCollection<InvoiceClass>();
+            PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-            }
-
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-
-                    //rootFrame.Navigate(typeof(CreateProduct));
-                    GetFirstPage();
-                        
-                }
-                // Ensure the current window is active
-
-
-                Window.Current.Activate();
-            }
-
-        }
-
-        private async void GetFirstPage()
-        {
-            Debug.WriteLine(PublisherFolder.Path);
-            try
-            {
-                StorageFolder f = await PublisherFolder.GetFolderAsync("Companies");
-                ChangePageTo("Intro");
-            }
-            catch (Exception)
-            {
-                ChangePageTo("AddCompany");
-            }
-        }
-
-        /// <summary>
-        /// Invoked when Navigation to a certain page fails
-        /// </summary>
-        /// <param name="sender">The Frame which failed navigation</param>
-        /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
-        /// <summary>
-        /// Invoked when application execution is being suspended.  Application state is saved
-        /// without knowing whether the application will be terminated or resumed with the contents
-        /// of memory still intact.
-        /// </summary>
-        /// <param name="sender">The source of the suspend request.</param>
-        /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
+            m_window = new MainWindow();
+            m_window.Title = "Invoice Free";
+            m_window.Activate();
+            m_window.ExtendsContentIntoTitleBar = true;
+           
+            m_window.Maximize();
            
         }
 
 
-        #region MyMethods
+        #region AddedMethods
+
+       
+        
 
         public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
@@ -191,17 +114,19 @@ namespace Invoice_Free
 
             deferral.Complete();
         }
-        
+
         public static async void App_ExitRequested()
         {
             var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
+            InitializeWithWindow(dialog);
+            
             var confirmCommand = new UICommand("Yes");
             var cancelCommand = new UICommand("No");
             dialog.Commands.Add(confirmCommand);
 
             dialog.Commands.Add(cancelCommand);
-
-            if (await dialog.ShowAsync() == cancelCommand)
+            IUICommand requestClose = await dialog.ShowAsync();
+            if (requestClose == cancelCommand)
             {
 
             }
@@ -209,6 +134,12 @@ namespace Invoice_Free
             {
                 Current.Exit();
             }
+        }
+
+        private static void InitializeWithWindow(object obj)
+        {
+            IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            WinRT.Interop.InitializeWithWindow.Initialize(obj, windowHandle);
         }
 
         public static bool TryGoBack()
@@ -219,12 +150,12 @@ namespace Invoice_Free
                 rootFrame.GoBack();
                 return true;
             }
-            return false;   
+            return false;
         }
 
         public static void MaintainMaimized(object sender, WindowSizeChangedEventArgs e)
         {
-           // ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
 
         public static async void Minimize_Checked(object sender, RoutedEventArgs e)
@@ -236,7 +167,7 @@ namespace Invoice_Free
 
         public static async void CheckTitleTxtColor(UISettings sender, object args, TextBlock TitleTxt, Button closeBtn)
         {
-            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
             () =>
             {
                 SolidColorBrush myBrush = new SolidColorBrush();
@@ -266,23 +197,26 @@ namespace Invoice_Free
         public static async void SelectImage()
         {
             FileOpenPicker openPicker = new FileOpenPicker();
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hwnd);
+
             openPicker.ViewMode = PickerViewMode.Thumbnail;
             openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             openPicker.FileTypeFilter.Add(".jpg");
             openPicker.FileTypeFilter.Add(".jpeg");
             openPicker.FileTypeFilter.Add(".png");
-
+            
             StorageFile file = await openPicker.PickSingleFileAsync();
             if (file != null)
             {
                 using (IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read))
                 {
                     BitmapImage bitmapImage = new BitmapImage();
-                    
-                    await bitmapImage.SetSourceAsync(fileStream);                   
-                    
+
+                    await bitmapImage.SetSourceAsync(fileStream);
+
                     ImageSelected(bitmapImage, file);
-                    
+
                 }
                 // Application now has read/write access to the picked file
                 Debug.WriteLine("Picked photo: " + file.Name);
@@ -295,26 +229,29 @@ namespace Invoice_Free
             }
         }
 
-        public static void ChangePageTo(string page)
+        public static void ChangePageTo(string page, FrameNavigationOptions NavOptions)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            Frame rootFrame = MainWindow.m_Frame;
             switch (page)
             {
                 case "Intro":
-                    rootFrame.Navigate(typeof(IntroPage));
+                    rootFrame.NavigateToType(typeof(IntroPage),null, NavOptions);
                     break;
-                case "AddCompany":                    
-                    rootFrame.Navigate(typeof(CreateCompany));
+                case "AddCompany":
+                    rootFrame.NavigateToType(typeof(CreateCompany), null, NavOptions);
                     break;
                 case "Main":
-                    rootFrame.Navigate(typeof(MainPage));
+                    rootFrame.NavigateToType(typeof(MainPage), null, NavOptions);
                     break;
                 case "AddCustomer":
-                    rootFrame.Navigate(typeof(IntroPage));
+                    rootFrame.NavigateToType(typeof(CreateCustomer), null, NavOptions);
+                    break;
+                case "SplashScreen":
+                    rootFrame.NavigateToType(typeof(SplashScreen), null, NavOptions);
                     break;
                 default:
                     break;
-            }        
+            }
         }
 
         public static FrameNavigationOptions AnimatePage(string direction)
@@ -333,6 +270,10 @@ namespace Invoice_Free
                 {
                     Effect = SlideNavigationTransitionEffect.FromRight
                 };
+            }
+            else if (direction == "start")
+            {
+                navOptions.TransitionInfoOverride = new EntranceNavigationTransitionInfo();
             }
             else
             {
@@ -389,8 +330,8 @@ namespace Invoice_Free
                     return -1;
                 }
             }
-            
-            
+
+
         }
 
         public static object ValidateSelectedItem(SearchableComboBox box, MenuFlyout flyout, MenuFlyoutItem flyoutItem, string errorMessage)
@@ -478,5 +419,6 @@ namespace Invoice_Free
 
 
         #endregion
+
     }
 }
