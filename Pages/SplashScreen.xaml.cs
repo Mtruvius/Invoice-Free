@@ -31,22 +31,23 @@ namespace Invoice_Free
         public SplashScreen()
         {
             this.InitializeComponent();
-           
-            FadeOut();
+
+            GetFirstPage();
         }
 
         
 
-        private async void FadeOut()
+        private async void GetFirstPage()
         {
             if (await StartDelay(2500))
             {
-                Debug.WriteLine("FadeOut WAS CALLED");
-               GetFirstPage();
+                Debug.WriteLine("Delay Complete");
+               FirstPageSelection();
             }
         }
-        private void GetFirstPage()
+        private void FirstPageSelection()
         {
+            //MainWindow.m_Frame.Navigate( typeof(Settings));
             if (!Directory.Exists(App.PathToCompanies))
             {
                 App.ChangePageTo("AddCompany", App.AnimatePage("start"));
@@ -56,23 +57,10 @@ namespace Invoice_Free
                 App.ChangePageTo("Intro", App.AnimatePage("start"));
             }
         }
-        public static float lerpFuntion(float a, float b, float t)
-        {
-            return a + (b - a) * t;
-        }
 
         private static async Task<bool> StartDelay(int delay)
         {
-            float timeElapsed = 0;
-            float lerpDuration = delay;
-
-            while (timeElapsed < lerpDuration)
-            {
-
-                timeElapsed += DateTime.Now.Second;
-                await Task.Delay(1);
-            }
-            await Task.Delay(1);
+            await Task.Delay(delay);
             return true;
         }
     }

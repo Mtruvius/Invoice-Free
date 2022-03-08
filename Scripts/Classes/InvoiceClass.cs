@@ -13,6 +13,7 @@ namespace Invoice_Free
         public string Date;        
         public string Number;        
         public List<InvoiceProduct> InvoicedProducts;
+        public float ExcludingTaxTotal;
         public float InvoiceTotal;
         public bool Completed;
     }

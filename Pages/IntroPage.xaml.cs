@@ -99,6 +99,8 @@ namespace Invoice_Free
                 PendingInvoices = companyInfo[0]["PendingInvoices"],
                 TotalQuotes = companyInfo[0]["TotalQuotes"],
                 TotalCustomers = companyInfo[0]["TotalCustomers"],
+                AddVat = companyInfo[0]["AddVat"],
+                VatRate = companyInfo[0]["VatRate"],
             };
             JSONNode CatagoriesList = companyInfo[0]["ProductCatagoriesList"];
             App.companyActive = company;

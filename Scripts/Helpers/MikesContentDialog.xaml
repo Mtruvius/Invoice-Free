@@ -1,0 +1,124 @@
+﻿<ContentDialog
+    x:Class="Invoice_Free.MikesContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Invoice_Free"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d"
+    Title="Enter comment"
+    PrimaryButtonText="Ok"    
+    SecondaryButtonText=""
+    CloseButtonText=""
+    Width="{x:Bind local:App.m_window.Content.ActualSize.X}"
+    Height="{x:Bind local:App.m_window.Content.ActualSize.Y}"
+    
+   >
+
+    <ContentDialog.Template>        
+        <ControlTemplate TargetType="ContentDialog">
+            <Grid x:Name="MainGrid" 
+                    Height="{x:Bind local:App.m_window.Content.ActualSize.Y}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid  Background="{Binding DialogBackground, Mode=OneWay}" Grid.Row="{Binding FullScreenMode[0], Mode=OneWay}" Grid.RowSpan="{Binding FullScreenMode[1], Mode=OneWay}" Width="{Binding DialogWidth, Mode=OneWay}" MinHeight="{Binding DialogMinHeight, Mode=OneWay}" >
+                    <Grid x:Name="ContentPanel" 
+                                MaxWidth="{Binding DialogContentMaxWidth, Mode=TwoWay}" 
+                                Margin="10,10,10,10" 
+                                VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+                        <!--Title-->
+                        <Grid Grid.Row="0">
+                            <Rectangle Fill="{Binding TitleBackground, Mode=OneWay}" Height="Auto" Margin="0,0,0,-5"/>
+                            <TextBlock Text="{TemplateBinding Title}" 
+                                       HorizontalAlignment="{Binding TitleHorizontalAlignment, Mode=OneWay}"
+                                       FontSize="{Binding TitleFontSize, Mode=OneWay}" FontWeight="{Binding TitleFontWeight, Mode=OneWay}" 
+                                       FontStyle="{Binding TitleFontStyle, Mode=OneWay}" 
+                                       Foreground="{Binding TitleForeground, Mode=OneWay}"
+                                       FontFamily="{Binding TitleFontFamily, Mode=OneWay}"/>
+                        </Grid>                        
+                        <!--Content Header-->
+                        <TextBlock Text="{Binding ContentHeaderText, Mode=OneWay}"
+                                   HorizontalAlignment="{Binding ContentHeaderHorizontalAlignment, Mode=OneWay}" 
+                                   FontSize="{Binding ContentHeaderFontSize, Mode=OneWay}" 
+                                   FontWeight="{Binding ContentHeaderFontWeight, Mode=OneWay}" 
+                                   FontStyle="{Binding ContentHeaderFontStyle, Mode=OneWay}" 
+                                   Foreground="{Binding ContentHeaderForeground, Mode=OneWay}"
+                                   Visibility="{Binding ContentHeaderVisibility, Mode=OneWay}"
+                                   FontFamily="{Binding ContentHeaderFontFamily, Mode=OneWay}"
+                                   Grid.Row="1"/>
+                        
+                        <StackPanel Grid.Row="2">
+                            <ContentControl Content="{TemplateBinding Content}"/>
+                        </StackPanel>
+                        
+                        
+                        <!--Footer Header-->
+                        <TextBlock Text="{Binding FooterHeaderText, Mode=OneWay}" 
+                                   HorizontalAlignment="{Binding FooterHeaderHorizontalAlignment, Mode=OneWay}" 
+                                   FontSize="{Binding FooterHeaderFontSize, Mode=OneWay}" 
+                                   FontWeight="{Binding FooterHeaderFontWeight, Mode=OneWay}"
+                                   FontStyle="{Binding FooterHeaderFontStyle, Mode=OneWay}"
+                                   Foreground="{Binding FooterHeaderForeground, Mode=OneWay}"
+                                   Visibility="{Binding FooterHeaderVisibility, Mode=OneWay}"
+                                   FontFamily="{Binding FooterHeaderFontFamily, Mode=OneWay}"
+                                   Grid.Row="3"/>
+                        
+                        <!--Footer Buttons-->
+                        <controls:UniformGrid   Name="ButtonGrid" 
+                                                Margin="0,10,0,0"
+                                                HorizontalAlignment="{Binding ButtonsAlignment, Mode=OneWay}"
+                                                Rows="1"
+                                                Grid.Row="4">
+
+                            <Button Content="{TemplateBinding PrimaryButtonText}"
+                                    FontSize="{Binding ButtonsFontSize, Mode=OneWay}"
+                                    FontFamily="{Binding ButtonsFontFamily, Mode=OneWay}" 
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch" 
+                                    Click="PrimaryButton_Click"/>
+
+                            <Button x:Name="SecondButton" 
+                                    Content="{TemplateBinding SecondaryButtonText}" 
+                                    Visibility="{Binding SecondButtonVisibility, Mode=OneWay}" 
+                                    FontSize="{Binding ButtonsFontSize, Mode=OneWay}"
+                                    FontFamily="{Binding ButtonsFontFamily, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch" 
+                                    Margin="5,0,0,0" 
+                                    Click="SecondaryButton_Click"/>
+
+                            <Button x:Name="CloseButton" 
+                                    Content="{TemplateBinding CloseButtonText}" 
+                                    Click="CloseButton_Click" 
+                                    Visibility="{Binding CancelButtonVisibility, Mode=OneWay}" 
+                                    FontSize="{Binding ButtonsFontSize, Mode=OneWay}"
+                                    FontFamily="{Binding ButtonsFontFamily, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch" 
+                                    VerticalAlignment="Stretch" 
+                                    Margin="5,0,0,0"/>
+                            
+                        </controls:UniformGrid>
+
+                        
+                    </Grid>
+                </Grid>
+            </Grid>
+
+
+        </ControlTemplate>
+    </ContentDialog.Template>
+    
+</ContentDialog>

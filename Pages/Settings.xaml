@@ -4,12 +4,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Invoice_Free"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
+    
    >
 
-    <Grid>
-        <Grid Padding="20">
+    <Grid MinWidth="{x:Bind local:App.m_window.Content.ActualSize.X}">
+        <Grid x:Name="SaveSuccessNotification" MinHeight="50" CornerRadius="5" Margin="0,0,20,0" Visibility="Collapsed">
+            <Rectangle  Fill="DarkOliveGreen"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Grid Height="25">
+                    <Ellipse Fill="Green" MinWidth="30" Stretch="Uniform"/>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,4,0"/>
+                </Grid>
+                
+                <TextBlock x:Name="NotificationTitle" Text="Save Successful" VerticalAlignment="Center"
+                           Margin="5,0,10,0" FontWeight="Bold" FontSize="18"/>
+                <TextBlock x:Name="NotificationContent" Text="Settings was saved successfully." VerticalAlignment="Center"/>
+            </StackPanel>
+            
+        </Grid>
+        
+        <Grid Padding="20" MaxWidth="900" x:Name="MainSettingsContent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -21,23 +37,116 @@
             <Grid>
                 <TextBlock Text="SETTINGS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40" Grid.ColumnSpan="2"/>
             </Grid>
-
-
-            <Grid Grid.Row="1">
-                <Grid Grid.Row="1">
-                    <StackPanel>
-                        <TextBlock Text="Settings page still in progress. Come back when ready!!!" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Margin="0,0,0,0"/>
-                        <Image Source="/Assets/Smiley.png" Width="150" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Padding="10">
-                            <Button x:Name="createBtn" Content="Create" Margin="0,0,5,0" Click="SaveSettings_Click"/>
-                            <Button x:Name="cancel" Content="Cancel" Click="CloseSettingsBtn_Click"/>
-                        </StackPanel>
-
-                    </StackPanel>
-                </Grid>
-            </Grid>
+            
+            <StackPanel Grid.Row="1">                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Edit Company" HorizontalAlignment="Center" Click="EditCompanyBtn_Click"/>
+                    <Button Content="Change Company" HorizontalAlignment="Center" Click="ChangeCompanyBtn_Click" Margin="5,0,0,0"/>                    
+                </StackPanel>
+                <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Margin="0,10,0,0"/>
                 
+                <ToggleSwitch x:Name="TaxVatToggle" 
+                              Header="Add Vat/Tax?" 
+                              Toggled="TaxVatSwitch_Toggled" 
+                              HorizontalAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              Margin="70,10,0,0"/>
+                
+                <StackPanel  x:Name="VatRate"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <TextBlock Text="Rate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <NumberBox x:Name="VatPercentageBox"/>
+                        <TextBlock Text="%" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                    
+                </StackPanel>
+                <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Margin="0,10,0,0"/>
+
+                <StackPanel x:Name="FooterBtns" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="Save" Margin="0,0,5,0" Click="SaveSettingsBtn_Click"/>
+                    <Button Content="Cancel" Click="CancelSettingsBtn_Click"/>
+                </StackPanel>
+            </StackPanel>
+            
+        </Grid>
+        <Grid Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
+              x:Name="CompanyEditing_Grid"                     
+              Visibility="Collapsed">
+            <StackPanel Padding="10" 
+                        MaxWidth="600"
+                        x:Name="CompanyEditing_Stack">
+                
+                <TextBlock Text="EDITING COMPANY" HorizontalAlignment="Center"/>
+                
+                <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1"/>
+
+                <Grid  Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Name" VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBlock x:Name="CompanyName_TextBlock" Text="" VerticalAlignment="Stretch" Grid.Column="1"/>
+                </Grid>
+                
+                <StackPanel x:Name="Image_panel" Margin="0,10,0,0">
+                    <Border x:Name="ImageBorder" BorderThickness="3" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="Company_logo" PointerReleased="{x:Bind SelectingImage}" HorizontalAlignment="Center" VerticalAlignment="Center"  MaxHeight="150"/>
+                    </Border>                  
+                </StackPanel>
+                
+                <Grid  Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Email" VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyEmail_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                </Grid>
+                
+                <Grid  Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Contact" VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyContact_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                </Grid>
+
+                <Grid  Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Address" VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyAddress_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                </Grid>
+                
+                <Grid  Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Reg No." VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyRegNo_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                </Grid>
+                
+                <Grid  Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Vat/Tax No." VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyVatTax_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                </Grid>
+                <Button Content="Done" 
+                    Click="CompanyEditing_SaveClick"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Right"
+                    MinWidth="90"/>
+            </StackPanel>
         </Grid>
 
     </Grid>
+    
 </Page>

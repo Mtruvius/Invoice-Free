@@ -12,5 +12,6 @@ namespace Invoice_Free
         public string Description;
         public int Quantity;
         public float TotalPrice;
+        public float Tax;
     }
 }

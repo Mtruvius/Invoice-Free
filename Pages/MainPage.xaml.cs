@@ -119,8 +119,7 @@ namespace Invoice_Free
                     currentActivePage = "Create Invoice";
                     break;
                 case "Settings":
-                    NavigateToPage("Settings", null);
-                    currentActivePage = "Settings";
+                    NavigateToPage("Settings", null);                    
                     break;
             }
             
@@ -144,7 +143,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Stats")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
+                            ContentFrame.NavigateToType(typeof(ViewStats), null, navOptions);
                             currentActivePage = "Stats";
                         }
                     }
@@ -156,7 +155,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Customers")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
+                            ContentFrame.NavigateToType(typeof(CustomerViewPage), null, navOptions);
                             currentActivePage = "Customers";
                         }
                     }
@@ -169,7 +168,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Create Customer")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
+                            ContentFrame.NavigateToType(typeof(CreateCustomer), null, navOptions);
                             currentActivePage = "Create Customer";
                         }
                     }                    
@@ -181,7 +180,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Invoices")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
+                            ContentFrame.NavigateToType(typeof(ViewInvoices), null, navOptions);
                             currentActivePage = "Invoices";
                         }
                     }
@@ -194,7 +193,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Create Invoice")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(CreateInvoice), customer, navOptions);
+                            ContentFrame.NavigateToType(typeof(CreateInvoice), customer, navOptions);
                             currentActivePage = "Create Invoice";
                         }
                     }
@@ -205,7 +204,7 @@ namespace Invoice_Free
                         if (item is NavigationViewItem && item.Content.ToString() == "Products")
                         {
                             MainPageNavigation.SelectedItem = item;
-                           // ContentFrame.NavigateToType(typeof(ViewProducts), customer, navOptions);
+                            ContentFrame.NavigateToType(typeof(ViewProducts), customer, navOptions);
                             currentActivePage = "Products";
                         }
                     }

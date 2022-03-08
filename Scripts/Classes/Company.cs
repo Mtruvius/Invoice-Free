@@ -25,6 +25,8 @@ namespace Invoice_Free
         public int CompleteInvoices;
         public int PendingInvoices;
         public int TotalQuotes;
-        public int TotalCustomers;
+        public int TotalCustomers;        
+        public bool AddVat;
+        public double VatRate;
     }
 }

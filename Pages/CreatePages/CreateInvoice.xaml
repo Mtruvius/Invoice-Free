@@ -8,7 +8,7 @@
     xmlns:hovey="using:HoveyTech.SearchableComboBox"
    xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters" 
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    >
 
     <Page.Resources>
         <Style TargetType="TextBlock" x:Key="RequiredTemplate">
@@ -66,13 +66,13 @@
                         
                         <hovey:SearchableComboBox x:Name="CustomersSelectBox" 
                                                   ItemsSource="{x:Bind CustomersList}" 
-                                                  FilterText="{x:Bind FilterCustomers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  FilterText="{x:Bind FilterCustomers, Mode=TwoWay}"
                                                   Grid.Row="0"
                                                   HorizontalAlignment="Stretch" 
                                                   VerticalAlignment="Center"
                                                   Height="35" 
                                                   Margin="10,0,0,0"
-                                                  PlaceholderText="Select a customer."
+                                                  PlaceholderText="Select a customer."  
                                                   ItemsSourceEmptyMessage="No Customer by that name found!"
                                                   UseLoadingProgressRing="True"
                                                   IsRefreshingItemsSource="{x:Bind IsSearching}">
@@ -95,17 +95,23 @@
                 </Grid>
             </StackPanel>
             
-            <Grid Grid.Row="2" Background="{ThemeResource SystemAccentColor}" Margin="10,0">
+            <Grid x:Name="invoiceHeadersGrid" Grid.Row="2" Background="{ThemeResource SystemAccentColor}" Margin="10,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="150"/>                    
+                    <ColumnDefinition />                    
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition x:Name="VatColumnHeader"  MaxWidth="100"/>
+                    <ColumnDefinition Width="140"/>                    
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Product" Grid.Column="0" VerticalAlignment="Center" Padding="10,0"/>
                 <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="0"/>
-                <TextBlock Text="Qty" Grid.Column="1" VerticalAlignment="Center" Padding="10,0" />
+                
+                <TextBlock Text="Qty" Grid.Column="1" VerticalAlignment="Center" Padding="10,0" HorizontalAlignment="Center"/>
                 <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="1"/>
-                <TextBlock Text="Price" Grid.Column="2" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center"/>
+
+                <TextBlock Text="Excl. Tax" Grid.Column="2" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center" FontSize="12"/>
+                
+                <Rectangle Fill="{ThemeResource AppBarBackgroundThemeBrush}" Width="1" HorizontalAlignment="Right" Grid.Column="2"/>
+                <TextBlock Text="Price" Grid.Column="3" VerticalAlignment="Center" Padding="10,0" HorizontalTextAlignment="Center" HorizontalAlignment="Center"/>
             </Grid>
             
             <StackPanel Grid.Row="3" VerticalAlignment="Stretch">
@@ -127,14 +133,18 @@
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
-                                                    <ColumnDefinition Width="Auto" MinWidth="50"/>
-                                                    <ColumnDefinition Width="150"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                    <ColumnDefinition MaxWidth="{x:Bind local:CreateInvoice.Instance.VatColumnBodyMaxWidth}"/>
+                                                    <ColumnDefinition Width="140"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
                                                 <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
-                                                <TextBlock Text="{x:Bind Quantity}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Center" VerticalAlignment="Center" FontSize="16" Grid.RowSpan ="2" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="{x:Bind TotalPrice, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Grid.RowSpan ="2"/>
-                                                <Rectangle Fill="LightGray" Height="1" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,18,0,0"/>
+                                                <TextBlock Text="{x:Bind Quantity}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Center" VerticalAlignment="Center" FontSize="16" Grid.RowSpan ="2" HorizontalAlignment="Center" />
+
+                                                <TextBlock x:Name="TaxValueTextBlock" Text="{x:Bind Tax, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="12" FontWeight="Bold" Grid.RowSpan ="2"/>
+                                                
+                                                <TextBlock Text="{x:Bind TotalPrice, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Grid.Column="3" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Grid.RowSpan ="2"/>
+                                                <Rectangle Fill="LightGray" Height="1" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="4" Margin="0,18,0,0"/>
                                             </Grid>
                                         </StackPanel>
                                     </DataTemplate>
@@ -166,16 +176,34 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock  Grid.Column="0" FontSize="30" VerticalAlignment="Center" Margin="40,0,0,0">
-                <Run Text="{x:Bind SelectedProducts.Count, Mode=OneWay}"/>
-                <Run Text=" products."/>
-            </TextBlock>
-            <TextBlock HorizontalAlignment="Right" Grid.Column="1" FontSize="40" VerticalAlignment="Center" Margin="0,0,40,0">                
-                <Run x:Name="TotalAmount"/>
-            </TextBlock>
+            <StackPanel MaxWidth="200" HorizontalAlignment="Left" Margin="30,8,0,0">
+                <TextBlock  Grid.Column="0" FontSize="16" VerticalAlignment="Center" Text="Products" HorizontalTextAlignment="Center"/>
+                <TextBlock  Grid.Column="0" FontSize="25" VerticalAlignment="Center" HorizontalTextAlignment="Center">
+                    <Run Text="{x:Bind SelectedProducts.Count, Mode=OneWay}"/>                
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Right" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <StackPanel Margin="0,0,80,0" VerticalAlignment="Center">
+                    <TextBlock  FontSize="16" VerticalAlignment="Center" Margin="0,0,40,0" HorizontalAlignment="Left" Text="Excl. Tax"/>
+                    <TextBlock  FontSize="25" VerticalAlignment="Center" Margin="0,0,40,0" HorizontalAlignment="Right">                
+                        <Run x:Name="ExcludingTotalAmount"/>
+                    </TextBlock>
+                </StackPanel>
+                
+                <StackPanel>
+                    <TextBlock  FontSize="16" VerticalAlignment="Center" Margin="0,5,40,-5" HorizontalAlignment="Left" Text="Total" HorizontalTextAlignment="Left"/>
+                    <TextBlock  FontSize="40" VerticalAlignment="Center" Margin="-2,0,40,0" HorizontalAlignment="Right">                
+                        <Run x:Name="TotalAmount"/>
+                    </TextBlock>
+                </StackPanel>
+                
+            </StackPanel>
+            
         </Grid>
-        
-        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add" PrimaryButtonClick="AddProductToInvoice" Visibility="Visible">
+
+
+        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add"  Visibility="Visible">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -192,7 +220,7 @@
 
                 <hovey:SearchableComboBox x:Name="ProductsDisplayList" 
                                           Grid.Row="2" MinWidth="470"
-                                          FilterText="{x:Bind FilterProducts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          FilterText="{x:Bind FilterProducts, Mode=TwoWay}"
                                           PlaceholderText="Select A Product..." 
                                           ItemsSourceEmptyMessage="No Product found by that name!" 
                                           ItemsSource="{x:Bind ProductsList}" 

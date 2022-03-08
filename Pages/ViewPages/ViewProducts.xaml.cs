@@ -91,7 +91,7 @@ namespace Invoice_Free
             productsPanel.UpdateLayout();
         }
 
-        public void Selectproduct_OnClick(object sender, ItemClickEventArgs e)
+        public async void Selectproduct_OnClick(object sender, ItemClickEventArgs e)
         {
             Product selectedProduct = (Product)e.ClickedItem;
             TextBlock info = new();
@@ -126,7 +126,7 @@ namespace Invoice_Free
                 CloseButtonText = "Close"
             };
             
-            var popup = dialog.ShowAsync();
+            await dialog.ShowAsync();
         }
 
         private void CreateProduct_OnHover(object sender, PointerRoutedEventArgs e)

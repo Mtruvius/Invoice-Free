@@ -1,5 +1,6 @@
 ﻿using HoveyTech.SearchableComboBox;
 using Microsoft.UI;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -96,7 +97,7 @@ namespace Invoice_Free
        
         
 
-        public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+      /*  public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             var deferral = e.GetDeferral();
             var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
@@ -113,30 +114,49 @@ namespace Invoice_Free
             }
 
             deferral.Complete();
-        }
+        }*/
 
         public static async void App_ExitRequested()
         {
-            var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
-            InitializeWithWindow(dialog);
+            MikesContentDialog dialog = new MikesContentDialog();
+            dialog.DialogMinHeight = 100;
+            dialog.Title = "Exit";
+            dialog.TitleFontSize = 25;
+            dialog.TitleFontWeight = FontWeights.Bold;
+
+            StackPanel sp = new StackPanel();
+            TextBlock tb = new()
+            {
+                Text = "Are you sure you want to exit?",
+                MinHeight = 80
+        };
+            sp.Children.Add(tb);
+            dialog.Content = sp;
+
+
+            dialog.DialogContentMaxWidth = 600;            
             
-            var confirmCommand = new UICommand("Yes");
-            var cancelCommand = new UICommand("No");
-            dialog.Commands.Add(confirmCommand);
+            dialog.PrimaryButtonText = "Yes";
+            dialog.ButtonsFontSize = 16;
+            dialog.CloseButtonText = "No";
 
-            dialog.Commands.Add(cancelCommand);
-            IUICommand requestClose = await dialog.ShowAsync();
-            if (requestClose == cancelCommand)
-            {
-
-            }
-            else
-            {
-                Current.Exit();
-            }
+            dialog.PrimaryButtonClick += MikesContentDialogPrimary_click;
+            dialog.CloseButtonClick += MikesContentDialogClose_click;
+            dialog.XamlRoot = m_window.Content.XamlRoot;
+            await dialog.ShowAsync();
         }
 
-        private static void InitializeWithWindow(object obj)
+        private static void MikesContentDialogClose_click(ContentDialog dialog, RoutedEventArgs args)
+        {
+            dialog.Hide();
+        }
+
+        private static void MikesContentDialogPrimary_click(ContentDialog dialog, RoutedEventArgs args)
+        {
+            Current.Exit();
+        }
+
+        public static void InitializeWithWindow(object obj)
         {
             IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
             WinRT.Interop.InitializeWithWindow.Initialize(obj, windowHandle);
