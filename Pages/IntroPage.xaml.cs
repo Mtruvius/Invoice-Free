@@ -29,7 +29,7 @@ namespace Invoice_Free
             InitializeComponent();
             SetContent();
 
-            //Window.Current.SizeChanged += App.MaintainMaimized;
+            //Window.Current.SizeChanged += App.InstancetainMaimized;
             uiSettings = new UISettings();
             uiSettings.ColorValuesChanged += CheckTitleTxtColor;
         }
@@ -99,6 +99,8 @@ namespace Invoice_Free
                 PendingInvoices = companyInfo[0]["PendingInvoices"],
                 TotalQuotes = companyInfo[0]["TotalQuotes"],
                 TotalCustomers = companyInfo[0]["TotalCustomers"],
+                AddVat = companyInfo[0]["AddVat"],
+                VatRate = companyInfo[0]["VatRate"],
             };
             JSONNode CatagoriesList = companyInfo[0]["ProductCatagoriesList"];
             App.companyActive = company;
@@ -233,7 +235,7 @@ namespace Invoice_Free
 
         private void AddNewCompany_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Frame frame = MainWindow.m_Frame;
+            Frame frame = InstanceWindow.m_Frame;
 
             frame.NavigateToType(typeof(CreateCompany),null,App.AnimatePage("bottom"));
         }

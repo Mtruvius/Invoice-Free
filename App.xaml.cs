@@ -1,5 +1,6 @@
 ﻿using HoveyTech.SearchableComboBox;
 using Microsoft.UI;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -49,7 +50,7 @@ namespace Invoice_Free
         public static BitmapSource addBtnHover;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// executed, and as such is the logical equivalent of Instance() or WinInstance().
         /// </summary>
         public App()
         {
@@ -81,7 +82,7 @@ namespace Invoice_Free
             ALL_INVOICES = new ObservableCollection<InvoiceClass>();
             PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             
-            m_window = new MainWindow();
+            m_window = new InstanceWindow();
             m_window.Title = "Invoice Free";
             m_window.Activate();
             m_window.ExtendsContentIntoTitleBar = true;
@@ -96,7 +97,7 @@ namespace Invoice_Free
        
         
 
-        public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+      /*  public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             var deferral = e.GetDeferral();
             var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
@@ -113,30 +114,49 @@ namespace Invoice_Free
             }
 
             deferral.Complete();
-        }
+        }*/
 
         public static async void App_ExitRequested()
         {
-            var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
-            InitializeWithWindow(dialog);
+            MikesContentDialog dialog = new MikesContentDialog();
+            dialog.DialogMinHeight = 100;
+            dialog.Title = "Exit";
+            dialog.TitleFontSize = 25;
+            dialog.TitleFontWeight = FontWeights.Bold;
+
+            StackPanel sp = new StackPanel();
+            TextBlock tb = new()
+            {
+                Text = "Are you sure you want to exit?",
+                MinHeight = 80
+        };
+            sp.Children.Add(tb);
+            dialog.Content = sp;
+
+
+            dialog.DialogContentMaxWidth = 600;            
             
-            var confirmCommand = new UICommand("Yes");
-            var cancelCommand = new UICommand("No");
-            dialog.Commands.Add(confirmCommand);
+            dialog.PrimaryButtonText = "Yes";
+            dialog.ButtonsFontSize = 16;
+            dialog.CloseButtonText = "No";
 
-            dialog.Commands.Add(cancelCommand);
-            IUICommand requestClose = await dialog.ShowAsync();
-            if (requestClose == cancelCommand)
-            {
-
-            }
-            else
-            {
-                Current.Exit();
-            }
+            dialog.PrimaryButtonClick += MikesContentDialogPrimary_click;
+            dialog.CloseButtonClick += MikesContentDialogClose_click;
+            dialog.XamlRoot = m_window.Content.XamlRoot;
+            await dialog.ShowAsync();
         }
 
-        private static void InitializeWithWindow(object obj)
+        private static void MikesContentDialogClose_click(ContentDialog dialog, RoutedEventArgs args)
+        {
+            dialog.Hide();
+        }
+
+        private static void MikesContentDialogPrimary_click(ContentDialog dialog, RoutedEventArgs args)
+        {
+            Current.Exit();
+        }
+
+        public static void InitializeWithWindow(object obj)
         {
             IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
             WinRT.Interop.InitializeWithWindow.Initialize(obj, windowHandle);
@@ -153,7 +173,7 @@ namespace Invoice_Free
             return false;
         }
 
-        public static void MaintainMaimized(object sender, WindowSizeChangedEventArgs e)
+        public static void InstancetainMaimized(object sender, WindowSizeChangedEventArgs e)
         {
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
@@ -231,7 +251,7 @@ namespace Invoice_Free
 
         public static void ChangePageTo(string page, FrameNavigationOptions NavOptions)
         {
-            Frame rootFrame = MainWindow.m_Frame;
+            Frame rootFrame = InstanceWindow.m_Frame;
             switch (page)
             {
                 case "Intro":
@@ -240,7 +260,7 @@ namespace Invoice_Free
                 case "AddCompany":
                     rootFrame.NavigateToType(typeof(CreateCompany), null, NavOptions);
                     break;
-                case "Main":
+                case "Instance":
                     rootFrame.NavigateToType(typeof(MainPage), null, NavOptions);
                     break;
                 case "AddCustomer":
@@ -387,7 +407,7 @@ namespace Invoice_Free
                     string[] theString = input.Text.Split('.');
                     string TLD = theString[1];
 
-                    foreach (string item in TLDs.Domains)
+                    foreach (string item in TLDs.DoInstances)
                     {
                         if (item.ToLower() == TLD.ToLower())
                         {

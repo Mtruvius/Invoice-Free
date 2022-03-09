@@ -14,7 +14,7 @@
             </MenuFlyout.Items>
         </MenuFlyout>
     </FlyoutBase.AttachedFlyout>
-    <Grid>
+    <Grid MaxWidth="720" Background="{ThemeResource SystemChromeMediumHighColor}">
         <Grid Padding="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

@@ -1,0 +1,85 @@
+﻿<Page
+    x:Class="Invoice_Free.AddProducts"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Invoice_Free"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:hovey="using:HoveyTech.SearchableComboBox" xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
+    mc:Ignorable="d"
+    >
+    <Page.Resources>
+        <Style TargetType="TextBlock" x:Key="RequiredTemplate">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="red"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Text" Value="* Field is required"/>
+        </Style>
+        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+    </Page.Resources>
+    <FlyoutBase.AttachedFlyout>
+        <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
+            <MenuFlyout.Items>
+                <MenuFlyoutItem x:Name="ErrorFlyout"/>
+            </MenuFlyout.Items>
+        </MenuFlyout>
+    </FlyoutBase.AttachedFlyout>
+    <Grid MinWidth="{x:Bind local:App.m_window.Content.ActualSize.X}">
+        <Grid Padding="20" MaxWidth="720" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="PRODUCTS" HorizontalTextAlignment="Center" HorizontalAlignment="Center" FontSize="22" Grid.Row="0"/>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,5">
+                <TextBlock Text="Quantity" HorizontalTextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Margin="0,0,5,0"/>
+                <TextBox x:Name="QuantitySelected" PlaceholderText="0"/>
+            </StackPanel>
+
+
+            <hovey:SearchableComboBox x:Name="ProductsDisplayList" 
+                                    Grid.Row="2" 
+                                    HorizontalAlignment="Stretch"
+                                    FilterText="{x:Bind FilterProducts, Mode=TwoWay}"
+                                    PlaceholderText="Select A Product..." 
+                                    ItemsSourceEmptyMessage="No Product found by that name!" 
+                                    ItemsSource="{x:Bind ProductsList}" 
+                                    UseLoadingProgressRing="True"
+                                    IsRefreshingItemsSource="{x:Bind IsSearching}"
+                                    MinHeight="60"
+                                     Margin="0,0,0,20"
+                                      >
+                <hovey:SearchableComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="local:Product">
+                        <Grid HorizontalAlignment="Stretch" Padding="10,5,25,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
+                            <TextBlock Text="{x:Bind Price, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+                            <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="2" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,18,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </hovey:SearchableComboBox.ItemTemplate>
+            </hovey:SearchableComboBox>
+
+            <Grid HorizontalAlignment="Stretch" Margin="0,0,0,10" Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Add" Click="AddingProduct_complete" HorizontalAlignment="Stretch" Grid.Column="0" Margin="5,0,5,0"/>
+                <Button Content="Cancel" Click="AddingProduct_cancel" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,5,0" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
