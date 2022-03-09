@@ -29,7 +29,7 @@ namespace Invoice_Free
             InitializeComponent();
             SetContent();
 
-            //Window.Current.SizeChanged += App.MaintainMaimized;
+            //Window.Current.SizeChanged += App.InstancetainMaimized;
             uiSettings = new UISettings();
             uiSettings.ColorValuesChanged += CheckTitleTxtColor;
         }
@@ -235,7 +235,7 @@ namespace Invoice_Free
 
         private void AddNewCompany_Btn_Click(object sender, RoutedEventArgs e)
         {
-            Frame frame = MainWindow.m_Frame;
+            Frame frame = InstanceWindow.m_Frame;
 
             frame.NavigateToType(typeof(CreateCompany),null,App.AnimatePage("bottom"));
         }

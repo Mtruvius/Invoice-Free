@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    >
     <Page.Resources>
         <Style TargetType="TextBlock" x:Key="RequiredTemplate">
             <Setter Property="FontSize" Value="10"/>
@@ -24,8 +24,8 @@
             </MenuFlyout.Items>
         </MenuFlyout>
     </FlyoutBase.AttachedFlyout>
-    
-    <Grid>
+
+    <Grid MaxWidth="720" Background="{ThemeResource SystemChromeMediumHighColor}">
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -38,7 +38,7 @@
             <TextBlock Text="CREATE CUSTOMER" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Height="40"/>
 
 
-            <StackPanel x:Name="detailsPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="200,100,200,0" Grid.Row="1">
+            <StackPanel x:Name="detailsPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,5,20,0" Grid.Row="1">
 
                 <TextBox x:Name="customerName" PlaceholderText="Customer Name" Height="35" AutomationProperties.IsRequiredForForm="True" TabNavigation="Local" LostFocus="AddToCustomerClass"/>
                 <TextBlock Style="{StaticResource RequiredTemplate}" />
@@ -54,7 +54,7 @@
 
                 <TextBox x:Name="ContactPerson"  HorizontalAlignment="Stretch" PlaceholderText="Contact Person" TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" LostFocus="AddToCustomerClass" />
 
-                <Button x:Name="AddCustomerBtn" Content="Add Customer" HorizontalAlignment="Center" Margin="0,50,0,0" Click="AddCustomerButton_OnClick">
+                <Button x:Name="AddCustomerBtn" Content="Add Customer" HorizontalAlignment="Center" Margin="0,20,0,0" Click="AddCustomerButton_OnClick">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout x:Name="ButtonFlyout" Placement="Top"  ShowMode="Transient">
                             <MenuFlyout.Items>

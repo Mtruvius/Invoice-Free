@@ -19,6 +19,7 @@
             <Setter Property="Text" Value="* Field is required"/>
         </Style>
         <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+        
     </Page.Resources>
     <FlyoutBase.AttachedFlyout>
         <MenuFlyout x:Name="TextBlockFlyout" Placement="TopEdgeAlignedLeft" ShowMode="Transient">
@@ -203,52 +204,7 @@
         </Grid>
 
 
-        <ContentDialog x:Name="InvoiceAddProduct_dialog" CloseButtonText="Cancel" PrimaryButtonText="Add"  Visibility="Visible">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="PRODUCTS" HorizontalTextAlignment="Center" HorizontalAlignment="Center" FontSize="22" Grid.Row="0"/>
-
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,5">
-                    <TextBlock Text="Quantity" HorizontalTextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Margin="0,0,5,0"/>
-                    <TextBox x:Name="QuantitySelected" PlaceholderText="0"/>
-                </StackPanel>
-
-
-                <hovey:SearchableComboBox x:Name="ProductsDisplayList" 
-                                          Grid.Row="2" MinWidth="470"
-                                          FilterText="{x:Bind FilterProducts, Mode=TwoWay}"
-                                          PlaceholderText="Select A Product..." 
-                                          ItemsSourceEmptyMessage="No Product found by that name!" 
-                                          ItemsSource="{x:Bind ProductsList}" 
-                                          UseLoadingProgressRing="True"
-                                          IsRefreshingItemsSource="{x:Bind IsSearching}"
-                                          MinHeight="60"> 
-                    <hovey:SearchableComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="local:Product">
-                            <Grid HorizontalAlignment="Center" MinWidth="400" Padding="10,5,10,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Name}" Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Left" FontSize="16" FontWeight="Bold"/>
-                                <TextBlock Text="{x:Bind Description}"  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" HorizontalTextAlignment="Left" FontSize="11"/>
-                                <TextBlock Text="{x:Bind Price, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}"  Grid.Column="1" Grid.Row="0" HorizontalTextAlignment="Right" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
-                                <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="2" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,18,0,0"/>
-                            </Grid>
-                        </DataTemplate>
-                    </hovey:SearchableComboBox.ItemTemplate>
-                </hovey:SearchableComboBox>
-
-            </Grid>
-        </ContentDialog>
+        
 
     </Grid>
 </Page>

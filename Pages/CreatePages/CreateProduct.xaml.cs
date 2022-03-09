@@ -121,7 +121,7 @@ namespace Invoice_Free
             };
             App.PRODUCTS.Add(theProduct);
 
-            if (MainPage.MAIN.currentActivePage == "Create Invoice")
+            if (MainPage.Instance.currentActivePage == "Create Invoice")
             {
                 MainPage.Popup_Content.Children.Clear();
                 MainPage.Popup_Panel.Visibility = Visibility.Collapsed;                
@@ -130,7 +130,7 @@ namespace Invoice_Free
             }
             else
             {
-                MainPage.MAIN.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
+                MainPage.Instance.MainContentFrame.NavigateToType(typeof(ViewProducts), null, App.AnimatePage("right"));
                 MainPage.Popup_Content.Children.Clear();
                 MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
             }
@@ -140,8 +140,8 @@ namespace Invoice_Free
         {
             MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
             MainPage.Popup_Content.Children.Clear();
-            Debug.WriteLine(MainPage.MAIN.currentActivePage);
-            MainPage.MAIN.NavigateToPage(MainPage.MAIN.currentActivePage, null);
+            Debug.WriteLine(MainPage.Instance.currentActivePage);
+            MainPage.Instance.NavigateToPage(MainPage.Instance.currentActivePage, null);
         }
 
         private void CreateCatagoryBtn_PointerHover(object sender, PointerRoutedEventArgs e)

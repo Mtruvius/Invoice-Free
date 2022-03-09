@@ -50,7 +50,7 @@ namespace Invoice_Free
         public static BitmapSource addBtnHover;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// executed, and as such is the logical equivalent of Instance() or WinInstance().
         /// </summary>
         public App()
         {
@@ -82,7 +82,7 @@ namespace Invoice_Free
             ALL_INVOICES = new ObservableCollection<InvoiceClass>();
             PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             
-            m_window = new MainWindow();
+            m_window = new InstanceWindow();
             m_window.Title = "Invoice Free";
             m_window.Activate();
             m_window.ExtendsContentIntoTitleBar = true;
@@ -173,7 +173,7 @@ namespace Invoice_Free
             return false;
         }
 
-        public static void MaintainMaimized(object sender, WindowSizeChangedEventArgs e)
+        public static void InstancetainMaimized(object sender, WindowSizeChangedEventArgs e)
         {
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
@@ -251,7 +251,7 @@ namespace Invoice_Free
 
         public static void ChangePageTo(string page, FrameNavigationOptions NavOptions)
         {
-            Frame rootFrame = MainWindow.m_Frame;
+            Frame rootFrame = InstanceWindow.m_Frame;
             switch (page)
             {
                 case "Intro":
@@ -260,7 +260,7 @@ namespace Invoice_Free
                 case "AddCompany":
                     rootFrame.NavigateToType(typeof(CreateCompany), null, NavOptions);
                     break;
-                case "Main":
+                case "Instance":
                     rootFrame.NavigateToType(typeof(MainPage), null, NavOptions);
                     break;
                 case "AddCustomer":
@@ -407,7 +407,7 @@ namespace Invoice_Free
                     string[] theString = input.Text.Split('.');
                     string TLD = theString[1];
 
-                    foreach (string item in TLDs.Domains)
+                    foreach (string item in TLDs.DoInstances)
                     {
                         if (item.ToLower() == TLD.ToLower())
                         {

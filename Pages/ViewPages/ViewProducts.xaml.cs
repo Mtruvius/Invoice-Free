@@ -125,7 +125,8 @@ namespace Invoice_Free
                 Content = info,
                 CloseButtonText = "Close"
             };
-            
+
+            dialog.XamlRoot = this.Content.XamlRoot;
             await dialog.ShowAsync();
         }
 
@@ -145,7 +146,7 @@ namespace Invoice_Free
 
         private void CreateProduct_OnClick(object sender, PointerRoutedEventArgs e)
         {
-            MainPage.MAIN.NavigateToPage("Create Product", null);
+            MainPage.Instance.NavigateToPage("Create Product", null);
         }
 
         private void TextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)

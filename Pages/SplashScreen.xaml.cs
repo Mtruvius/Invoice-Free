@@ -47,7 +47,7 @@ namespace Invoice_Free
         }
         private void FirstPageSelection()
         {
-            //MainWindow.m_Frame.Navigate( typeof(Settings));
+            //InstanceWindow.m_Frame.Navigate( typeof(Settings));
             if (!Directory.Exists(App.PathToCompanies))
             {
                 App.ChangePageTo("AddCompany", App.AnimatePage("start"));

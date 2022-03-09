@@ -178,6 +178,20 @@ namespace Invoice_Free
             new PropertyMetadata(default(HorizontalAlignment)));
         #endregion
 
+        #region Content
+
+        public HorizontalAlignment DialogContentHorizontalAlignment
+        {
+            get => (HorizontalAlignment)GetValue(DialogContentHorizontalAlignmentProperty);
+            set => SetValue(DialogContentHorizontalAlignmentProperty, value);
+        }
+        DependencyProperty DialogContentHorizontalAlignmentProperty = DependencyProperty.Register(
+        nameof(DialogContentHorizontalAlignment),
+        typeof(HorizontalAlignment),
+        typeof(MikesContentDialog),
+        new PropertyMetadata(default(HorizontalAlignment)));
+        #endregion
+
         #region Content Header Property
         public string ContentHeaderText
         {
@@ -279,7 +293,6 @@ namespace Invoice_Free
             new PropertyMetadata(default(Visibility)));
 
         #endregion
-
       
         #region Footer Header Property
         public string FooterHeaderText
@@ -471,7 +484,8 @@ namespace Invoice_Free
             Color accentColor = (Color)Application.Current.Resources["SystemAccentColor"];
             DialogBackground = new SolidColorBrush(accentColor);
             ButtonsAlignment = HorizontalAlignment.Stretch;
-            
+            DialogContentHorizontalAlignment = HorizontalAlignment.Left;
+
             DataContext = this;
         }
 

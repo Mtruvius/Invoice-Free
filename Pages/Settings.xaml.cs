@@ -216,11 +216,11 @@ namespace Invoice_Free
                 };
                 dialog.Content = content;
 
-                dialog.FooterHeaderText = "Do you accept the changes?";
+                dialog.FooterHeaderText = "Would you like to save these changes?";
 
-                dialog.CloseButtonText = "No";
+                dialog.CloseButtonText = "Cancel";
 
-                dialog.PrimaryButtonText = "Yes";
+                dialog.PrimaryButtonText = "Save";
                 dialog.PrimaryButtonClick += AcceptedChanges_AcceptbuttonClick;
                 dialog.CloseButtonClick += AcceptedChanges_CancelbuttonClick;
 
@@ -355,7 +355,7 @@ namespace Invoice_Free
             SaveManager.SaveCompanyEdits();
             CreateTimer();
             SaveSuccessNotification.Visibility = Visibility.Visible;
-            MainSettingsContent.Visibility = Visibility.Collapsed;
+            InstanceSettingsContent.Visibility = Visibility.Collapsed;
             
         }
 
@@ -364,8 +364,8 @@ namespace Invoice_Free
             Debug.WriteLine("CancelSettingsBtn_Click");
             MainPage.Popup_Panel.Visibility = Visibility.Collapsed;
             MainPage.Popup_Content.Children.Clear();
-            Debug.WriteLine(MainPage.MAIN.currentActivePage);
-            MainPage.MAIN.NavigateToPage(MainPage.MAIN.currentActivePage, null);
+            Debug.WriteLine(MainPage.Instance.currentActivePage);
+            MainPage.Instance.NavigateToPage(MainPage.Instance.currentActivePage, null);
         }
 
         public void CreateTimer()

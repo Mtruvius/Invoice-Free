@@ -107,7 +107,7 @@ namespace Invoice_Free
                     App.CUSTOMERS = newCustomerList;
                     CustomerViewPage.SortInvoicesToLists(_customerInvoices);
 
-                    MainPage.MAIN.MainContentFrame.NavigateToType(typeof(CustomerViewPage), CustomerViewPage.SelectedCustomer, App.AnimatePage("left"));
+                    MainPage.Instance.MainContentFrame.NavigateToType(typeof(CustomerViewPage), CustomerViewPage.SelectedCustomer, App.AnimatePage("left"));
                     SaveManager.SaveCustomerEdits();
 
                     App.companyActive.PendingInvoices--;

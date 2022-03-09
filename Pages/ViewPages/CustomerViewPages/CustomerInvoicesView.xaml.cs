@@ -52,7 +52,7 @@ namespace Invoice_Free
 
         private void CreateInvoice_OnClick(object sender, RoutedEventArgs e)
         {
-            MainPage.MAIN.NavigateToPage("Create Invoice", CustomerViewPage.SelectedCustomer);
+            MainPage.Instance.NavigateToPage("Create Invoice", CustomerViewPage.SelectedCustomer);
         }
 
         private void AddInvoice_OnHover(object sender, PointerRoutedEventArgs e)

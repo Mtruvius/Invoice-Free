@@ -10,6 +10,8 @@ using Windows.UI.Popups;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Text;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,10 +39,10 @@ namespace Invoice_Free
             CustomerNavigation.BackRequested += BackToCustomers;
             CompletedInvoices = new ObservableCollection<InvoiceClass>();
             PendingInvoices = new ObservableCollection<InvoiceClass>();
-            
+
         }
 
-        
+       
 
         private void BackToCustomers(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
@@ -58,7 +60,8 @@ namespace Invoice_Free
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            SelectedCustomer = (Customer)e.Parameter;           
+            SelectedCustomer = (Customer)e.Parameter;
+            Debug.WriteLine("SelectedCustomer param: " +SelectedCustomer.Name);
             SortInvoicesToLists(SelectedCustomer.Invoices);
             LoadCustomer(SelectedCustomer);
         }
@@ -122,7 +125,7 @@ namespace Invoice_Free
                     InvoicesContentFrame.NavigateToType(typeof(CustomerPendingView), PendingInvoices, navOptions);
                     break;
                 case "Edit":
-                    EditCustomer();
+                    EditingCustomer_buttonClick();
                     break;
                 case "Delete":
                     DeleteCustomer();
@@ -133,77 +136,86 @@ namespace Invoice_Free
             }
         }
 
-        private async void EditCustomer()
+        private void EditingCustomer_buttonClick()
         {
             Debug.WriteLine("The customer " + SelectedCustomer.Name + " is in edit mode");
-
-            await EditingPanel.ShowAsync();
+            MainPage.Instance.ShowModal(new EditCustomer(), null);
         }
 
-        private void CustomerEditComplete(ContentDialog dialog, ContentDialogButtonClickEventArgs args)
-        {
-            if (!string.IsNullOrEmpty(EmailInput.Text))
-            {
-                SelectedCustomer.Email = EmailInput.Text;
-                EmailInput.Text = string.Empty;
-            }
-            if (!string.IsNullOrEmpty(ContactPersonInput.Text))
-            {
-                SelectedCustomer.ContactPerson = ContactPersonInput.Text;
-                ContactPersonInput.Text = string.Empty;
-            }
-            if (!string.IsNullOrEmpty(Number.Text))
-            {
-                SelectedCustomer.Contact  = Number.Text;
-                Number.Text = string.Empty;
-            }
-            if (!string.IsNullOrEmpty(Address.Text))
-            {
-                SelectedCustomer.Address = Address.Text;
-                Address.Text = string.Empty;
-            }
-            LoadCustomer(SelectedCustomer);            
-        }
 
         private async void DeleteCustomer()
+        {
+            MikesContentDialog dialog = new();
+            dialog.DialogContentMaxWidth = 600;
+            dialog.Title = "Delete Customer";
+            dialog.TitleFontWeight = FontWeights.Bold;
+            dialog.TitleHorizontalAlignment = HorizontalAlignment.Center;
+
+            dialog.ContentHeaderText = "Are you sure you want to delete " + SelectedCustomer.Name + "?";
+            dialog.ContentHeaderHorizontalAlignment = HorizontalAlignment.Center;
+
+           StackPanel contentPanel = new() { Orientation = Orientation.Horizontal };
+
+            TextBlock str1 = new(){Text = "All data for"};
+            TextBlock str2 = new()
+            {
+                Text = SelectedCustomer.Name,
+                FontWeight = FontWeights.Bold,
+                FontStyle = Windows.UI.Text.FontStyle.Italic,
+                Margin = new Thickness(5, 0, 5, 0)
+            };
+            TextBlock str3 = new(){Text = "will be deleted"};
+
+            contentPanel.Children.Add(str1);
+            contentPanel.Children.Add(str2);
+            contentPanel.Children.Add(str3);
+            dialog.Content = contentPanel;
+            dialog.DialogContentHorizontalAlignment = HorizontalAlignment.Center;
+            
+            
+
+            dialog.FooterHeaderText = "Do you wish to continue?";
+            
+            dialog.PrimaryButtonText = "Yes";
+            dialog.PrimaryButtonClick += DeleteCustomerConfirmation_accept;
+            dialog.CloseButtonText = "No";
+            dialog.CloseButtonClick += DeleteCustomerConfirmation_decline;
+
+            dialog.XamlRoot = this.Content.XamlRoot;
+            await dialog.ShowAsync();
+        }
+
+        private void DeleteCustomerConfirmation_decline(ContentDialog dialog, RoutedEventArgs args)
+        {
+            dialog.Hide();
+        }
+
+        private void DeleteCustomerConfirmation_accept(ContentDialog dialog, RoutedEventArgs args)
         {
             string CustomerJsonFile = File.ReadAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json");
             JSONNode customersData = JSONNode.Parse(CustomerJsonFile);
 
             foreach (JSONNode item in customersData)
-            {                
+            {
                 if (item["Name"] == SelectedCustomer.Name)
                 {
-                    var dialog = new MessageDialog("Are you sure you want to delete customer?", "Delete " + SelectedCustomer.Name + "?");
-                    var confirmCommand = new UICommand("Yes");
-                    var cancelCommand = new UICommand("No");
-                    dialog.Commands.Add(confirmCommand);
-
-                    dialog.Commands.Add(cancelCommand);
-
-                    if (await dialog.ShowAsync() == cancelCommand)
+                    customersData.Remove(item);
+                    //App.AnimatePage("left");
+                    FrameNavigationOptions navOptions = new FrameNavigationOptions();
+                    navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
                     {
+                        Effect = SlideNavigationTransitionEffect.FromLeft
+                    };
+                    navOptions.IsNavigationStackEnabled = false;
 
-                    }
-                    else
-                    {
-                        customersData.Remove(item);
-                        //App.AnimatePage("left");
-                        FrameNavigationOptions navOptions = new FrameNavigationOptions();
-                        navOptions.TransitionInfoOverride = new SlideNavigationTransitionInfo()
-                        {
-                            Effect = SlideNavigationTransitionEffect.FromLeft
-                        };
-                        navOptions.IsNavigationStackEnabled = false;
+                    File.WriteAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json", customersData);
+                    CustomerViewFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
+                    CustomerViewFrame.UpdateLayout();
 
-                        File.WriteAllText(App.PathToCompanies + App.companyActive.CompanyName + "\\customers.json", customersData);
-                        CustomerViewFrame.NavigateToType(typeof(ViewCustomers), null, navOptions);
-                        CustomerViewFrame.UpdateLayout();
-                    }
-                    break;
                 }
-               
+
             }
+            dialog.Hide();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

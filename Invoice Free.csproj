@@ -14,10 +14,10 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Pages\MainPages\**" />
-    <EmbeddedResource Remove="Pages\MainPages\**" />
-    <None Remove="Pages\MainPages\**" />
-    <Page Remove="Pages\MainPages\**" />
+    <Compile Remove="Pages\InstancePages\**" />
+    <EmbeddedResource Remove="Pages\InstancePages\**" />
+    <None Remove="Pages\InstancePages\**" />
+    <Page Remove="Pages\InstancePages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,12 +46,14 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Remove="Pages\MainPages\**" />
+    <PRIResource Remove="Pages\InstancePages\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Dialog1.xaml" />
+    <None Remove="Pages\EditPages\AddProducts.xaml" />
     <None Remove="Pages\SplashScreen.xaml" />
     <None Remove="Pages\UserControlDialog.xaml" />
+    <None Remove="Pages\ViewPages\CustomerViewPages\EditCustomer.xaml" />
     <None Remove="Pages\ViewPages\Settings.xaml" />
     <None Remove="Pages\ViewPages\ViewStats.xaml" />
   </ItemGroup>
@@ -74,6 +76,12 @@
 	    <None Update="logo.ico">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    </None>
+	    <Page Update="Pages\EditPages\AddProducts.xaml">
+	      <Generator>MSBuild:Compile</Generator>
+	    </Page>
+	    <Page Update="Pages\EditPages\EditCustomer.xaml">
+	      <Generator>MSBuild:Compile</Generator>
+	    </Page>
 	    <Page Update="Scripts\Helpers\MikesContentDialog.xaml">
 	      <Generator>MSBuild:Compile</Generator>
 	    </Page>

@@ -25,7 +25,7 @@
             
         </Grid>
         
-        <Grid Padding="20" MaxWidth="900" x:Name="MainSettingsContent">
+        <Grid Padding="20" MaxWidth="900" x:Name="InstanceSettingsContent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>

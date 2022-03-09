@@ -18,7 +18,7 @@
 
     <ContentDialog.Template>        
         <ControlTemplate TargetType="ContentDialog">
-            <Grid x:Name="MainGrid" 
+            <Grid x:Name="InstanceGrid" 
                     Height="{x:Bind local:App.m_window.Content.ActualSize.Y}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -59,9 +59,9 @@
                                    Visibility="{Binding ContentHeaderVisibility, Mode=OneWay}"
                                    FontFamily="{Binding ContentHeaderFontFamily, Mode=OneWay}"
                                    Grid.Row="1"/>
-                        
+
                         <StackPanel Grid.Row="2">
-                            <ContentControl Content="{TemplateBinding Content}"/>
+                            <ContentControl Content="{TemplateBinding Content}" HorizontalAlignment="{Binding DialogContentHorizontalAlignment, Mode=OneWay}"/>
                         </StackPanel>
                         
                         

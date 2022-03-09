@@ -2,7 +2,7 @@
  * A simple JSON Parser / builder
  * ------------------------------
  * 
- * It mainly has been written as a simple JSON parser. It can build a JSON string
+ * It Instancely has been written as a simple JSON parser. It can build a JSON string
  * from the node-tree, or generate a node tree from any valid JSON string.
  * 
  * Written by Bunny83 
