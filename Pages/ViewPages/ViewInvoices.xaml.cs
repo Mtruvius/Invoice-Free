@@ -121,7 +121,7 @@ namespace Invoice_Free
 
         private void CreateInvoice_OnClick(object sender, PointerRoutedEventArgs e)
         {
-            MainPage.MAIN.NavigateToPage("Create Invoice", null);
+            MainPage.Instance.NavigateToPage("Create Invoice", null);
         }
 
         private void TextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)

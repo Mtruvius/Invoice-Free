@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using HoveyTech.SearchableComboBox;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -24,19 +28,21 @@ namespace Invoice_Free
     public sealed partial class CreateInvoice : Page, INotifyPropertyChanged
     {
         public static CreateInvoice Instance;
-        private bool IsSearching;
+        public bool IsSearching { get; private set; }
         private bool ErrorOccured;
+        private float ExcludingTaxTotal;
         private float InvoiceTotal;
         private double ScrollerHeight;
         private BitmapSource addBtnNormal;
         private BitmapSource addBtnHover;
+        private DispatcherQueue dispatcherQueue;
 
         private ObservableCollection<Customer> CustomersList;
         private ObservableCollection<InvoiceProduct> SelectedProducts;
         private ObservableCollection<Product> ProductsList;
         public List<Product> FilteredProductList { get; private set; }
         public List<Customer> FilteredCustomersList { get; private set; }
-
+        public double VatColumnBodyMaxWidth { get; private set; }
         public Product selectedProduct;
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -56,17 +62,42 @@ namespace Invoice_Free
             ScrollerView.MaxHeight = ScrollerHeight;
             Debug.WriteLine(ScrollerHeight);
             ScrollerView.UpdateLayout();
-            InvoiceAddProduct_dialog.Closing += CloseInvoiceAddProduct_dialog;
             GetInvoiceNumber();
             CreateCustomerOptionList();
+
+            AddProducts.ProductSelected += AddProductToInvoice;
+
+            if (App.companyActive.AddVat)
+            {
+                VatColumnHeader.MaxWidth = 100;
+            }
+            else
+            {
+                VatColumnHeader.MaxWidth = 0;
+            }
+            dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         }
 
-        private void CloseInvoiceAddProduct_dialog(ContentDialog sender, ContentDialogClosingEventArgs args)
+        private void AddProductToInvoice(InvoiceProduct product)
         {
-            if (ErrorOccured)
+            SelectedProducts.Add(product);
+
+            ExcludingTaxTotal += product.Tax;
+            InvoiceTotal += product.TotalPrice;
+            ExcludingTotalAmount.Text = ExcludingTaxTotal.ToString("C");
+            TotalAmount.Text = InvoiceTotal.ToString("C");
+            if (App.companyActive.AddVat)
             {
-                args.Cancel = true;
+                VatColumnBodyMaxWidth = 100;
             }
+            else
+            {
+                VatColumnBodyMaxWidth = 0;
+            }
+            addInvoicePanel.UpdateLayout();
+            ErrorOccured = false;
+
+
         }
 
         private string _filterProductList;
@@ -104,10 +135,9 @@ namespace Invoice_Free
 
             OnProductListSearch(filteredProducts);
         }
-        private async void OnProductListSearch([CallerMemberName] string propName = "")
+        private void OnProductListSearch([CallerMemberName] string propName = "")
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
+            dispatcherQueue.TryEnqueue(() => {
                 ProductsList.Clear();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
@@ -122,7 +152,6 @@ namespace Invoice_Free
 
         private string _filterCustomersList;
         
-
         public string FilterCustomers
         {
 
@@ -137,8 +166,7 @@ namespace Invoice_Free
         }
         private void HandleCustomerFilterRequest(string filteredCustomers)
         {
-            IsSearching = true;
-
+            IsSearching = true;            
             Task.Run(async () =>
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
@@ -157,10 +185,9 @@ namespace Invoice_Free
 
             OnCustomerListSearch(filteredCustomers);
         }
-        private async void OnCustomerListSearch([CallerMemberName] string propName = "")
+        private void OnCustomerListSearch([CallerMemberName] string propName = "")
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
+            dispatcherQueue.TryEnqueue(() => {
                 CustomersList.Clear();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
 
@@ -169,8 +196,7 @@ namespace Invoice_Free
                     CustomersList.Add(customer);
                 }
                 IsSearching = false;
-            });
-
+            }); 
         }
 
         private void GetInvoiceNumber()
@@ -178,8 +204,19 @@ namespace Invoice_Free
             string invoiceNo = (App.companyActive.LastInvoiceNo + 1).ToString();
             InvoiceNo.Text = invoiceNo;
             addInvoicePanel.UpdateLayout();
+            CustomersSelectBox.PointerPressed += CustomersSelectBox_PointerPressed;
         }
-        
+
+        private void CustomersSelectBox_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("CustomersSelectBox_PointerPressed");
+            if (CustomersList.Count < 1)
+            {
+                MainPage.Instance.NavigateToPage("Create Customer", null);
+            }
+            
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -200,12 +237,12 @@ namespace Invoice_Free
             }
         }
         
-        public async void ShowProducts_OnClick(object sender, RoutedEventArgs e)
+        public void ShowProducts_OnClick(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("App.PRODUCTS.Count: " + App.PRODUCTS.Count);
             if (App.PRODUCTS.Count < 1)
             {
-                MainPage.MAIN.NavigateToPage("Create Product", null);
+                MainPage.Instance.NavigateToPage("Create Product", null);
             }
             else
             {
@@ -218,70 +255,30 @@ namespace Invoice_Free
                 }
                 
                 
-                ProductsDisplayList.ItemsSource = ProductsList;
+               /* ProductsDisplayList.ItemsSource = ProductsList;
                 if (e == null)
                 {
                     ProductsDisplayList.SelectedItem = sender;
-                }
+                }*/
 
-               await InvoiceAddProduct_dialog.ShowAsync();
-               
+                MainPage.Instance.ShowModal(new AddProducts(), null);
             }
         }
-       
-        private void AddProductToInvoice(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+
+        private void CancelAddProducts_click(ContentDialog dialog, RoutedEventArgs args)
         {
-            if (string.IsNullOrEmpty(QuantitySelected.Text))
-            {
-                QuantitySelected.BorderBrush = new SolidColorBrush(Colors.Red);
-                ErrorFlyout.Text = "Please add product quantity";
-                TextBlockFlyout.ShowAt(QuantitySelected);
-                ErrorOccured = true;
-                return;
-            }
-            else
-            {
-                int _qty;
-                try
-                {
-                    _qty = int.Parse(QuantitySelected.Text);
-                    Brush borderColor = (Brush)Application.Current.Resources["TextBoxDisabledBorderThemeBrush"];
-                    QuantitySelected.BorderBrush = borderColor;                    
-                }
-                catch (Exception)
-                {
-                    QuantitySelected.BorderBrush = new SolidColorBrush(Colors.Red);
-                    ErrorFlyout.Text = "A numeric value is required!";
-                    TextBlockFlyout.ShowAt(QuantitySelected);
-                    ErrorOccured = true;
-                    return;
-                }
+            dialog.Hide();
+        }
 
-                selectedProduct = (Product)App.ValidateSelectedItem(ProductsDisplayList, TextBlockFlyout, ErrorFlyout, "Please select a product to continue.");
-                if (selectedProduct == null)
-                {
-                    ErrorOccured = true;
-                    return;                    
-                }
-                float price = selectedProduct.Price;
-                float total = _qty * price;
-                InvoiceProduct prod = new()
-                {
-                    Name = selectedProduct.Name,
-                    Description = selectedProduct.Description,
-                    Quantity = _qty,
-                    TotalPrice = total
-                };
-                SelectedProducts.Add(prod);
-
-                InvoiceTotal += total;
-                TotalAmount.Text = InvoiceTotal.ToString("C");
-                addInvoicePanel.UpdateLayout();
-                ErrorOccured = false;
-                
-            }
-            
-        }        
+        
+        private void CancelAddProductToInvoice(ContentDialog dialog, RoutedEventArgs args)
+        {
+            dialog.Hide();
+        }
+        
+       
+        
+        
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -337,7 +334,7 @@ namespace Invoice_Free
             SaveManager.SaveInvoiceToCustomer(_selectedCustomer, _invoice);
 
             AddToCompany(_invoice);
-            MainPage.MAIN.MainContentFrame.Navigate(typeof(ViewInvoices));
+            MainPage.Instance.MainContentFrame.Navigate(typeof(ViewInvoices));
         }
 
         private void AddToCompany(InvoiceClass Invoice)

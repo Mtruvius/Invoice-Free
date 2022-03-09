@@ -28,11 +28,13 @@ namespace Invoice_Free
         bool isHovering_AddBtn;
         BitmapSource addBtnNormal;
         BitmapSource addBtnHover;
-        public static Frame CustomerViewMainFrame;
+        public static Frame CustomerViewInstanceFrame;
         private ObservableCollection<Customer> CustomersList;
         private ObservableCollection<SearchOptions> CustomerSearchOptions;
         private bool IsSearching;
 
+
+        public static Frame CustomerContent_Frame { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int InvoiceListCount { get; private set; }
@@ -47,6 +49,7 @@ namespace Invoice_Free
             addBtnNormal = App.addBtnNormal;
             addBtnHover = App.addBtnHover;
             AddIcon.Source = addBtnNormal;
+            CustomerContent_Frame = CustomerContentFrame;
         }
 
         private void CreateSearchOptions()
@@ -99,7 +102,7 @@ namespace Invoice_Free
             };            
             navOptions.IsNavigationStackEnabled = false;
 
-           // CustomerContentFrame.NavigateToType(typeof(CustomerViewPage), (Customer)e.ClickedItem, navOptions);
+            CustomerContentFrame.NavigateToType(typeof(CustomerViewPage), (Customer)e.ClickedItem, navOptions);
         }
        
         private void CreateCustomer_OnHover(object sender, PointerRoutedEventArgs e)
@@ -118,15 +121,15 @@ namespace Invoice_Free
 
         private void CreateCustomer_OnClick(object sender, PointerRoutedEventArgs e)
         {
-            MainPage.MAIN.NavigateToPage("Create Customer", null);
+            MainPage.Instance.NavigateToPage("Create Customer", null);
         }
 
         private void TextBox_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
         {
-            HandleProductFilterRequest(sender.Text);
+            HandleCustomerFilterRequest(sender.Text);
         }
 
-        private void HandleProductFilterRequest(string filteredProducts)
+        private void HandleCustomerFilterRequest(string filteredCustomer)
         {
             IsSearching = true;
             string selectItem;
@@ -147,31 +150,31 @@ namespace Invoice_Free
             {
                 await Task.Delay(TimeSpan.FromSeconds(1));
 
-                ExecuteProductFiltering(filteredProducts, selectItem);
+                ExecuteCustomerFiltering(filteredCustomer, selectItem);
             });
         }
-        private void ExecuteProductFiltering(string filteredProducts, string SelectedSearchOption)
+        private void ExecuteCustomerFiltering(string filteredCustomer, string SelectedSearchOption)
         {
-            filteredProducts = filteredProducts?.Trim().ToLower();
+            filteredCustomer = filteredCustomer?.Trim().ToLower();
             Debug.WriteLine("SelectedSearchOption: " + SelectedSearchOption);
             switch (SelectedSearchOption)
             {
                 case "Name":
                     FilteredCustomerList = App.CUSTOMERS.
                         Where(x => string.IsNullOrEmpty(
-                            filteredProducts) || x.Name.ToLower().Contains(filteredProducts)
+                            filteredCustomer) || x.Name.ToLower().Contains(filteredCustomer)
                             ).Take(10).ToList();
                     break;
                 case "Email":
                     FilteredCustomerList = App.CUSTOMERS.
                         Where(x => string.IsNullOrEmpty(
-                            filteredProducts) || x.Email.ToLower().Contains(filteredProducts)
+                            filteredCustomer) || x.Email.ToLower().Contains(filteredCustomer)
                             ).Take(10).ToList();
                     break;
                 case "Contact Person":
                     FilteredCustomerList = App.CUSTOMERS.
                         Where(x => string.IsNullOrEmpty(
-                            filteredProducts) || x.ContactPerson.ToString().ToLower().Contains(filteredProducts)
+                            filteredCustomer) || x.ContactPerson.ToString().ToLower().Contains(filteredCustomer)
                             ).Take(10).ToList();
                     break;
 
@@ -179,7 +182,7 @@ namespace Invoice_Free
 
 
 
-            OnProductListSearch(filteredProducts);
+            OnProductListSearch(filteredCustomer);
         }
         private async void OnProductListSearch([CallerMemberName] string propName = "")
         {

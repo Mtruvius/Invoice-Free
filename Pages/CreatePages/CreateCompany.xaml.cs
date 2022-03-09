@@ -115,9 +115,11 @@ namespace Invoice_Free
             CompanyObj.Add("TotalQuotes", 0);
             CompanyObj.Add("TotalCustomers", 0);
             CompanyObj.Add("ProductCatagoriesList", productCatagoriesList);
-            
-            
+            CompanyObj.Add("AddVat", false);
+            CompanyObj.Add("VatRate", 0); 
 
+          
+            
             CompanyDetails.Add("Details", CompanyObj);
 
             await _chosenImage.CopyAsync(await StorageFolder.GetFolderFromPathAsync(CompanyFolder.ToString()), "logo.jpg");
@@ -142,14 +144,16 @@ namespace Invoice_Free
                 VatOrTax = VatTax.Text,
                 ContactPerson = ContactPerson.Text,
                 LastInvoiceNo = 0,
-                PriorRevenue = new double[]{0,0,0,0,0,0,0,0,0,0,0,0 },
-                PreviousRevenue = new double[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                Revenue = new double[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                PriorRevenue = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                PreviousRevenue = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                Revenue = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 CurrentYear = DateTime.Now.Year,
                 CompleteInvoices = 0,
                 PendingInvoices = 0,
                 TotalQuotes = 0,
-                TotalCustomers = 0
+                TotalCustomers = 0,
+                AddVat = false,
+                VatRate = 0
             };
 
             App.companyActive = company;
@@ -208,8 +212,16 @@ namespace Invoice_Free
             switch (_detailsTracker)
             {
                 case 0:
-                    COMP_name_panel.Visibility = Visibility.Visible;
+                    if (!Directory.Exists(App.PathToCompanies))
+                    {
+                        COMP_name_panel.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        App.ChangePageTo("Intro", App.AnimatePage("start"));
+                    }
                     
+
                     break;
                 case 1:
                     COMP_name_panel.Visibility = Visibility.Visible;

@@ -23,15 +23,15 @@ namespace Invoice_Free
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public sealed partial class InstanceWindow : Window
     {
         public static Frame m_Frame;
-        public MainWindow()
+        public InstanceWindow()
         {
             App.m_window = this;            
             this.InitializeComponent();
             LoadIcon("Assets/logo.ico");
-            m_Frame = MainFrame;
+            m_Frame = InstanceFrame;
             DoSetup();
         }
 

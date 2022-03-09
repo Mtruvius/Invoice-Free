@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="Invoice_Free.MainWindow"
+    x:Class="Invoice_Free.InstanceWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Invoice_Free"
@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Frame Name="MainFrame"/>
+        <Frame Name="InstanceFrame"/>
     </Grid>
     
     

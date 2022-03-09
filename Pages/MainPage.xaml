@@ -9,7 +9,7 @@
     Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 
-    <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
+    <Grid x:Name="InstanceSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="38*"/>
             <RowDefinition Height="145*"/>
@@ -106,7 +106,7 @@
                         <BitmapIcon UriSource="/Assets/Icons/AddInvoice.png"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Create Product" x:Name="AddProductContent" Tapped="ShowAddProducts">                    
+                <NavigationViewItem Content="Create Product" x:Name="AddProductContent">                    
                     <NavigationViewItem.Icon>
                         <BitmapIcon UriSource="/Assets/Icons/addProduct.png"/>
                     </NavigationViewItem.Icon>

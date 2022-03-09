@@ -139,7 +139,9 @@ namespace Invoice_Free
                 CompleteInvoices = company.CompleteInvoices,
                 PendingInvoices = company.PendingInvoices,
                 TotalQuotes = company.TotalQuotes,
-                TotalCustomers = company.TotalCustomers
+                TotalCustomers = company.TotalCustomers,
+                AddVat = company.AddVat,
+                VatRate = company.VatRate
             };
             
             App.companyActive = EditedCompany;
@@ -170,6 +172,8 @@ namespace Invoice_Free
                 ProductCatagoriesList.Add(catagory);
             }
             newCompanyOBJ.Add("ProductCatagoriesList", ProductCatagoriesList);
+            newCompanyOBJ.Add("AddVat", EditedCompany.AddVat);
+            newCompanyOBJ.Add("VatRate", EditedCompany.VatRate);
 
             newCompanyDetail.Add(newCompanyOBJ);
 
