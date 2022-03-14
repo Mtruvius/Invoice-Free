@@ -76,7 +76,7 @@
             
             <TextBlock x:Name="NoInvoicesText"  Text="No customers to display." Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Visibility="Collapsed"/>
             
-            <ListView x:Name="InvoicesPanel" ItemsSource="{x:Bind InvoicesList}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.Row="2" Grid.ColumnSpan="3"  IsItemClickEnabled="True">
+            <ListView x:Name="InvoicesPanel" ItemsSource="{x:Bind InvoicesList}" ScrollViewer.VerticalScrollBarVisibility="Hidden" Grid.Row="2" Grid.ColumnSpan="3"  IsItemClickEnabled="True" ItemClick="InvoicesPanel_ItemClick">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>                        

@@ -9,7 +9,7 @@
     Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 
-    <Grid x:Name="InstanceSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
+    <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="38*"/>
             <RowDefinition Height="145*"/>

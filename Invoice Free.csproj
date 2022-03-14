@@ -14,10 +14,10 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Pages\InstancePages\**" />
-    <EmbeddedResource Remove="Pages\InstancePages\**" />
-    <None Remove="Pages\InstancePages\**" />
-    <Page Remove="Pages\InstancePages\**" />
+    <Compile Remove="Pages\MainPages\**" />
+    <EmbeddedResource Remove="Pages\MainPages\**" />
+    <None Remove="Pages\MainPages\**" />
+    <Page Remove="Pages\MainPages\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +34,9 @@
     <PackageReference Include="HoveyTech.SearchableComboBox" Version="3.1.100" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WinUI" Version="2.0.0-beta.101" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22572-preview" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -46,16 +47,23 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Remove="Pages\InstancePages\**" />
+    <PRIResource Remove="Pages\MainPages\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Dialog1.xaml" />
     <None Remove="Pages\EditPages\AddProducts.xaml" />
+    <None Remove="Pages\PdfExport_theme1.xaml" />
     <None Remove="Pages\SplashScreen.xaml" />
     <None Remove="Pages\UserControlDialog.xaml" />
     <None Remove="Pages\ViewPages\CustomerViewPages\EditCustomer.xaml" />
     <None Remove="Pages\ViewPages\Settings.xaml" />
     <None Remove="Pages\ViewPages\ViewStats.xaml" />
+    <None Remove="PDFexport.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="sharpPDF">
+      <HintPath>Scripts\Plugins\sharpPDF.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings.xaml">
@@ -76,6 +84,12 @@
 	    <None Update="logo.ico">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    </None>
+	    <Page Update="InvoiceThemes\PdfExport_theme1.xaml">
+	      <Generator>MSBuild:Compile</Generator>
+	    </Page>
+	    <Page Update="Pages\PDFexport.xaml">
+	      <Generator>MSBuild:Compile</Generator>
+	    </Page>
 	    <Page Update="Pages\EditPages\AddProducts.xaml">
 	      <Generator>MSBuild:Compile</Generator>
 	    </Page>

@@ -47,14 +47,14 @@ namespace Invoice_Free
         }
         private void FirstPageSelection()
         {
-            //InstanceWindow.m_Frame.Navigate( typeof(Settings));
+            //MainWindow.m_Frame.Navigate( typeof(Settings));
             if (!Directory.Exists(App.PathToCompanies))
             {
-                App.ChangePageTo("AddCompany", App.AnimatePage("start"));
+                App.ChangePageTo("AddCompany",null, App.AnimatePage("start"));
             }
             else
             {
-                App.ChangePageTo("Intro", App.AnimatePage("start"));
+                App.ChangePageTo("Intro",null, App.AnimatePage("start"));
             }
         }
 

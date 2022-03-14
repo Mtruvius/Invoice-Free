@@ -278,6 +278,13 @@ namespace Invoice_Free
             }
             
         }
+
+        private void InvoicesPanel_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            InvoiceClass selectedInv = (InvoiceClass)e.ClickedItem;
+            Debug.WriteLine(selectedInv.CustomerName);
+            App.ChangePageTo("PdfExport", selectedInv, null);
+        }
     }
 
    

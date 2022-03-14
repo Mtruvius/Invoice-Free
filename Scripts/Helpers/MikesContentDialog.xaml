@@ -18,7 +18,7 @@
 
     <ContentDialog.Template>        
         <ControlTemplate TargetType="ContentDialog">
-            <Grid x:Name="InstanceGrid" 
+            <Grid x:Name="MainGrid" 
                     Height="{x:Bind local:App.m_window.Content.ActualSize.Y}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -88,7 +88,8 @@
                                     FontFamily="{Binding ButtonsFontFamily, Mode=OneWay}" 
                                     HorizontalAlignment="Stretch" 
                                     VerticalAlignment="Stretch" 
-                                    Click="PrimaryButton_Click"/>
+                                    Click="PrimaryButton_Click"
+                                    MinWidth="60"/>
 
                             <Button x:Name="SecondButton" 
                                     Content="{TemplateBinding SecondaryButtonText}" 
@@ -98,7 +99,8 @@
                                     HorizontalAlignment="Stretch" 
                                     VerticalAlignment="Stretch" 
                                     Margin="5,0,0,0" 
-                                    Click="SecondaryButton_Click"/>
+                                    Click="SecondaryButton_Click"
+                                    MinWidth="60"/>
 
                             <Button x:Name="CloseButton" 
                                     Content="{TemplateBinding CloseButtonText}" 
@@ -108,7 +110,8 @@
                                     FontFamily="{Binding ButtonsFontFamily, Mode=OneWay}"
                                     HorizontalAlignment="Stretch" 
                                     VerticalAlignment="Stretch" 
-                                    Margin="5,0,0,0"/>
+                                    Margin="5,0,0,0"
+                                    MinWidth="60"/>
                             
                         </controls:UniformGrid>
 

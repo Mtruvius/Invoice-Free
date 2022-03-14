@@ -143,7 +143,7 @@ namespace Invoice_Free
 
         private void ChangeCompanyBtn_Click(object sender, RoutedEventArgs e)
         {
-            App.ChangePageTo("Intro", App.AnimatePage("start"));
+            App.ChangePageTo("Intro",null, App.AnimatePage("start"));
         }
          
         private void TaxVatSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -355,7 +355,7 @@ namespace Invoice_Free
             SaveManager.SaveCompanyEdits();
             CreateTimer();
             SaveSuccessNotification.Visibility = Visibility.Visible;
-            InstanceSettingsContent.Visibility = Visibility.Collapsed;
+            MainSettingsContent.Visibility = Visibility.Collapsed;
             
         }
 
