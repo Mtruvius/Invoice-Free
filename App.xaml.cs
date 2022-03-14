@@ -50,7 +50,7 @@ namespace Invoice_Free
         public static BitmapSource addBtnHover;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of Instance() or WinInstance().
+        /// executed, and as such is the logical equivalent of Main() or WinMain().
         /// </summary>
         public App()
         {
@@ -82,7 +82,7 @@ namespace Invoice_Free
             ALL_INVOICES = new ObservableCollection<InvoiceClass>();
             PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             
-            m_window = new InstanceWindow();
+            m_window = new MainWindow();
             m_window.Title = "Invoice Free";
             m_window.Activate();
             m_window.ExtendsContentIntoTitleBar = true;
@@ -173,7 +173,7 @@ namespace Invoice_Free
             return false;
         }
 
-        public static void InstancetainMaimized(object sender, WindowSizeChangedEventArgs e)
+        public static void MaintainMaimized(object sender, WindowSizeChangedEventArgs e)
         {
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
         }
@@ -249,9 +249,9 @@ namespace Invoice_Free
             }
         }
 
-        public static void ChangePageTo(string page, FrameNavigationOptions NavOptions)
+        public static void ChangePageTo(string page,object parameter, FrameNavigationOptions NavOptions)
         {
-            Frame rootFrame = InstanceWindow.m_Frame;
+            Frame rootFrame = MainWindow.m_Frame;
             switch (page)
             {
                 case "Intro":
@@ -260,7 +260,7 @@ namespace Invoice_Free
                 case "AddCompany":
                     rootFrame.NavigateToType(typeof(CreateCompany), null, NavOptions);
                     break;
-                case "Instance":
+                case "Main":
                     rootFrame.NavigateToType(typeof(MainPage), null, NavOptions);
                     break;
                 case "AddCustomer":
@@ -268,6 +268,9 @@ namespace Invoice_Free
                     break;
                 case "SplashScreen":
                     rootFrame.NavigateToType(typeof(SplashScreen), null, NavOptions);
+                    break;
+                case "PdfExport":
+                    rootFrame.NavigateToType(typeof(PDFexport), parameter, NavOptions);
                     break;
                 default:
                     break;
@@ -407,7 +410,7 @@ namespace Invoice_Free
                     string[] theString = input.Text.Split('.');
                     string TLD = theString[1];
 
-                    foreach (string item in TLDs.DoInstances)
+                    foreach (string item in TLDs.DoMains)
                     {
                         if (item.ToLower() == TLD.ToLower())
                         {

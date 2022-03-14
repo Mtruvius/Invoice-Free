@@ -5,12 +5,15 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using PInvoke;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Windows.Graphics.Printing;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using WinRT;
@@ -23,19 +26,21 @@ namespace Invoice_Free
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class InstanceWindow : Window
+    public sealed partial class MainWindow : Window
     {
         public static Frame m_Frame;
-        public InstanceWindow()
+       
+        public MainWindow()
         {
-            App.m_window = this;            
+
+            App.m_window = this;
+           
             this.InitializeComponent();
             LoadIcon("Assets/logo.ico");
-            m_Frame = InstanceFrame;
+            m_Frame = MainFrame;
             DoSetup();
         }
-
-        private void LoadIcon(string iconName)
+         private void LoadIcon(string iconName)
         {
             //Get the Window's HWND
             var hwnd = this.As<IWindowNative>().WindowHandle;
@@ -71,6 +76,8 @@ namespace Invoice_Free
             App.ALL_INVOICES = new ObservableCollection<InvoiceClass>();
             App.PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             GetAssets();
+
+           
         }
 
         private void GetAssets()
@@ -84,7 +91,7 @@ namespace Invoice_Free
 
         private void GetSplashScreen()
         {
-            App.ChangePageTo("SplashScreen",null);
+            App.ChangePageTo("SplashScreen",null, null);
         }
 
         

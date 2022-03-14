@@ -375,7 +375,7 @@ namespace Invoice_Free
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-           // Debug.WriteLine("FILTER TEXT: " + FilterText);
+            App.ChangePageTo("PdfExport", null, null);
         }
     }
 }

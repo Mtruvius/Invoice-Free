@@ -2,7 +2,7 @@
  * A simple JSON Parser / builder
  * ------------------------------
  * 
- * It Instancely has been written as a simple JSON parser. It can build a JSON string
+ * It Mainly has been written as a simple JSON parser. It can build a JSON string
  * from the node-tree, or generate a node tree from any valid JSON string.
  * 
  * Written by Bunny83 
@@ -1160,12 +1160,12 @@ namespace SimpleJSON
 
     public partial class JSONNull : JSONNode
     {
-        static JSONNull m_StaticInstance = new JSONNull();
-        public static bool reuseSameInstance = true;
+        static JSONNull m_StaticMain = new JSONNull();
+        public static bool reuseSameMain = true;
         public static JSONNull CreateOrGet()
         {
-            if (reuseSameInstance)
-                return m_StaticInstance;
+            if (reuseSameMain)
+                return m_StaticMain;
             return new JSONNull();
         }
         private JSONNull() { }
