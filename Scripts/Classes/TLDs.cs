@@ -8,7 +8,7 @@ namespace Invoice_Free
 {
     class TLDs
     {
-        public static string[] DoInstances = new string[]
+        public static string[] DoMains = new string[]
         {
             "ABC",
             "ABLE",
@@ -357,7 +357,7 @@ namespace Invoice_Free
             "DOCS",
             "DOCTOR",
             "DOG",
-            "DOInstanceS",
+            "DOMainS",
             "DOT",
             "DOWNLOAD",
             "DRIVE",

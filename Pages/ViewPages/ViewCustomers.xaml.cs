@@ -28,7 +28,7 @@ namespace Invoice_Free
         bool isHovering_AddBtn;
         BitmapSource addBtnNormal;
         BitmapSource addBtnHover;
-        public static Frame CustomerViewInstanceFrame;
+        public static Frame CustomerViewMainFrame;
         private ObservableCollection<Customer> CustomersList;
         private ObservableCollection<SearchOptions> CustomerSearchOptions;
         private bool IsSearching;

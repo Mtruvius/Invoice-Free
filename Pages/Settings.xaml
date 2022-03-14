@@ -25,7 +25,7 @@
             
         </Grid>
         
-        <Grid Padding="20" MaxWidth="900" x:Name="InstanceSettingsContent">
+        <Grid Padding="20" MaxWidth="900" x:Name="MainSettingsContent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -119,7 +119,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Address" VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
-                    <TextBox x:Name="CompanyAddress_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                    <TextBox x:Name="CompanyAddress_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="100"/>
                 </Grid>
                 
                 <Grid  Margin="0,10,0,0">
