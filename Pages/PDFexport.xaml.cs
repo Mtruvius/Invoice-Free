@@ -41,6 +41,8 @@ namespace Invoice_Free
         public string Email { get; set; }
         public string CustomerTax { get; set; }
         public int TotalProductsInvoices { get; set; }
+        private float TaxTotal { get; set; }
+        private string InvoiceFooterMessage { get; set; }
 
         public ObservableCollection<InvoiceProduct> _products;
 
@@ -61,17 +63,37 @@ namespace Invoice_Free
                 if (customer.Name == CustomerName)
                 {
                     Email = customer.Email;
-                    if (customer.VatOrTax != null)
+                    if (customer.Tax != null)
                     {
-                        CustomerTax = customer.VatOrTax;
+                        CustomerTax = customer.Tax;
                     }
-                    
+                    InvoiceFooterMessage = App.companyActive.InvoiceFooterMsg;
                 }
             }
             foreach (InvoiceProduct product in SelectedInvoice.InvoicedProducts)
             {
                 _products.Add(product);
                 TotalProductsInvoices += product.Quantity;
+            }
+
+            if (!App.companyActive.AddTax)
+            {
+                subtotalTitle.Visibility = Visibility.Collapsed;
+                TaxTitle.Visibility = Visibility.Collapsed;
+                subtotalValue.Visibility = Visibility.Collapsed;
+                TaxValue.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TaxTitle.Text = "Tax "+ App.companyActive.TaxRate.ToString() + "%:";               
+
+                float num1 = SelectedInvoice.InvoiceTotal;
+                float num2 = SelectedInvoice.ExcludingTaxTotal;
+                float TaxTotal = MathF.Abs(num1 - num2);
+
+                Debug.WriteLine("num1: " + num1);
+                Debug.WriteLine("num2: " + num2);
+                Debug.WriteLine("TaxTotal: " + TaxTotal);
             }
         }
         private void CancelButton_Click(object sender, RoutedEventArgs e)

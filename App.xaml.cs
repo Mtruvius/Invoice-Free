@@ -88,6 +88,7 @@ namespace Invoice_Free
             m_window.ExtendsContentIntoTitleBar = true;
            
             m_window.Maximize();
+
            
         }
 

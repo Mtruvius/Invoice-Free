@@ -12,9 +12,67 @@
     </Page.Resources>
     
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+       
+        <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="135"/>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="TitleLogo" Grid.Column="0"  VerticalAlignment="Stretch" Height="30" Source="/Assets/StoreLogo.png" Stretch="Uniform" Margin="0,3,0,3"/>
+            <TextBlock x:Name="TitleText" Text="Invoice Free" Grid.Column="1" TextAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="19"  HorizontalAlignment="Stretch"/>
+            <StackPanel Orientation="Horizontal"  Grid.Column="2" Height="32" HorizontalAlignment="Right">
 
-        
-        <Grid Name="thePage" Background="White" MaxWidth="720" MaxHeight="980" VerticalAlignment="Stretch" Margin="0,0,0,30">
+                <Button x:Name="Minimize" FontFamily="Segoe MDL2 Assets" Content="&#xE949;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.Minimize_Checked}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Dark">
+
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
+
+                <Button x:Name="Fullscreen" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="DimGray" FocusVisualSecondaryBrush="#00000000" FocusVisualPrimaryBrush="Transparent" IsEnabled="False"/>
+
+
+                <Button x:Name="ClsBtn" FontFamily="Segoe MDL2 Assets" Content="&#xE106;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.App_ExitRequested}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Dark">
+
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+
+                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
+                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Name="thePage" Background="White" MaxWidth="720" MaxHeight="980" VerticalAlignment="Stretch" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="130"/>
                 <RowDefinition Height="*"/>
@@ -147,21 +205,28 @@
                         <ColumnDefinition MinWidth="70"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Name="Titles" >
-                        <TextBlock Text="Subtotal:" Padding="5,0" HorizontalAlignment="Right" Foreground="Black" />
-                        <TextBlock Text="Tax 15%:" Padding="5,0" HorizontalAlignment="Right" Foreground="Black" />
-                        <TextBlock Text="Total:" Padding="5,0" FontWeight="Bold" HorizontalAlignment="Right" FontSize="20" Foreground="Black" />
+                        <TextBlock Name="subtotalTitle" Text="Subtotal:" Padding="5,0" HorizontalAlignment="Right" Foreground="Black" />
+                        <TextBlock Name="TaxTitle" Padding="5,0" HorizontalAlignment="Right" Foreground="Black" />
+                        <TextBlock Name="TotalTitle" Text="Total:" Padding="5,0" FontWeight="Bold" HorizontalAlignment="Right" FontSize="20" Foreground="Black" />
                     </StackPanel>
                     <StackPanel Name="Vales" Grid.Column="1">
-                        <TextBlock Text="{x:Bind SelectedInvoice.ExcludingTaxTotal, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Padding="5,0" Foreground="Black" />
-                        <TextBlock Text="100" Padding="5,0" Foreground="Black" />
-                        <TextBlock Text="{x:Bind SelectedInvoice.InvoiceTotal, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Padding="5,0" FontSize="20" FontWeight="Bold" Foreground="Black" />
+                        <TextBlock Name="subtotalValue" Text="{x:Bind SelectedInvoice.ExcludingTaxTotal, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Padding="5,0" Foreground="Black" />
+                        <TextBlock Name="TaxValue" Text="{x:Bind TaxTotal, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Padding="5,0" Foreground="Black" />
+                        <TextBlock Name="TotalValue" Text="{x:Bind SelectedInvoice.InvoiceTotal, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:C}'}" Padding="5,0" FontSize="20" FontWeight="Bold" Foreground="Black" />
                     </StackPanel>                   
                 </Grid>
                 
             </Grid>
 
             <StackPanel  Name="footer" Grid.Row="2" VerticalAlignment="Center" Padding="0,0,0,5">
-                <TextBlock Name="FooterMessage" Text="This is a footer message hadhfgiafa isflf ashf lfgha ffg hihisfhdg ishugpihsgihsdg sdihgsiuhdsdhg ;ishudiushdishdihsdshdlsdkjg sdhih" HorizontalAlignment="Center" HorizontalTextAlignment="Center" MaxWidth="720" TextWrapping="Wrap" Foreground="Black" Margin="0,0,0,15"/>
+                <TextBlock Name="FooterMessage" 
+                           Text="{x:Bind InvoiceFooterMessage}" 
+                           HorizontalAlignment="Center" 
+                           HorizontalTextAlignment="Center" 
+                           MaxWidth="720" 
+                           TextWrapping="Wrap" 
+                           Foreground="Black" 
+                           Margin="20,0,20,15"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Name="companyRegTitle" Text="RegNo." Foreground="Black" FontSize="9" />
                     <TextBlock Name="companyReg" Text="{x:Bind local:App.companyActive.RegNo}" Foreground="Black" FontSize="9" FontWeight="Bold"/>
@@ -173,10 +238,21 @@
             
             
         </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <Button x:Name="myButton" Click="ExportButton_Click">Export</Button>
-            <Button x:Name="Cancel_Btn" Click="CancelButton_Click">Cancel</Button>
-            <TextBlock x:Name="textblock"/>
-        </StackPanel>
+
+        <Grid Grid.Row="2" MaxWidth="720" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <AppBarButton Label="Export PDF" Click="ExportButton_Click">
+                    <AppBarButton.Icon>
+                        <BitmapIcon UriSource="/Assets/Icons/PDFExport.png"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Back" Click="CancelButton_Click">
+                    <AppBarButton.Icon>
+                        <SymbolIcon Symbol="Back"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </StackPanel> 
+        </Grid>
+        
     </Grid>    
 </Page>

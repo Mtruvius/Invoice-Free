@@ -14,7 +14,7 @@ namespace Invoice_Free
         public string Contact;
         public string Email;
         public string Address;
-        public string VatOrTax;
+        public string Tax;
         public string RegNo;
         public string ContactPerson;
         public int LastInvoiceNo;
@@ -26,7 +26,8 @@ namespace Invoice_Free
         public int PendingInvoices;
         public int TotalQuotes;
         public int TotalCustomers;        
-        public bool AddVat;
-        public double VatRate;
+        public bool AddTax;
+        public double TaxRate;
+        public string InvoiceFooterMsg;
     }
 }

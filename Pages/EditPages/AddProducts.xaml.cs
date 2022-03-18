@@ -186,7 +186,7 @@ namespace Invoice_Free
 
         private float GetExcludingTaxValue(float total)
         {
-            float percentageRate = total * ((float)App.companyActive.VatRate / 100);
+            float percentageRate = total * ((float)App.companyActive.TaxRate / 100);
             float excludingTaxValue = total - percentageRate;
             return excludingTaxValue;
         }

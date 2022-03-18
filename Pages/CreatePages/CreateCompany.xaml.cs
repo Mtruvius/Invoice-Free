@@ -102,7 +102,7 @@ namespace Invoice_Free
             CompanyObj.Add("Contact", Contact.Text);
             CompanyObj.Add("Email", Email.Text);
             CompanyObj.Add("Address", companyAddress.Text);
-            CompanyObj.Add("VatOrTax", VatTax.Text);
+            CompanyObj.Add("Tax", Tax.Text);
             CompanyObj.Add("RegNo", CompanyReg.Text);
             CompanyObj.Add("ContactPerson", ContactPerson.Text);
             CompanyObj.Add("LastInvNo", 0);
@@ -115,9 +115,9 @@ namespace Invoice_Free
             CompanyObj.Add("TotalQuotes", 0);
             CompanyObj.Add("TotalCustomers", 0);
             CompanyObj.Add("ProductCatagoriesList", productCatagoriesList);
-            CompanyObj.Add("AddVat", false);
-            CompanyObj.Add("VatRate", 0); 
-
+            CompanyObj.Add("AddTax", false);
+            CompanyObj.Add("TaxRate", 0);
+            CompanyObj.Add("InvoiceFooterMsg", "");
           
             
             CompanyDetails.Add("Details", CompanyObj);
@@ -141,7 +141,7 @@ namespace Invoice_Free
                 Email = Email.Text,
                 Address = companyAddress.Text,
                 RegNo = CompanyReg.Text,
-                VatOrTax = VatTax.Text,
+                Tax = Tax.Text,
                 ContactPerson = ContactPerson.Text,
                 LastInvoiceNo = 0,
                 PriorRevenue = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -152,8 +152,9 @@ namespace Invoice_Free
                 PendingInvoices = 0,
                 TotalQuotes = 0,
                 TotalCustomers = 0,
-                AddVat = false,
-                VatRate = 0
+                AddTax = false,
+                TaxRate = 0,
+                InvoiceFooterMsg = ""
             };
 
             App.companyActive = company;
