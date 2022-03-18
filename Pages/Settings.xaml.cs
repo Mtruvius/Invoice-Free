@@ -1,25 +1,14 @@
 ﻿using Microsoft.UI;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.UI.Popups;
-using Microsoft.UI.Text;
-using Windows.UI.Core;
-using Microsoft.UI.Xaml.Documents;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,21 +21,21 @@ namespace Invoice_Free
     public sealed partial class Settings : Page
     {
 
-        
+        public int CharAvailable { get; set; }
         
         private StorageFile _chosenImage;
         private string _chosenEmail;
         private string _chosenContact;
         private string _chosenAddress;
         private string _chosenRegNo;
-        private string _chosenVatTax;
+        private string _chosenTax;
 
         private StorageFile _newImage;
         private string _newEmail;
         private string _newContact;
         private string _newAddress;
         private string _newRegNo;
-        private string _newVatTax;
+        private string _newTax;
         
 
         List<string[]> CompanyChangesList;
@@ -58,12 +47,15 @@ namespace Invoice_Free
             App.ImageSelected += ImageSelected;
 
             GetCompanySettings();
+
+            CharAvailable = 165;
+            Available.Text = "Characters available: " + CharAvailable.ToString();
         }
 
         private void GetCompanySettings()
         {
-            TaxVatToggle.IsOn = App.companyActive.AddVat;
-            VatPercentageBox.Value = App.companyActive.VatRate;
+            TaxToggle.IsOn = App.companyActive.AddTax;
+            TaxPercentageBox.Value = App.companyActive.TaxRate;
         }
 
         private void EditCompanyBtn_Click(object sender, RoutedEventArgs e)
@@ -129,13 +121,13 @@ namespace Invoice_Free
             {
                 CompanyRegNo_TextBox.Text = _chosenRegNo;
             }
-            if (string.IsNullOrEmpty(_chosenVatTax) || _chosenVatTax != App.companyActive.VatOrTax)
+            if (string.IsNullOrEmpty(_chosenTax) || _chosenTax != App.companyActive.Tax)
             {
-                CompanyVatTax_TextBox.Text = App.companyActive.VatOrTax;
+                CompanyTax_TextBox.Text = App.companyActive.Tax;
             }
             else
             {
-                CompanyVatTax_TextBox.Text = _chosenVatTax;
+                CompanyTax_TextBox.Text = _chosenTax;
             }
             
             CompanyEditing_Grid.Visibility = Visibility.Visible;
@@ -146,18 +138,18 @@ namespace Invoice_Free
             App.ChangePageTo("Intro",null, App.AnimatePage("start"));
         }
          
-        private void TaxVatSwitch_Toggled(object sender, RoutedEventArgs e)
+        private void TaxSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             ToggleSwitch toggle = sender as ToggleSwitch;
             if (toggle.IsOn)
             {
                 Debug.WriteLine("Toggle is ON");
-                VatRate.Visibility = Visibility.Visible;
+                TaxRate.Visibility = Visibility.Visible;
             }
             else
             {
                 Debug.WriteLine("Toggle is OFF");
-                VatRate.Visibility = Visibility.Collapsed;
+                TaxRate.Visibility = Visibility.Collapsed;
             }
             
         }
@@ -266,11 +258,11 @@ namespace Invoice_Free
                         AddToChangeMadeList("RegNo: " + App.companyActive.RegNo, _chosenRegNo);
                     }
                     break;
-                case "CompanyVatTax_TextBox":
-                    if (input.Text != App.companyActive.VatOrTax)
+                case "CompanyTax_TextBox":
+                    if (input.Text != App.companyActive.Tax)
                     {
-                        _chosenVatTax = input.Text;
-                        AddToChangeMadeList("VatOrTax: " + App.companyActive.VatOrTax, _chosenVatTax);
+                        _chosenTax = input.Text;
+                        AddToChangeMadeList("Tax: " + App.companyActive.Tax, _chosenTax);
                     }
                     break;
             }
@@ -293,7 +285,7 @@ namespace Invoice_Free
             _newContact = _chosenContact;
             _newAddress = _chosenAddress;
             _newRegNo = _chosenRegNo;
-            _newVatTax = _chosenVatTax;
+            _newTax = _chosenTax;
             dialog.Hide();
             CompanyEditing_Grid.Visibility = Visibility.Collapsed;
         }
@@ -332,26 +324,27 @@ namespace Invoice_Free
                 App.companyActive.RegNo = _newRegNo;
             }
 
-            if (_newVatTax != null && _newVatTax != App.companyActive.VatOrTax)
+            if (_newTax != null && _newTax != App.companyActive.Tax)
             {
-                App.companyActive.VatOrTax = _newVatTax;
+                App.companyActive.Tax = _newTax;
             }
 
-            if (TaxVatToggle.IsOn)
+            if (TaxToggle.IsOn)
             {
-                App.companyActive.AddVat = true;
+                App.companyActive.AddTax = true;
             }
             else
             {
-                App.companyActive.AddVat = false;
+                App.companyActive.AddTax = false;
             }
             
-            if (VatPercentageBox.Value != App.companyActive.VatRate)
+            if (TaxPercentageBox.Value != App.companyActive.TaxRate)
             {
-                Debug.WriteLine("VatPercentageBox.Value: " + VatPercentageBox.Value);
-                App.companyActive.VatRate = VatPercentageBox.Value;
+                Debug.WriteLine("TaxPercentageBox.Value: " + TaxPercentageBox.Value);
+                App.companyActive.TaxRate = TaxPercentageBox.Value;
             }
-
+            App.companyActive.InvoiceFooterMsg = InvFootMsg.Text;
+            
             SaveManager.SaveCompanyEdits();
             CreateTimer();
             SaveSuccessNotification.Visibility = Visibility.Visible;
@@ -385,6 +378,35 @@ namespace Invoice_Free
             dispatcherTimer.Stop();
             dispatcherTimer = null;            
             CancelSettingsBtn_Click(sender, args);
+        }
+
+        private void InvFootMsg_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CharAvailable = 165;
+            int MaxLength = 165;
+            int textLength = 94;            
+            TextBox box = (TextBox)sender;
+            
+            string[] lines = box.Text.Split('\r');
+            Debug.WriteLine("Lines: " + lines.Length);
+            Debug.WriteLine("box.Text.Length: " + box.Text.Length);
+            if (lines.Length > 1 || box.Text.Length == textLength)
+            {
+                
+                InvFootMsg.MaxLength = MaxLength - ((textLength +1) - lines[0].Length);
+                InvFootMsg.AcceptsReturn = false;
+                Debug.WriteLine("This was called");
+                Debug.WriteLine("InvFootMsg.MaxLength: " + InvFootMsg.MaxLength);
+                CharAvailable -= (textLength+1) - lines[0].Length;
+            }
+            else
+            {
+                InvFootMsg.AcceptsReturn = true;
+            }
+            
+            CharAvailable -= box.Text.Length;
+            Available.Text = "Characters available: " + CharAvailable.ToString();
+            Debug.WriteLine("CharAvailable: " + CharAvailable);
         }
     }
 }

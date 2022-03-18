@@ -1,0 +1,28 @@
+[
+    {
+        "Name": "test customer",
+        "Email": "test@test.com",
+        "Address": "",
+        "Contact": "",
+        "ContactPerson": "me",
+        "VatOrTax": "",
+        "InvoiceCount": 1,
+        "Invoices": [
+            {
+                "CustomerName": "test customer",
+                "Date": "9/3/2022",
+                "Number": "1",
+                "InvoiceTotal": 50,
+                "Completed": false,
+                "InvoicedProducts": [
+                    {
+                        "Name": "test product",
+                        "Description": "just a test product",
+                        "Quantity": 3,
+                        "TotalPrice": 150
+                    }
+                ]
+            }
+        ]
+    }
+]

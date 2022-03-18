@@ -44,22 +44,35 @@
                     <Button Content="Change Company" HorizontalAlignment="Center" Click="ChangeCompanyBtn_Click" Margin="5,0,0,0"/>                    
                 </StackPanel>
                 <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Margin="0,10,0,0"/>
-                
-                <ToggleSwitch x:Name="TaxVatToggle" 
-                              Header="Add Vat/Tax?" 
-                              Toggled="TaxVatSwitch_Toggled" 
-                              HorizontalAlignment="Center"
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,0">
+                    <TextBlock Text="Add Tax?" VerticalAlignment="Center"/>
+                    <ToggleSwitch x:Name="TaxToggle" 
+                              Toggled="TaxSwitch_Toggled" 
+                              HorizontalAlignment="Stretch" Margin="30,0"
                               HorizontalContentAlignment="Center"
-                              Margin="70,10,0,0"/>
-                
-                <StackPanel  x:Name="VatRate"  Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
-                    <TextBlock Text="Rate" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <StackPanel Orientation="Horizontal">
-                        <NumberBox x:Name="VatPercentageBox"/>
-                        <TextBlock Text="%" VerticalAlignment="Bottom"/>
+                              />
+
+                    <StackPanel  x:Name="TaxRate"  Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="30,0" Visibility="Collapsed">
+                        <TextBlock Text="Rate" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <NumberBox x:Name="TaxPercentageBox" VerticalAlignment="Center"/>
+                            <TextBlock Text="%" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+
                     </StackPanel>
-                    
+                </StackPanel>                
+                
+                <StackPanel x:Name="FooterMsg" HorizontalAlignment="Stretch" Margin="30,0">
+                    <TextBlock Text="Invoive Footer Message" Margin="0,0,0,5"/>
+                    <TextBox Name="InvFootMsg" 
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             MaxLength="165"
+                              MaxHeight="50"                             
+                             TextChanged="InvFootMsg_TextChanged"/>
+                    <TextBlock Name="Available" FontSize="9" HorizontalAlignment="Right"/>
                 </StackPanel>
+                
                 <Rectangle Fill="{ThemeResource SystemAccentColor}" Height="1" Margin="0,10,0,0"/>
 
                 <StackPanel x:Name="FooterBtns" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
@@ -69,6 +82,9 @@
             </StackPanel>
             
         </Grid>
+        
+        
+        
         <Grid Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
               x:Name="CompanyEditing_Grid"                     
               Visibility="Collapsed">
@@ -136,8 +152,8 @@
                         <ColumnDefinition Width="75"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Vat/Tax No." VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
-                    <TextBox x:Name="CompanyVatTax_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
+                    <TextBlock Text="Tax No." VerticalAlignment="Center" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBox x:Name="CompanyTax_TextBox" Text="" VerticalAlignment="Stretch" Grid.Column="1" Tag="CompanyInput"/>
                 </Grid>
                 <Button Content="Done" 
                     Click="CompanyEditing_SaveClick"

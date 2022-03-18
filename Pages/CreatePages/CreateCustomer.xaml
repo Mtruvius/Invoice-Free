@@ -50,7 +50,7 @@
 
                 <TextBox x:Name="customerAddress"  HorizontalAlignment="Stretch" PlaceholderText="Phisical Address" TextWrapping="Wrap" Height="35" VerticalContentAlignment="Center" Margin="0,0,0,15" MaxHeight="200" VerticalAlignment="top" AcceptsReturn="True" LostFocus="AddToCustomerClass"/>
 
-                <TextBox x:Name="VatTax"  HorizontalAlignment="Stretch" PlaceholderText="Vat/Tax No." TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,15" InputScope="Number" LostFocus="AddToCustomerClass"/>
+                <TextBox x:Name="Tax"  HorizontalAlignment="Stretch" PlaceholderText="Tax No." TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,15" InputScope="Number" LostFocus="AddToCustomerClass"/>
 
                 <TextBox x:Name="ContactPerson"  HorizontalAlignment="Stretch" PlaceholderText="Contact Person" TextWrapping="Wrap"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" LostFocus="AddToCustomerClass" />
 
