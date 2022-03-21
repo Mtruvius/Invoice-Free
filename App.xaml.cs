@@ -1,6 +1,7 @@
 ﻿using HoveyTech.SearchableComboBox;
 using Microsoft.UI;
 using Microsoft.UI.Text;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -11,15 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System;
-using Windows.UI.Core.Preview;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Invoice_Free;
 
 namespace Invoice_Free
 {
@@ -48,6 +47,11 @@ namespace Invoice_Free
 
         public static BitmapSource addBtnNormal;
         public static BitmapSource addBtnHover;
+
+        public static double ScreenHeight { get; private set; }
+
+
+        private int sizeChecked = 0;
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of Main() or WinMain().
@@ -55,6 +59,7 @@ namespace Invoice_Free
         public App()
         {
             this.InitializeComponent();
+           
         }
 
         /// <summary>
@@ -72,7 +77,7 @@ namespace Invoice_Free
             }
             Debug.WriteLine("PATH: " + Directory.GetCurrentDirectory());
             //this.Suspending += OnSuspending;
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+           
 
            
             PathToCompanies = DataFolder + "Companies\\";
@@ -83,41 +88,38 @@ namespace Invoice_Free
             PRODUCTCATAGORIESLIST = new ObservableCollection<string>();
             
             m_window = new MainWindow();
-            m_window.Title = "Invoice Free";
+            //m_window.LoadIcon("Assets/logo.ico");
+            //m_window.Title = "Invoice Free";
+            m_window.SizeChanged += SizeChangeCheck;
             m_window.Activate();
-            m_window.ExtendsContentIntoTitleBar = true;
-           
-            m_window.Maximize();
-           
+            m_window.Maximize();            
+            m_window.DisableMaximizeButton();
+            AppWindow appWindow = m_window.GetCurrentAppWin();
+            if (appWindow != null)
+            {
+                appWindow.Closing += ClosingRequested;
+                
+                appWindow.SetIcon("Assets/logo.ico");
+                appWindow.Title = "Invoice Free";
+                //ScreenHeight = m_window.Bounds.Height - titleBar.Height;
+            }           
         }
 
-
-        #region AddedMethods
-
-       
-        
-
-      /*  public async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        private void SizeChangeCheck(object sender, WindowSizeChangedEventArgs args)
         {
-            var deferral = e.GetDeferral();
-            var dialog = new MessageDialog("Are you sure you want to exit?", "Exit");
-            var confirmCommand = new UICommand("Yes");
-            var cancelCommand = new UICommand("No");
-            dialog.Commands.Add(confirmCommand);
-
-            dialog.Commands.Add(cancelCommand);
-
-            if (await dialog.ShowAsync() == cancelCommand)
+            Window window = (Window)sender;
+            if (sizeChecked < 2)
             {
-                //cancel close by handling the event
-                e.Handled = true;
+                ScreenHeight = window.Bounds.Height;
+                Debug.WriteLine("ScreenHeight: " + ScreenHeight);
             }
+            sizeChecked++;
+            Debug.WriteLine("ScreenHeight: " + ScreenHeight);
+        }
 
-            deferral.Complete();
-        }*/
-
-        public static async void App_ExitRequested()
+        private async void ClosingRequested(AppWindow sender, AppWindowClosingEventArgs args)
         {
+            args.Cancel = true;
             MikesContentDialog dialog = new MikesContentDialog();
             dialog.DialogMinHeight = 100;
             dialog.Title = "Exit";
@@ -129,13 +131,13 @@ namespace Invoice_Free
             {
                 Text = "Are you sure you want to exit?",
                 MinHeight = 80
-        };
+            };
             sp.Children.Add(tb);
             dialog.Content = sp;
 
 
-            dialog.DialogContentMaxWidth = 600;            
-            
+            dialog.DialogContentMaxWidth = 600;
+
             dialog.PrimaryButtonText = "Yes";
             dialog.ButtonsFontSize = 16;
             dialog.CloseButtonText = "No";
@@ -144,11 +146,61 @@ namespace Invoice_Free
             dialog.CloseButtonClick += MikesContentDialogClose_click;
             dialog.XamlRoot = m_window.Content.XamlRoot;
             await dialog.ShowAsync();
+            
         }
+
+
+
+        #region AddedMethods
+
+
+
+        public async void App_CloseRequested(object sender)
+        {
+            
+           // var deferral = e.GetDeferral();
+            MikesContentDialog dialog = new MikesContentDialog();
+            dialog.DialogMinHeight = 100;
+            dialog.Title = "Exit";
+            dialog.TitleFontSize = 25;
+            dialog.TitleFontWeight = FontWeights.Bold;
+
+            StackPanel sp = new StackPanel();
+            TextBlock tb = new()
+            {
+                Text = "Are you sure you want to exit?",
+                MinHeight = 80
+            };
+            sp.Children.Add(tb);
+            dialog.Content = sp;
+
+
+            dialog.DialogContentMaxWidth = 600;
+
+            dialog.PrimaryButtonText = "Yes";
+            dialog.ButtonsFontSize = 16;
+            dialog.CloseButtonText = "No";
+
+            dialog.PrimaryButtonClick += MikesContentDialogPrimary_click;
+            dialog.CloseButtonClick += MikesContentDialogClose_click;
+            dialog.XamlRoot = m_window.Content.XamlRoot;
+            await dialog.ShowAsync();
+
+           /* if (await dialog.ShowAsync() == cancelCommand)
+            {
+                cancel close by handling the event
+                e.Handled = true;
+            }*/
+
+           // deferral.Complete();
+        }
+        
+       
 
         private static void MikesContentDialogClose_click(ContentDialog dialog, RoutedEventArgs args)
         {
             dialog.Hide();
+            
         }
 
         private static void MikesContentDialogPrimary_click(ContentDialog dialog, RoutedEventArgs args)

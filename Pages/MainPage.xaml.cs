@@ -18,6 +18,7 @@ using SimpleJSON;
 using Windows.UI;
 using Microsoft.UI.Xaml;
 using Windows.UI.ViewManagement;
+using Microsoft.UI.Windowing;
 
 
 
@@ -39,7 +40,7 @@ namespace Invoice_Free
         
         public NavigationView MainPageNav { get { return MainPageNavigation; } }
         public string currentActivePage;
-
+        
 
         public MainPage()
         {
@@ -49,11 +50,15 @@ namespace Invoice_Free
             Instance = this;
             LoadFirstPage();
             
+
+            
         }
        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             LoadFirstPage();
+            
+            
         }
 
         private void LoadFirstPage()

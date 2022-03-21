@@ -23,7 +23,7 @@
             </MenuFlyout.Items>
         </MenuFlyout>
     </FlyoutBase.AttachedFlyout>
-    <Grid>
+    <Grid MinHeight="{x:Bind local:App.ScreenHeight}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="17*"/>
             <ColumnDefinition Width="233*"/>

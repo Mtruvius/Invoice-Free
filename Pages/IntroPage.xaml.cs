@@ -22,7 +22,7 @@ namespace Invoice_Free
     {
         
         private ObservableCollection<CompanyListViewItem> _companies;
-        private UISettings uiSettings;
+        
 
         public IntroPage()
         {
@@ -30,15 +30,11 @@ namespace Invoice_Free
             SetContent();
 
             //Window.Current.SizeChanged += App.MaintainMaimized;
-            uiSettings = new UISettings();
-            uiSettings.ColorValuesChanged += CheckTitleTxtColor;
+            
+           
         }
 
-        private void CheckTitleTxtColor(UISettings sender, object args)
-        {
-            App.CheckTitleTxtColor(sender, args, TitleText, ClsBtn);
-            
-        }
+       
 
         
         private async void SetContent()

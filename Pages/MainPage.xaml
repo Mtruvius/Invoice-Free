@@ -9,70 +9,16 @@
     Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 
-    <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="auto">
+    <Grid x:Name="MainSceen" VerticalAlignment="Stretch" Width="auto" Height="{x:Bind local:App.ScreenHeight}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="38*"/>
-            <RowDefinition Height="145*"/>
-            <RowDefinition Height="817*"/>
+            <RowDefinition Height="145"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="TitleBar" Height="32" Background="{ThemeResource SystemAccentColor}" Width="auto" VerticalAlignment="Top" Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="135"/>
-            </Grid.ColumnDefinitions>
-            <Image x:Name="TitleLogo" Grid.Column="0"  VerticalAlignment="Stretch" Height="30" Source="/Assets/StoreLogo.png" Stretch="Uniform" Margin="0,3,0,3"/>
-            <TextBlock x:Name="TitleText" Text="Invoice Free" Grid.Column="1" TextAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" Height="19"  HorizontalAlignment="Stretch"/>
-            <StackPanel Orientation="Horizontal"  Grid.Column="2" Height="32" HorizontalAlignment="Right">
-
-                <Button x:Name="Minimize" FontFamily="Segoe MDL2 Assets" Content="&#xE949;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.Minimize_Checked}">
-                    <Button.Resources>
-                        <ResourceDictionary>
-                            <ResourceDictionary.ThemeDictionaries>
-                                <ResourceDictionary x:Key="Dark">
-                                    
-                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
-                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                </ResourceDictionary>
-                                <ResourceDictionary x:Key="Light">
-                                    
-                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
-                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                </ResourceDictionary>
-                            </ResourceDictionary.ThemeDictionaries>
-                        </ResourceDictionary>
-                    </Button.Resources>
-                </Button>
-
-                <Button x:Name="Fullscreen" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="DimGray" FocusVisualSecondaryBrush="#00000000" FocusVisualPrimaryBrush="Transparent" IsEnabled="False"/>
-
-
-                <Button x:Name="ClsBtn" FontFamily="Segoe MDL2 Assets" Content="&#xE106;" FontSize="{ThemeResource ControlContentThemeFontSize}" Width="45" Height="32"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="{ThemeResource SystemAccentColor}" Foreground="{ThemeResource MediaTextThemeBrush}" Click="{x:Bind local:App.App_ExitRequested}">
-                    <Button.Resources>
-                        <ResourceDictionary>
-                            <ResourceDictionary.ThemeDictionaries>
-                                <ResourceDictionary x:Key="Dark">
-                                    
-                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorLight3}"/>
-                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                </ResourceDictionary>
-                                <ResourceDictionary x:Key="Light">
-                                    
-                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{ThemeResource SystemAccentColorDark3}"/>
-                                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="Transparent"/>
-                                </ResourceDictionary>
-                            </ResourceDictionary.ThemeDictionaries>
-                        </ResourceDictionary>
-                    </Button.Resources>
-                </Button>
-            </StackPanel>
-
-        </Grid>
-
-        <Image x:Name="Company_Logo" Grid.Row="1" Width="228" HorizontalAlignment="Left" Margin="50,15,0,9" Source="{x:Bind  local:App.companyActive.CompanyLogo}"/>
-        <TextBlock x:Name="Company_Name" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="1" Text="{x:Bind local:App.companyActive.CompanyName}" TextWrapping="NoWrap"  VerticalAlignment="Center" Height="119" Width="782" FontSize="75" />
-        <Rectangle Height="1" Fill="{ThemeResource SystemAccentColor}" VerticalAlignment="Bottom" Grid.Row="1"/>
+        
+        <Image x:Name="Company_Logo" Grid.Row="0" Width="228" HorizontalAlignment="Left" Margin="50,15,0,9" Source="{x:Bind  local:App.companyActive.CompanyLogo}"/>
+        <TextBlock x:Name="Company_Name" HorizontalAlignment="Left" Margin="350,0,0,0" Grid.Row="0" Text="{x:Bind local:App.companyActive.CompanyName}" TextWrapping="NoWrap"  VerticalAlignment="Center" Height="119" Width="782" FontSize="75" />
+        <Rectangle Height="1" Fill="{ThemeResource SystemAccentColor}" VerticalAlignment="Bottom" Grid.Row="0"/>
         <NavigationView x:Name="MainPageNavigation" PaneTitle="Menu" Grid.Row="2" ItemInvoked="NavView_ItemInvoked" PaneDisplayMode="Left" IsBackButtonVisible="Collapsed">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Stats" x:Name="StatsContent" IsSelected="True">
