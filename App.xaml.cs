@@ -103,6 +103,8 @@ namespace Invoice_Free
                 appWindow.Title = "Invoice Free";
                 //ScreenHeight = m_window.Bounds.Height - titleBar.Height;
             }           
+            m_window.ExtendsContentIntoTitleBar = true;
+            m_window.Maximize();
         }
 
         private void SizeChangeCheck(object sender, WindowSizeChangedEventArgs args)

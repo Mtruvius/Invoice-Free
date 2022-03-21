@@ -14,9 +14,13 @@
 
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Invoice Free\**" />
     <Compile Remove="Pages\MainPages\**" />
+    <EmbeddedResource Remove="Invoice Free\**" />
     <EmbeddedResource Remove="Pages\MainPages\**" />
+    <None Remove="Invoice Free\**" />
     <None Remove="Pages\MainPages\**" />
+    <Page Remove="Invoice Free\**" />
     <Page Remove="Pages\MainPages\**" />
   </ItemGroup>
 
@@ -101,6 +105,6 @@
 	    </Page>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Invoice Free\" />
+      <PRIResource Remove="Invoice Free\**" />
     </ItemGroup>
 </Project>
