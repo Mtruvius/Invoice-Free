@@ -30,7 +30,7 @@ namespace Invoice_Free
                 customerObj.Add("Address", customer.Address);
                 customerObj.Add("Contact", customer.Contact);
                 customerObj.Add("ContactPerson", customer.ContactPerson);
-                customerObj.Add("VatOrTax", customer.VatOrTax);
+                customerObj.Add("Tax", customer.Tax);
                 customerObj.Add("InvoiceCount", customer.InvoiceCount);
 
                 JSONArray customerInvoiceList = new JSONArray();
@@ -84,7 +84,7 @@ namespace Invoice_Free
                 customer.Add("Address", cust.Address);
                 customer.Add("Contact", cust.Contact);
                 customer.Add("ContactPerson", cust.ContactPerson);
-                customer.Add("VatOrTax", cust.VatOrTax);
+                customer.Add("Tax", cust.Tax);
                 customer.Add("InvoiceCount", cust.InvoiceCount);
 
                 foreach (InvoiceClass Inv in cust.Invoices)
@@ -121,6 +121,7 @@ namespace Invoice_Free
             Debug.WriteLine("SaveCompanyEdits LastInvoiceNo" + App.companyActive.LastInvoiceNo);
             Company company = App.companyActive;
             Debug.WriteLine("company LastInvoiceNo" + company.LastInvoiceNo);
+            Debug.WriteLine("TEST1: " + App.companyActive.InvoiceFooterMsg);
             Company EditedCompany = new()
             {
                 CompanyName = company.CompanyName,
@@ -129,7 +130,7 @@ namespace Invoice_Free
                 Contact = company.Contact,
                 Address = company.Address,
                 RegNo = company.RegNo,
-                VatOrTax = company.VatOrTax,
+                Tax = company.Tax,
                 ContactPerson = company.ContactPerson,
                 LastInvoiceNo = company.LastInvoiceNo,
                 PreviousRevenue = company.PriorRevenue,
@@ -140,10 +141,11 @@ namespace Invoice_Free
                 PendingInvoices = company.PendingInvoices,
                 TotalQuotes = company.TotalQuotes,
                 TotalCustomers = company.TotalCustomers,
-                AddVat = company.AddVat,
-                VatRate = company.VatRate
+                AddTax = company.AddTax,
+                TaxRate = company.TaxRate,
+                InvoiceFooterMsg = company.InvoiceFooterMsg
             };
-            
+            Debug.WriteLine("TEST2: " + EditedCompany.InvoiceFooterMsg);
             App.companyActive = EditedCompany;
             Debug.WriteLine("EditedCompany LastInvoiceNo" + EditedCompany.LastInvoiceNo);
 
@@ -154,7 +156,7 @@ namespace Invoice_Free
             newCompanyOBJ.Add("Email", EditedCompany.Email);
             newCompanyOBJ.Add("Address", EditedCompany.Address);
             newCompanyOBJ.Add("Contact", EditedCompany.Contact);
-            newCompanyOBJ.Add("VatOrTax", EditedCompany.VatOrTax);
+            newCompanyOBJ.Add("Tax", EditedCompany.Tax);
             newCompanyOBJ.Add("RegNo", EditedCompany.RegNo);
             newCompanyOBJ.Add("ContactPerson", EditedCompany.ContactPerson);
             newCompanyOBJ.Add("LastInvoiceNo", EditedCompany.LastInvoiceNo);
@@ -165,19 +167,20 @@ namespace Invoice_Free
             newCompanyOBJ.Add("CompleteInvoices", EditedCompany.CompleteInvoices);
             newCompanyOBJ.Add("PendingInvoices", EditedCompany.PendingInvoices);
             newCompanyOBJ.Add("TotalQuotes", EditedCompany.TotalQuotes);
-            newCompanyOBJ.Add("TotalCustomers", EditedCompany.TotalCustomers);
-
+            newCompanyOBJ.Add("TotalCustomers", EditedCompany.TotalCustomers);            
             foreach (string catagory in App.PRODUCTCATAGORIESLIST)
             {
                 ProductCatagoriesList.Add(catagory);
             }
             newCompanyOBJ.Add("ProductCatagoriesList", ProductCatagoriesList);
-            newCompanyOBJ.Add("AddVat", EditedCompany.AddVat);
-            newCompanyOBJ.Add("VatRate", EditedCompany.VatRate);
+            newCompanyOBJ.Add("AddTax", EditedCompany.AddTax);
+            newCompanyOBJ.Add("TaxRate", EditedCompany.TaxRate);
 
+            newCompanyOBJ.Add("InvoiceFooterMsg", EditedCompany.InvoiceFooterMsg);
             newCompanyDetail.Add(newCompanyOBJ);
 
-            Debug.WriteLine("newCompanyDetail" + newCompanyDetail.ToString());
+            Debug.WriteLine("TEST3: " + EditedCompany.InvoiceFooterMsg);
+
             File.WriteAllText(App.PathToCompanies + EditedCompany.CompanyName + "\\" + EditedCompany.CompanyName + ".json", newCompanyDetail.ToString());
         }
 
@@ -188,7 +191,6 @@ namespace Invoice_Free
             {
                 intArray.Add(revenue[i]);
             }
-            Debug.WriteLine("intArray: " + intArray.ToString());
             return intArray;
         }
     }

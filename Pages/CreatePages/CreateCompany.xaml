@@ -79,7 +79,7 @@
 
                     <TextBox x:Name="CompanyReg"  HorizontalAlignment="Left" PlaceholderText="Company Registration No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
 
-                    <TextBox x:Name="VatTax"  HorizontalAlignment="Left" PlaceholderText="Vat/Tax No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
+                    <TextBox x:Name="Tax"  HorizontalAlignment="Left" PlaceholderText="Tax No." TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10" InputScope="Number"/>
 
                     <TextBox x:Name="ContactPerson"  HorizontalAlignment="Left" PlaceholderText="Contact Person" TextWrapping="Wrap" Width="720"  Height="35" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
 

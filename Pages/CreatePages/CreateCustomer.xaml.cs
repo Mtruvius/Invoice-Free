@@ -41,8 +41,8 @@ namespace Invoice_Free
                 case "companyAddress": 
                     CustomerToAdd.Address = textBox.Text;
                     break;
-                case "VatTax":
-                    CustomerToAdd.VatOrTax = textBox.Text;
+                case "Tax":
+                    CustomerToAdd.Tax = textBox.Text;
                     break;
                 case "ContactPerson":
                     CustomerToAdd.ContactPerson = textBox.Text;
@@ -88,7 +88,7 @@ namespace Invoice_Free
             newCustomer.Add("Email", CustomerToAdd.Email);            
             newCustomer.Add("Contact", CheckStringNotNull(CustomerToAdd.Contact));
             newCustomer.Add("Address", CheckStringNotNull(CustomerToAdd.Address));
-            newCustomer.Add("VatOrTax", CheckStringNotNull(CustomerToAdd.VatOrTax));
+            newCustomer.Add("Tax", CheckStringNotNull(CustomerToAdd.Tax));
             newCustomer.Add("ContactPerson", CheckStringNotNull(CustomerToAdd.ContactPerson));
             newCustomer.Add("InvoiceCount", "0");
             JSONArray customerInvoiceArray = new JSONArray();
@@ -104,7 +104,7 @@ namespace Invoice_Free
                 Email = newCustomer["Email"],
                 Contact = newCustomer["Contact"],
                 Address = newCustomer["Address"],
-                VatOrTax = newCustomer["VatOrTax"],
+                Tax = newCustomer["Tax"],
                 ContactPerson = newCustomer["ContactPerson"],
                 InvoiceCount = newCustomer["InvoiceCount"],
                 Invoices = new List<InvoiceClass>()

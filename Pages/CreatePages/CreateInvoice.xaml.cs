@@ -42,7 +42,7 @@ namespace Invoice_Free
         private ObservableCollection<Product> ProductsList;
         public List<Product> FilteredProductList { get; private set; }
         public List<Customer> FilteredCustomersList { get; private set; }
-        public double VatColumnBodyMaxWidth { get; private set; }
+        public double TaxColumnBodyMaxWidth { get; private set; }
         public Product selectedProduct;
         
         public event PropertyChangedEventHandler PropertyChanged;
@@ -67,13 +67,13 @@ namespace Invoice_Free
 
             AddProducts.ProductSelected += AddProductToInvoice;
 
-            if (App.companyActive.AddVat)
+            if (App.companyActive.AddTax)
             {
-                VatColumnHeader.MaxWidth = 100;
+                TaxColumnHeader.MaxWidth = 100;
             }
             else
             {
-                VatColumnHeader.MaxWidth = 0;
+                TaxColumnHeader.MaxWidth = 0;
             }
             dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         }
@@ -86,13 +86,13 @@ namespace Invoice_Free
             InvoiceTotal += product.TotalPrice;
             ExcludingTotalAmount.Text = ExcludingTaxTotal.ToString("C");
             TotalAmount.Text = InvoiceTotal.ToString("C");
-            if (App.companyActive.AddVat)
+            if (App.companyActive.AddTax)
             {
-                VatColumnBodyMaxWidth = 100;
+                TaxColumnBodyMaxWidth = 100;
             }
             else
             {
-                VatColumnBodyMaxWidth = 0;
+                TaxColumnBodyMaxWidth = 0;
             }
             addInvoicePanel.UpdateLayout();
             ErrorOccured = false;
@@ -334,7 +334,7 @@ namespace Invoice_Free
             SaveManager.SaveInvoiceToCustomer(_selectedCustomer, _invoice);
 
             AddToCompany(_invoice);
-            MainPage.Instance.MainContentFrame.Navigate(typeof(ViewInvoices));
+            MainPage.Instance.MainContentFrame.Navigate(typeof(PDFexport));
         }
 
         private void AddToCompany(InvoiceClass Invoice)
@@ -373,9 +373,6 @@ namespace Invoice_Free
             SaveManager.SaveCompanyEdits();
         }
 
-        private void ExportButton_Click(object sender, RoutedEventArgs e)
-        {
-            App.ChangePageTo("PdfExport", null, null);
-        }
+        
     }
 }

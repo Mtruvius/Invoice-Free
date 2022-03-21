@@ -84,7 +84,7 @@ namespace Invoice_Free
                 Email = companyInfo[0]["Email"],
                 Address = companyInfo[0]["Address"],
                 RegNo = companyInfo[0]["RegNo"],
-                VatOrTax = companyInfo[0]["VatOrTax"],
+                Tax = companyInfo[0]["Tax"],
                 ContactPerson = companyInfo[0]["ContactPerson"],
                 LastInvoiceNo = companyInfo[0]["LastInvoiceNo"],
                 PriorRevenue = GetRevenueIntArray(companyInfo[0]["PriorRevenue"]),
@@ -95,8 +95,9 @@ namespace Invoice_Free
                 PendingInvoices = companyInfo[0]["PendingInvoices"],
                 TotalQuotes = companyInfo[0]["TotalQuotes"],
                 TotalCustomers = companyInfo[0]["TotalCustomers"],
-                AddVat = companyInfo[0]["AddVat"],
-                VatRate = companyInfo[0]["VatRate"],
+                AddTax = companyInfo[0]["AddTax"],
+                TaxRate = companyInfo[0]["TaxRate"],
+                InvoiceFooterMsg = companyInfo[0]["InvoiceFooterMsg"]
             };
             JSONNode CatagoriesList = companyInfo[0]["ProductCatagoriesList"];
             App.companyActive = company;
@@ -219,7 +220,7 @@ namespace Invoice_Free
                     Email = customer["Email"],
                     Contact = customer["Contact"],
                     Address = customer["Address"],
-                    VatOrTax = customer["VatOrTax"],
+                    Tax = customer["Tax"],
                     ContactPerson = customer["ContactPerson"],
                     Invoices = invoicesList,
                     InvoiceCount = customer["InvoiceCount"]
